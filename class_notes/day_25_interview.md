@@ -1,48 +1,62 @@
 # Day 25: Interview Questions — Logistic Regression and Sigmoid Function
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. Define logistic regression and sigmoid function.
-**Answer:** Logistic regression models class probability using a sigmoid transformation of a linear score. Despite its name, it is used for classification.
+## Core concepts
 
-### Q2. Why would you use it?
-**Answer:** It provides a systematic approach to learning patterns from data. Its suitability depends on the target, data quality, scale, assumptions and business cost of errors.
+### Q1. Why is logistic regression used for classification?
+**Answer:** It estimates class probabilities by transforming a model score into a value between zero and one, then assigns a class using a decision threshold.
+**Follow-up:** Why does its name include regression?  
+**Answer:** It models a score using a regression-style structure, but it is commonly used for classification.
 
-### Q3. Explain the basic syntax.
-**Answer:** p = 1/(1+exp(-z)); LogisticRegression(max_iter=1000).fit(X_train,y_train); use predict_proba() for probabilities. I would explain the input, parameters, fitted state and output, not simply quote the class name.
+### Q2. What is the sigmoid function?
+**Answer:** It maps a real-valued score into a value between zero and one. In binary logistic regression, the output is used as an estimated positive-class probability.
+**Follow-up:** Does a probability of 0.90 guarantee the outcome?  
+**Answer:** No. It is an estimate, not a guarantee.
 
-## Practical questions
+### Q3. What is the difference between predict() and predict_proba()?
+**Answer:** predict() returns class labels. predict_proba() returns probability estimates for each class.
+**Follow-up:** Why inspect classes_?  
+**Answer:** To confirm the order of the probability columns.
 
-### Q4. How do you know the model is learning useful patterns rather than memorizing?
-**Answer:** Compare training and validation performance, use an appropriate split, inspect error patterns and evaluate once on untouched test data. A large gap between training and validation can indicate overfitting.
-
-### Q5. What would you inspect before tuning the model?
-**Answer:** Target definition, missing values, data leakage, feature types, scaling needs, class balance, baseline performance and the validation strategy.
+### Q4. What does max_iter control?
+**Answer:** It sets the maximum number of optimization iterations for the estimator.
+**Follow-up:** If a convergence warning appears, what do you inspect?  
+**Answer:** Feature scaling, data quality, model settings and the iteration limit.
 
 ## Scenario questions
 
-### Q6. A telecom company estimates churn probability. The probability can prioritize retention outreach, but a decision threshold must reflect campaign capacity and error costs.
-**Answer:** I would clarify the business requirement, inspect examples and data quality, establish a baseline, train with leakage-safe preprocessing and validate on representative unseen data. I would compare relevant metrics, examine errors by segment and explain the cost of false positives and false negatives. I would not deploy based only on one aggregate score.
+### Q5. A customer has a churn probability of 0.82. Does that guarantee churn?
+**Answer:** No. It is an estimated probability. Its reliability depends on model performance and calibration.
+**Follow-up:** What does calibration mean?  
+**Answer:** Predicted probabilities should correspond reasonably well to observed event frequencies.
 
-### Q7. Training performance is excellent but validation performance is poor. What might be happening?
-**Answer:** The model may be overfitting, the split may not represent deployment, the dataset may be small, or there may be leakage or distribution differences. I would check split logic, pipeline boundaries, model complexity and segment coverage before changing hyperparameters.
+### Q6. The model predicts every customer as non-churn. What do you inspect?
+**Answer:** Class balance, threshold, confusion matrix, recall, feature quality and whether the model learned useful patterns.
+**Follow-up:** Why can accuracy hide this failure?  
+**Answer:** If non-churn is the majority class, predicting it for every row can still achieve high accuracy.
 
-### Q8. A stakeholder asks you to improve accuracy, but missing a positive case is very expensive. What do you recommend?
-**Answer:** Clarify the cost of false negatives and false positives. Evaluate recall, precision, PR curve and confusion matrices across thresholds. Choose a threshold using validation data and business capacity, and explain the trade-off. Accuracy alone is not enough.
+### Q7. A new contract category appears in production. What should happen?
+**Answer:** Use a documented unknown-category policy in the fitted encoder and monitor the new category.
+**Follow-up:** Does ignoring the category mean the model learned its effect?  
+**Answer:** No. It only avoids a transformation error.
 
-## Senior developer questions
+### Q8. Probability ranking is useful but estimates are overconfident. What do you investigate?
+**Answer:** Probability calibration, evaluation data representativeness and whether calibration methods are appropriate.
+**Follow-up:** Should calibration be assessed on training data?  
+**Answer:** No. Use suitable held-out or cross-validation procedures.
 
-### Q9. How do you decide whether this method is suitable for production?
-**Answer:** Assess validated performance, latency, memory, explainability, stability, monitoring, data availability, retraining needs and operational ownership. A slightly weaker but reliable model may be preferable to a fragile complex one.
+### Q9. Why separate the target from the features?
+**Answer:** The target is the outcome being predicted. Including it in X would let the model access the answer and create leakage.
 
-### Q10. What would you monitor after release?
-**Answer:** Input schema and data quality, missing/unknown values, prediction distribution, latency, errors, drift and delayed ground-truth metrics. Review performance by relevant segment and define rollback criteria.
+## Code interpretation
 
-## Structured scenario-answer method
-1. Clarify business impact.
-2. Gather evidence and representative examples.
-3. Identify likely causes without guessing.
-4. Test hypotheses one at a time.
-5. Choose a safe correction.
-6. Validate on unseen and edge-case data.
-7. Communicate trade-offs and monitor.
+### Q10. What does predict_proba(X_test) return?
+**Answer:** A probability for each class for each test observation.
+**Follow-up:** How do you select the positive-class column?  
+**Answer:** Inspect classes_ and select the matching column.
+
+### Q11. Why use a Pipeline for logistic regression?
+**Answer:** It combines preprocessing and the classifier so the same fitted transformations are used during training and prediction.
+
+**Senior developer principle:** A probability is an estimate that must be evaluated and communicated responsibly.
