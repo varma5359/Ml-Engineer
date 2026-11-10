@@ -4,106 +4,53 @@
 **Phase:** 2 — Data preparation and EDA  
 **Level:** Beginner to Intermediate
 
-## 1. Learning objectives
-By the end, you can define the concept, explain why it is needed, use its basic syntax, interpret results and discuss its risks in a real ML workflow.
+## Learning Objectives
+- Explain Matplotlib and Seaborn.
+- Select charts based on the analytical question.
+- Create histograms, box plots, count plots and scatter plots.
+- Label charts correctly.
+- Recognize misleading visualizations.
 
-## 2. Definition from zero
+## 1. What Are Matplotlib and Seaborn?
+Matplotlib is a foundational Python plotting library. Seaborn provides higher-level statistical plots built on Matplotlib.
 
-**Matplotlib and Seaborn for ML Visualization:** Matplotlib is a foundational plotting library; Seaborn provides statistical visualizations built on Matplotlib.
+## 2. Histogram
+A histogram groups numeric values into bins and shows how frequently values occur.
 
-In simple terms, this is a step used to make data or a model more reliable. First understand what the input represents, what output is expected and what assumptions are being made.
-
-## 3. Why do we need it?
-
-It helps an ML engineer prepare trustworthy data, choose valid methods and avoid errors that otherwise affect model quality. Skipping it can lead to unreliable metrics or poor production decisions.
-
-## 4. Syntax and key operations
-
-Use histograms for distributions, box plots for spread, count plots for category frequency, scatter plots for relationships and heatmaps for correlation matrices. Label axes and units.
-
-### How to read a syntax example
-1. Identify the imported library or class.
-2. Identify the input data and its expected type/shape.
-3. Identify the method and its parameters.
-4. Inspect the output and validate it against the business meaning.
-
-## 5. Small worked example
-
-Use a tiny sample first. Calculate or predict the expected result manually, run the code, and compare. Then change one input and observe what changes. Finally test an empty, missing or unusual input where applicable.
-
-## 6. Real-time industry scenario
-
-**Scenario:** A product manager asks why returns increased. Plot return rates by category and month; raw return counts can mislead when sales volumes differ.
-
-### Senior developer approach
-- Clarify the business decision and prediction time.
-- Inspect representative records and source-system definitions.
-- Check assumptions, units, missingness and edge cases.
-- Choose the simplest method that solves the requirement.
-- Validate on data that was not used to fit the transformation/model.
-- Explain uncertainty and monitor after deployment.
-
-### What goes wrong if ignored?
-
-A chart without labels, correct denominators or representative data can mislead. Visualization supports investigation; it does not establish causation.
-
-## 7. Common mistakes
-
-| Mistake | Why it is a problem | Better practice |
-|---|---|---|
-| Applying a method without understanding the data | Output may be technically valid but semantically wrong | Check definitions, types, units and examples |
-| Learning preprocessing from all records | Evaluation becomes optimistic | Fit on training folds only |
-| Treating every unusual value as invalid | Valid rare cases may be lost | Investigate against domain rules |
-| Reporting one metric only | Important failure segments remain hidden | Evaluate segments and error costs |
-
-## 8. Interview-ready summary
-
-Explain the definition, why the step is required, its syntax, assumptions, a business example and the failure mode if it is skipped. Avoid claiming a cause before examining evidence.
-
-## 9. Self-check
-1. Define the topic in your own words.
-2. When should you use it and when should you avoid it?
-3. What assumptions must be checked?
-4. What can go wrong if it is skipped?
-5. How would you validate the result?
-
-## 10. Related interview practice
-See `day_17_interview.md` for scenario questions and model answers.
-
-
----
-
-## Detailed Beginner Teaching Expansion
-
-### From zero
-Matplotlib is a plotting library that gives control over figures and axes. Seaborn builds statistical charts with concise syntax and works on top of Matplotlib.
-
-### Choose the right chart
-| Chart | Question answered |
-|---|---|
-| Histogram | What is the distribution of a numeric feature? |
-| Box plot | How does spread and potential outlier behaviour differ by group? |
-| Scatter plot | How do two numeric features relate? |
-| Count plot | How many observations are in each category? |
-| Line plot | How does a metric change over time? |
-| Heatmap | What is the pattern in a matrix such as correlations? |
-
-### Syntax and explanation
 ```python
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-sns.histplot(data=df, x="monthly_charge", bins=20, kde=True)
-plt.title("Monthly charge distribution")
-plt.xlabel("Monthly charge (₹)")
-plt.ylabel("Number of customers")
+sns.histplot(data=df, x="amount", bins=20)
+plt.xlabel("Order amount")
+plt.ylabel("Number of orders")
 plt.show()
 ```
-- `data`: DataFrame supplying the data.
-- `x`: column mapped to horizontal axis.
-- `bins`: number of intervals.
-- `kde=True`: adds a smoothed density estimate.
-- Labels and units make the chart interpretable.
 
-### Chart quality rules
-Use clear titles, units, readable scales and appropriate denominators. Avoid truncated axes that exaggerate differences. For categories of different sizes, compare rates rather than raw counts.
+## 3. Three Chart Examples
+**Example 1 — Histogram:** inspect order amount distribution.
+```python
+sns.histplot(data=df, x="amount", bins=20)
+plt.show()
+```
+
+**Example 2 — Box plot:** compare order amounts by region.
+```python
+sns.boxplot(data=df, x="region", y="amount")
+plt.show()
+```
+
+**Example 3 — Scatter plot:** inspect relationship between discount and sales.
+```python
+sns.scatterplot(data=df, x="discount", y="sales")
+plt.show()
+```
+
+Other useful charts include countplot for category counts, lineplot for time trends and heatmap for correlation matrices.
+
+## 4. Chart Quality
+Always label axes, include units and time range, choose readable scales and compare rates when group sizes differ. A chart can show association but does not prove causation.
+
+## 5. Scenario Questions
+1. A region has more returns but also more orders. Which plot/measure should you use? Compare return rate, not only count.
+2. You want to see the distribution of salary. Which chart? Histogram or box plot.
+3. A graph's y-axis starts at 95 and exaggerates a small change. What is the issue? A potentially misleading truncated axis.
