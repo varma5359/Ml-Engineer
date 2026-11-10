@@ -337,6 +337,23 @@ This is a common pattern, not a guarantee for every dataset or threshold step.
 
 ## 9. Demonstrate how threshold changes predictions
 
+### 9.0 Import libraries for the threshold experiment
+
+~~~python
+import numpy as np
+import pandas as pd
+
+print("Threshold experiment libraries ready")
+~~~
+
+**Expected output**
+~~~text
+Threshold experiment libraries ready
+~~~
+
+**Explanation**
+NumPy creates the sample score arrays, and Pandas displays the threshold comparison table.
+
 ### 9.1 Create actual labels and model scores
 
 ~~~python
