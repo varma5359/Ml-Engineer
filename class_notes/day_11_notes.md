@@ -292,7 +292,7 @@ print(q1)
 **Expected output**
 
 ```text
-112.5
+116.25
 ```
 
 **Explanation**
@@ -360,7 +360,7 @@ print(upper_fence)
 **Expected output**
 
 ```text
-73.125 followed by 178.125
+82.5 followed by 172.5
 ```
 
 **Explanation**
