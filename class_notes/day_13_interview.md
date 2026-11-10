@@ -1,74 +1,74 @@
 # Day 13: Interview Questions — Train, Validation and Test Split
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. What is train, validation and test split?
-**Answer:** Training data fits model parameters. Validation data supports model and hyperparameter selection. Test data is held back for a final unbiased estimate.
+## Core concepts
 
-### Q2. Why is it important in an ML workflow?
-**Answer:** It improves the reliability of data preparation, training or evaluation. Repeatedly checking the test score during tuning leaks information from the test set into model selection. Keep it untouched until final evaluation.
+### Q1. Why split data into training and test sets?
+**Answer:** Training data fits the model. Test data is held back to estimate performance on unseen observations.
+**Follow-up:** What if you evaluate only on training data?  
+**Answer:** The result may reflect memorization rather than generalization.
 
-### Q3. What syntax or method would you use?
-**Answer:** Use train_test_split; stratify classification labels where appropriate. For time series, split chronologically. For related entities, keep groups together using group-aware splitting. I would explain the input, parameters, output and validation rather than reciting a function name.
+### Q2. What is the purpose of validation data?
+**Answer:** It supports model comparison, hyperparameter tuning and threshold selection during development.
+**Follow-up:** Why keep test data separate?  
+**Answer:** Repeatedly using test results for decisions makes the test set part of development.
 
-## Practical questions
+### Q3. What does random_state do?
+**Answer:** It makes a random split repeatable for the same data and implementation.
+**Follow-up:** Does it improve model quality?  
+**Answer:** No. It supports reproducibility only.
 
-### Q4. How do you know the operation worked correctly?
-**Answer:** Test a small known example, compare expected and actual output, inspect boundary cases and verify that the result still makes sense in the business domain.
+### Q4. What is stratified splitting?
+**Answer:** It attempts to preserve target-class proportions across subsets.
+**Follow-up:** Can it always be used?  
+**Answer:** No. Each class needs enough examples for the requested partitions.
 
-### Q5. What beginner mistake should you avoid?
-**Answer:** Applying a technique without checking assumptions or the meaning of the data. I would inspect source definitions, data types, units, missingness and output before using it downstream.
+## Scenario questions
 
-## Scenario-based interview questions
+### Q5. A churn dataset has 95% non-churn and 5% churn. What should you consider?
+**Answer:** Inspect class counts and use stratification if enough examples exist. Evaluate with metrics that reflect minority-class performance.
+**Follow-up:** What if there are only two churn examples?  
+**Answer:** The desired split may not be feasible; collect more data or redesign evaluation.
 
-### Q6. A churn dataset has monthly records per customer. Randomly splitting rows can put the same customer in train and test, making performance look better than it is.
-**Answer:** I would first clarify the business goal and gather examples of the issue. Then I would inspect source data, assumptions and the point in time at which each field becomes available. I would reproduce the problem on a small sample, test likely causes one at a time, select a correction based on evidence and validate it on held-out data. I would document limitations and monitor the outcome after release.
+### Q6. Each patient has ten records, and the goal is unseen-patient prediction. Which split?
+**Answer:** Group-based splitting by patient ID, so one patient's records do not appear in both train and test.
+**Follow-up:** What is the risk of random row splitting?  
+**Answer:** Patient-specific patterns can leak across subsets and inflate evaluation.
 
-### Q7. The aggregate metric is acceptable, but one important customer segment performs poorly. What do you do?
-**Answer:** I would calculate metrics and inspect data quality by segment, verify sample sizes, investigate whether the segment differs in behaviour or data capture, and discuss the error trade-off with the business owner. I would not hide the issue behind an overall average.
+### Q7. You are forecasting next month's sales. Can you randomly shuffle all months?
+**Answer:** Not for a realistic future forecast. Use a chronological split.
+**Follow-up:** What is rolling validation?  
+**Answer:** Repeatedly train on past observations and validate on a subsequent time window.
 
-### Q8. A teammate suggests an immediate fix without investigating the cause. How do you respond?
-**Answer:** I would ask for evidence and reproduce the failure. A quick change can mask the root cause or create a new defect. I would compare hypotheses, make the smallest safe change and add a regression test.
+### Q8. The test set has no positive examples. What do you do?
+**Answer:** Inspect class counts and split design. Stratify if feasible, or obtain more positive examples.
+**Follow-up:** Should you keep changing seeds until the score improves?  
+**Answer:** No. That creates selection bias.
 
-## Senior developer questions
+### Q9. The same customer appears in train and test. Is it always wrong?
+**Answer:** It depends on the deployment goal. For unseen-customer evaluation, group separation is needed. For future predictions on known customers, a time-aware design may be more suitable.
+**Follow-up:** What determines the split?  
+**Answer:** The real prediction scenario.
 
-### Q9. How do you choose between a simple and complex solution?
-**Answer:** Compare correctness, maintainability, latency, cost, explainability, data requirements and operational risk. Start with a baseline and add complexity only when repeatable validation and business impact justify it.
+### Q10. The team chooses the best of 50 models based on test score. Is the score independent?
+**Answer:** No. Test results influenced model selection. Use validation or cross-validation for decisions and reserve test data for final evaluation.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, missing and unknown values, output distributions, latency, errors, delayed ground-truth metrics and segment-level outcomes. Define owners and alert thresholds before release.
+## Code interpretation
 
-## Answer framework
-1. Clarify the decision and constraints.
-2. Inspect the data and assumptions.
-3. Diagnose using evidence.
-4. Choose the smallest safe correction.
-5. Validate normal and edge cases.
-6. Communicate trade-offs and limitations.
-7. Monitor after release.
+### Q11. What does test_size=0.2 mean?
+**Answer:** It reserves approximately 20% of observations for testing, subject to integer rounding.
+**Follow-up:** Does it always create exactly 20%?  
+**Answer:** Not necessarily for small datasets because row counts are integers.
 
+### Q12. Why pass X and y together to train_test_split?
+**Answer:** It keeps feature rows paired with their target values.
+**Follow-up:** What if they are split independently?  
+**Answer:** Features can become paired with incorrect labels.
 
----
+### Q13. What does GroupShuffleSplit use?
+**Answer:** It partitions groups rather than individual rows, keeping each group in one subset.
+**Follow-up:** What should groups contain?  
+**Answer:** The entity identifier that defines related observations, such as customer or patient ID.
 
-## Detailed Scenario and Technical Interview Expansion
-
-### Scenario: churn prediction from monthly customer snapshots
-The same customer appears in January, February and March. A random row split places January and February in training and March in test. The model may recognize customer-specific patterns, so test performance looks better than it will for entirely new customers.
-
-**Senior engineer response:** Define the deployment question first. If predicting future months for known customers, use a time-based design. If predicting for unseen customers, use a group split by customer ID. Make sure the test data reflects the actual future use case.
-
-### Scenario questions
-**Q1. Why do we need a validation set if we already have a test set?**  
-The validation set supports choices such as algorithm, hyperparameters and threshold. Repeatedly using the test set for these choices turns it into another validation set.
-
-**Q2. When should you use stratify=y?**  
-For classification where preserving approximate class proportions is important and each class has enough examples.
-
-**Q3. Why is random splitting dangerous for time series?**  
-It can train on future observations and test on past observations, which is not how forecasting works in production.
-
-**Q4. What is group leakage?**  
-Related records from the same entity appear in both training and test sets, allowing the model to benefit from entity-specific information.
-
-**Q5. If test performance is poor, can you tune the model against the test set?**  
-No. Diagnose using training/validation data. If the test set has been repeatedly consulted, create a new independent evaluation set if possible.
+**Senior developer principle:** A good split is not simply 80/20. It simulates the real prediction situation.
