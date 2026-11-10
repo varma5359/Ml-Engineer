@@ -1,49 +1,65 @@
-# Day 31: Interview Questions — Support Vector Machines and Maximum-Margin Hyperplanes
+# Day 31: Interview Questions — Support Vector Machines (SVM)
 
-## Beginner concepts
+**Pathway:** Machine Learning Engineer
 
-### Q1. Explain support vector machines and maximum-margin hyperplanes.
-**Answer:** SVM is a supervised algorithm that finds a decision boundary separating classes while maximizing the margin between the closest training points (support vectors).
+## Core concepts
 
-### Q2. Why is this method useful?
-**Answer:** It addresses a practical pattern-discovery or prediction need. Its suitability depends on the dataset, assumptions, target/goal and operational constraints.
+### Q1. What is SVM?
+**Answer:** A supervised algorithm that finds a decision boundary with a useful margin between classes. Kernel methods allow it to represent nonlinear boundaries.
+**Follow-up:** Is SVM used only for classification?  
+**Answer:** No. Support Vector Regression is also available.
 
-### Q3. Explain the basic implementation.
-**Answer:**
-```python
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler
-from sklearn.svm import SVC
-model = make_pipeline(StandardScaler(), SVC(kernel='rbf', C=1.0, gamma='scale'))
-model.fit(X_train, y_train)
-pred = model.predict(X_test)
-```
-I would explain the inputs, parameters, what fit learns, what the output represents and how I validate it.
+### Q2. What are support vectors?
+**Answer:** Training observations that are important in defining the decision boundary, typically observations closest to the boundary.
+**Follow-up:** Are support vectors automatically the most important business records?  
+**Answer:** No. They are important to the learned boundary, not necessarily to the business process.
 
-## Practical and scenario questions
+### Q3. What is the margin?
+**Answer:** It is the separation around the decision boundary. SVM tries to find a useful margin while managing classification errors.
+**Follow-up:** Does a larger margin always mean better test performance?  
+**Answer:** No. It depends on the data and regularization settings.
 
-### Q4. A bank separates legitimate and suspicious transactions using several behavioural features. SVM can form a boundary that is not a simple single-feature threshold.
-**Answer:** I would confirm the business objective and data meaning, inspect representative records, prepare features according to the algorithm's requirements, establish a baseline, fit using the appropriate training data and evaluate the output. I would inspect errors or group profiles, document assumptions and verify that the result is actionable.
+### Q4. What is the difference between linear and RBF kernels?
+**Answer:** A linear kernel creates a linear boundary in the input representation. RBF can model nonlinear boundaries by using similarity in feature space.
+**Follow-up:** Is RBF always better?  
+**Answer:** No. Compare using validation and consider complexity.
 
-### Q5. What is the most important limitation to explain to a stakeholder?
-**Answer:** SVM is sensitive to feature scaling and can be expensive on large datasets. A complex kernel can overfit. Tune C and kernel parameters using validation data.
+### Q5. What does C control?
+**Answer:** It controls how strongly training classification errors are penalized. Larger C fits training observations more strictly; smaller C allows a softer margin.
+**Follow-up:** What is a risk of very high C?  
+**Answer:** It may overfit.
 
-### Q6. The result changes significantly when you change one parameter. What do you do?
-**Answer:** Run a controlled sensitivity analysis across a reasonable parameter range, keep the data and evaluation method fixed, measure quality and stability, and choose based on validation and business usefulness rather than a single attractive result.
+### Q6. What does gamma control for an RBF kernel?
+**Answer:** It controls how local each training observation's influence is. High gamma can create complex local boundaries; low gamma creates smoother boundaries.
+**Follow-up:** What is a risk of very high gamma?  
+**Answer:** Overfitting.
 
-### Q7. A colleague says the algorithm's output is automatically the correct business answer. Do you agree?
-**Answer:** No. Algorithms produce outputs under assumptions. A developer must check data quality, interpret the result, compare with domain knowledge and validate against business outcomes.
+## Scenario questions
 
-### Q8. How would you prepare this method for production?
-**Answer:** Package preprocessing and the estimator consistently, validate input schema and ranges, record model/data versions, test edge cases, monitor input drift and outcomes, and define an owner and rollback procedure.
+### Q7. SVM performs poorly because income has a much larger range than age. What do you do?
+**Answer:** Scale features using a pipeline fitted on training data.
+**Follow-up:** Does scaling fix irrelevant features?  
+**Answer:** No. Irrelevant or noisy features can still distort the model.
 
-## Senior developer questions
+### Q8. Training accuracy is high but validation accuracy is low with high gamma. What may be happening?
+**Answer:** The model may be overfitting with overly local decision regions.
+**Follow-up:** What would you try?  
+**Answer:** Test lower gamma or different C values using validation or cross-validation.
 
-### Q9. How do you compare this method with an alternative?
-**Answer:** Use the same data protocol and compare relevant quality measures, stability, interpretability, latency, memory, operational complexity and business impact. Avoid choosing solely by algorithm popularity.
+### Q9. A linear SVM underfits but RBF performs better on validation. What might that indicate?
+**Answer:** The class relationship may be nonlinear and RBF captures it better.
+**Follow-up:** Should you choose RBF immediately?  
+**Answer:** Also consider stability, inference cost and the business need for interpretability.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, feature distributions, prediction/cluster distribution, runtime failures, latency, delayed labels or business outcomes, and changes across important segments. Define alerts and review ownership.
+### Q10. SVM training is slow on a very large dataset. What do you consider?
+**Answer:** Benchmark computational cost, simplify the model, use a suitable implementation or compare with algorithms that scale better for the task.
 
-## Interview answer structure
-Clarify the business question → explain the concept → state assumptions → describe implementation → validate output → explain limitations → recommend monitoring.
+## Practical questions
+
+### Q11. Why scale features for SVM?
+**Answer:** The margin and kernel calculations depend on feature geometry. Large feature ranges can dominate if inputs are not scaled.
+
+### Q12. Does SVC return probabilities by default?
+**Answer:** No. Probability estimates must be enabled explicitly, and their calibration should be assessed if they drive decisions.
+
+**Senior developer principle:** SVM performance depends on feature representation, scaling and parameter choices. Validate the complete workflow.
