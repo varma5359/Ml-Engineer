@@ -395,3 +395,154 @@ The loop processes every order, the function centralizes the review rule, and th
 - `break` exits a loop; `continue` skips the current iteration.
 - Functions package reusable logic; parameters accept inputs and `return` supplies a result.
 - Validate inputs and make business rules explicit.
+
+---
+
+## Expanded Beginner-to-Developer Teaching Layer
+
+# Day 03: Conditions, loops and functions
+
+**Pathway:** Machine Learning Engineer  
+**Phase:** 1 — Python, mathematics and statistics foundations  
+**Level:** Beginner foundations  
+**Learning focus:** Build understanding from first principles, implement correctly and explain engineering decisions.
+
+---
+
+## 1. Start Here: What Will You Learn?
+
+By the end of this lesson, you should be able to:
+- Define the key terms in simple language.
+- Explain why the concept is needed and which problem it solves.
+- Write and read the core syntax without memorizing blindly.
+- Apply the concept to a small practical example.
+- Recognize common errors and explain how to investigate them.
+- Discuss a realistic business scenario and its limitations.
+
+## 2. Beginner Definition
+
+**Conditions, loops and functions**
+
+A condition selects a path based on True or False. A loop repeats work. A function is a named reusable block that accepts inputs and may return a result.
+
+### Explain it in everyday language
+
+Think of this as a tool in a developer's toolbox. Before using it, identify the problem, understand what information goes in, what result should come out, and what assumptions are being made. The same technique can be useful in one situation and unsuitable in another.
+
+### Key terms
+
+| Term | Beginner-friendly meaning | Why it matters |
+|---|---|---|
+| Input | Information supplied to the process | Incorrect input produces unreliable results |
+| Output | Result produced by the process | Must match the business requirement |
+| Parameter | A value supplied to control an operation or learned by a model, depending on context | Know whether it is configured or learned |
+| Validation | Checking whether the result is correct and suitable | Prevents silent errors |
+| Generalization | Ability to work on new, unseen cases | Essential for real ML systems |
+
+## 3. Why Do We Need It?
+
+Use if/elif/else for decisions, for/while for repetition, and functions to organize repeated logic and make it testable.
+
+**Without this concept or step:** teams may produce incorrect outputs, waste compute, make poor business decisions or trust a result that does not work on new data. The exact risk depends on the application; investigate rather than assume.
+
+## 4. Syntax, Structure and How to Read It
+
+Watch indentation, infinite while loops, off-by-one ranges, missing return statements and functions that modify shared data unexpectedly.
+
+### Read the syntax carefully
+
+1. Identify the library or Python feature being used.
+2. Identify the input variable and its expected type/shape.
+3. Identify the operation or method being called.
+4. Check optional parameters and their defaults.
+5. Inspect the output and verify that it matches the intended result.
+
+### Practical example
+
+```python
+# A small, readable example related to the lesson
+def review_payment(amount):\n    if amount >= 50000:\n        return 'manual review'\n    return 'normal review'\n\nprint(review_payment(72000))
+```
+
+**Expected result:** The example demonstrates the basic operation. Exact numeric output depends on the input values and library version; run it in the same environment to verify.
+
+### Line-by-line explanation
+
+- The import statement loads the required library or class.
+- The input variable stores the data the operation will use.
+- The method/function performs the requested operation.
+- The print statement displays the result so that it can be checked.
+- In a real application, validate inputs and handle expected exceptions rather than assuming every record is valid.
+
+## 5. Worked Examples: From Simple to Practical
+
+### Example A — Understand the smallest case
+
+Start with a tiny input that can be checked manually. Predict what the output should be before running the code. This helps separate a coding error from a misunderstanding of the concept.
+
+### Example B — Change one input
+
+Change one value while keeping the rest constant. Observe which part of the output changes. This is a simple way to understand the effect of a parameter or feature.
+
+### Example C — Check a boundary case
+
+Test an empty input, a missing value, a very small value and a very large value where appropriate. Boundary testing often reveals bugs that normal examples do not show.
+
+## 6. Industry Scenario: Think Like a Senior Developer
+
+**Scenario:** A payment service checks whether a transaction exceeds a review threshold. It processes thousands of transactions, so a loop applies the same validation consistently; a function keeps the rule in one place.
+
+### How an experienced engineer approaches it
+
+1. Clarify the business objective and what decision the output will support.
+2. Identify the data available at the moment the prediction/operation must happen.
+3. Check data quality, definitions, units and edge cases.
+4. Choose the simplest method that meets the requirement.
+5. Validate on representative cases, including difficult cases.
+6. Explain uncertainty, limitations and the cost of mistakes.
+7. Monitor the result after release; real-world data and business behaviour can change.
+
+### What could go wrong?
+
+undefined
+
+### Senior developer's decision
+
+Syntax: if condition: ... elif condition: ... else: ...; for item in items: ...; def function_name(parameter): ... return result. Example: def classify_amount(x): return 'review' if x >= 50000 else 'normal'.
+
+## 7. Common Beginner Mistakes and Corrections
+
+| Mistake | Why it causes trouble | Better approach |
+|---|---|---|
+| Copying syntax without understanding inputs | Code may run on the wrong data | Check type, shape, units and meaning first |
+| Looking only at one successful example | Edge cases remain hidden | Test normal, boundary and invalid inputs |
+| Ignoring warnings or unexpected output | Errors can silently affect downstream steps | Inspect output and add assertions/checks |
+| Choosing a complex method immediately | Complexity makes debugging and maintenance harder | Establish a simple baseline first |
+| Reporting a metric without context | A number alone may hide business failure | Explain the metric, test data and error costs |
+
+## 8. Quick Revision Table
+
+| Question | Key point |
+|---|---|
+| What is it? | A condition selects a path based on True or False. A loop repeats work. A function is a named reusable block that accepts inputs and may return a result. |
+| Why use it? | Use if/elif/else for decisions, for/while for repetition, and functions to organize repeated logic and make it testable. |
+| Main practical use | A payment service checks whether a transaction exceeds a review threshold. It processes thousands of transactions, so a loop applies the same validation consistently; a function keeps the rule in one place. |
+| Main risk | undefined |
+| Engineering principle | Validate assumptions and unseen/boundary cases |
+
+## 9. Check Your Understanding
+
+Try answering without looking at the notes:
+1. Define the concept in your own words.
+2. What problem does it solve?
+3. What are the inputs and expected outputs?
+4. When would you avoid using it?
+5. What would you test before trusting the result?
+
+## 10. Interview Preparation
+
+Use the matching `day_03_interview.md` file for detailed interview questions, model answers, real-world troubleshooting scenarios and follow-up questions.
+
+---
+
+**Learning standard:** Understand the meaning first, then syntax, then practical use, then engineering trade-offs. A student should be able to explain the idea without reading code from the screen.
