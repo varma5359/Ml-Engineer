@@ -2,273 +2,103 @@
 
 **Pathway:** Machine Learning Engineer  
 **Phase:** 1 — Python, mathematics and statistics foundations  
-**Level:** Beginner to Intermediate  
-**Learning focus:** Understand the concepts, apply them correctly, and explain decisions in an interview.
+**Level:** Beginner to Intermediate
 
----
-
-## 1. Learning Objectives
-
+## Learning Objectives
 - Calculate and interpret mean and median.
-- Understand variance and standard deviation as measures of spread.
-- Recognize how outliers affect summary statistics.
-- Explain basic probability and conditional probability.
-- Understand common distributions used in ML.
-- Connect statistical thinking to model evaluation and business decisions.
+- Explain variance and standard deviation.
+- Understand how outliers affect averages.
+- Define probability and conditional probability.
+- Recognize common probability distributions.
+- Connect statistics with ML data analysis.
 
-## 2. Why Statistics Matters in ML
+## 1. Why Statistics Matters in ML
+Statistics helps us summarize data, understand variation, reason about uncertainty and evaluate patterns. Without it, developers may misinterpret averages, overlook unusual observations or make claims unsupported by data.
 
-Statistics helps engineers understand data before training, summarize patterns, reason about uncertainty and evaluate whether model results are meaningful.
+## 2. Mean
+**Definition:** Mean is the arithmetic average: add all values and divide by the number of values.
 
-Examples:
-
-- Mean and median summarize typical customer spending.
-- Standard deviation describes how much values vary.
-- Probability expresses uncertainty about an event.
-- Distributions describe how values are spread across possible outcomes.
-
-## 3. Mean (Average)
-
-The mean is the sum of all values divided by the number of values.
-
-Example monthly spends: `[100, 200, 300, 400]`
-
-- Sum = 1,000
-- Number of values = 4
-- Mean = 1,000 / 4 = 250
+**Formula in words:** sum of values / count of values.
 
 ```python
-import numpy as np
-
-spend = np.array([100, 200, 300, 400])
-print(np.mean(spend))
+values = [10, 20, 30, 40]
+print(sum(values) / len(values))
 ```
+Output: 25.0.
 
-Output: `250.0`
+**Three examples**
+1. Average daily sales: [100, 200, 300] → 200.
+2. Average marks: [60, 70, 80, 90] → 75.
+3. Average delivery time: [20, 25, 30] → 25 minutes.
 
-**When useful:** The mean is useful when values are reasonably balanced and extreme values do not dominate the summary.
-
-## 4. Median
-
-The median is the middle value after sorting the data. For an even number of values, it is the average of the two middle values.
-
-Example:
-
-- Values: `[100, 200, 300, 400, 500]`
-- Median = 300
-
-Even example:
-
-- Values: `[100, 200, 300, 400]`
-- Median = (200 + 300) / 2 = 250
+## 3. Median
+**Definition:** Median is the middle value after sorting. For an even number of values, it is the average of the two middle values.
 
 ```python
-values = np.array([100, 200, 300, 400, 500])
-print(np.median(values))
+import statistics
+print(statistics.median([10, 20, 30]))
+print(statistics.median([10, 20, 30, 40]))
 ```
+Output: 20 and 25.
 
-Output: `300.0`
+**Why use it?** Median is less affected by extreme values than mean.
 
-### Mean vs median when an outlier exists
+Example: salaries [25, 30, 32, 35, 500] (in thousands). The mean is pulled upward by 500, while the median is 32.
 
-Monthly customer spend:
-
-`[100, 120, 130, 150, 1500]`
-
-- Mean = 400
-- Median = 130
-
-The one very large value pulls the mean upward. The median better represents the middle customer in this example.
-
-| Mean | Median |
-|---|---|
-| Uses every value in the sum | Depends on the middle position(s) |
-| Sensitive to extreme values | More resistant to extreme values |
-| Useful for arithmetic averages | Useful for skewed distributions |
-
-## 5. Variance
-
-Variance measures the average squared distance of values from the mean. It describes spread.
-
-For a population, variance is the mean of squared deviations from the population mean. For a sample, the usual sample variance divides by `n - 1` rather than `n`.
-
-Example values: `[2, 4, 6]`
-
-- Mean = 4
-- Deviations = -2, 0, 2
-- Squared deviations = 4, 0, 4
-- Population variance = (4 + 0 + 4) / 3 = 2.667
+## 4. Variance
+**Definition:** Variance measures how spread out values are around the mean. It is the average squared deviation under the chosen population or sample convention.
 
 ```python
-values = np.array([2, 4, 6])
-print(np.var(values))          # Population variance, ddof=0
-print(np.var(values, ddof=1)) # Sample variance
+values = [2, 4, 6]
+print(statistics.pvariance(values))
+print(statistics.variance(values))
 ```
+Population variance and sample variance use different denominators; choose the one appropriate to the question.
 
-Output approximately:
-
-```text
-2.6667
-4.0
-```
-
-The sample calculation divides by 2, giving 4. Use the version that matches whether your data is treated as a complete population or a sample used to estimate a larger population.
-
-## 6. Standard Deviation
-
-Standard deviation is the square root of variance. It expresses spread in the same units as the original data.
-
-For `[2, 4, 6]`, population standard deviation is approximately 1.633.
+## 5. Standard Deviation
+**Definition:** Standard deviation is the square root of variance. It measures spread in the same units as the original data.
 
 ```python
-print(np.std(np.array([2, 4, 6])))
+values = [2, 4, 6]
+print(statistics.pstdev(values))
+print(statistics.stdev(values))
 ```
 
-**Output:** Approximately `1.63299`.
+**Three interpretations**
+1. Low standard deviation: values are relatively close to the mean.
+2. High standard deviation: values are more spread out.
+3. Same mean but different standard deviation: two groups can have the same average but very different consistency.
 
-Interpretation: a larger standard deviation indicates greater spread around the mean. It does not by itself tell us whether values are good or bad.
+## 6. Probability
+**Definition:** Probability measures how likely an event is, from 0 (impossible) to 1 (certain).
 
-## 7. Percentiles and Quartiles
+For equally likely outcomes: probability = favourable outcomes / total possible outcomes.
 
-A percentile tells us the value below which a specified percentage of observations falls.
+**Examples**
+1. Fair coin: probability of heads = 1/2 = 0.5.
+2. Fair six-sided die: probability of rolling 6 = 1/6.
+3. If 20 out of 100 orders are returned, observed return proportion = 0.20.
 
-- 25th percentile (Q1): approximately the lower quartile.
-- 50th percentile: median.
-- 75th percentile (Q3): approximately the upper quartile.
+Observed proportions are estimates from data, not guarantees about the next event.
 
-```python
-values = np.array([10, 20, 30, 40, 50, 60, 70, 80])
-print(np.percentile(values, [25, 50, 75]))
-```
+## 7. Conditional Probability
+**Definition:** Conditional probability is the probability of event A when event B is already known to have occurred.
 
-NumPy uses a specified percentile calculation method (default interpolation method); different tools or conventions may produce slightly different quartile values on small datasets.
+Notation in words: P(A given B) = P(A and B) / P(B), when P(B) > 0.
 
-## 8. Probability Basics
+**Example:** Among premium customers, 30 of 100 made a repeat purchase. The observed repeat-purchase rate conditional on being premium is 30/100 = 0.30.
 
-Probability measures how likely an event is, from 0 to 1 (or 0% to 100%).
-
-- 0: impossible under the defined model.
-- 1: certain under the defined model.
-- 0.5: 50% likelihood.
-
-For equally likely outcomes, probability of an event is:
-
-```text
-Number of favourable outcomes / Total number of possible outcomes
-```
-
-Example: A fair six-sided die has 6 equally likely outcomes. Probability of rolling a 4 is 1/6.
-
-### Empirical probability
-
-If 20 out of 100 historical deliveries were late, the observed late-delivery rate is 20/100 = 0.20 or 20%. This historical rate is an estimate and may not equal the future rate.
-
-## 9. Conditional Probability
-
-Conditional probability is the probability of an event given that another event has occurred.
-
-Example:
-
-Among 100 customers, 40 used a discount code. Of those 40, 12 returned the product.
-
-Probability of return given discount use = 12/40 = 0.30 or 30%.
-
-This is not the same as the overall return rate, which needs the total number of returns across all customers.
-
-## 10. Probability in Machine Learning
-
-A binary classifier may output an estimated probability for the positive class.
-
-Example:
-
-```text
-Customer A: estimated churn probability = 0.82
-Customer B: estimated churn probability = 0.18
-```
-
-These values represent model estimates, not guarantees. Whether they can be interpreted as well-calibrated probabilities should be tested with calibration evaluation.
-
-A decision threshold converts scores into labels. For example, with a threshold of 0.50, score 0.82 is classified positive and 0.18 negative. A different threshold may be appropriate when missing a churner is expensive or outreach capacity is limited.
-
-## 11. Common Distributions
-
-A probability distribution describes possible values and how probability is assigned to them.
-
-| Distribution | Main idea | Example |
+## 8. Common Distributions
+| Distribution | Meaning | Example |
 |---|---|---|
-| Bernoulli | One trial with two outcomes | Customer churns or does not churn |
-| Binomial | Number of successes across fixed independent trials with the same success probability | Number of successful deliveries in 20 trials under simplified assumptions |
-| Normal | Symmetric, bell-shaped continuous distribution | Measurement errors may be approximately normal in some settings |
-| Uniform | Values in a defined interval have equal density/probability | Random number generated uniformly between 0 and 1 |
-| Poisson | Count of events in a fixed interval under assumptions | Calls arriving per minute in a simplified model |
+| Normal | Continuous, bell-shaped distribution | Measurement variation around a typical value |
+| Binomial | Number of successes in fixed independent trials with same success probability | Number of successful deliveries in 10 trials |
+| Poisson | Count of events in a fixed interval under suitable assumptions | Calls arriving per minute |
+| Uniform | Outcomes have equal density/probability over a defined range | Idealized random number over an interval |
 
-### Normal distribution intuition
+Do not assume real business data follows a normal distribution. Inspect it.
 
-A normal distribution is symmetric around its mean. Values near the mean are more common than values far away, when the data genuinely follows this distribution.
-
-<Note: The 68–95–99.7 rule applies to a normal distribution: approximately 68% of values lie within 1 standard deviation of the mean, 95% within 2, and 99.7% within 3. This rule should not be assumed for every dataset.>
-
-## 12. Correlation Is Not Causation
-
-Two variables may move together without one causing the other.
-
-Example: Ice-cream sales and swimming incidents may both increase during hot weather. Temperature may influence both. It would be incorrect to conclude that ice-cream sales cause swimming incidents.
-
-In ML, a feature can help predict a target without causing it. Prediction and causal explanation are different goals.
-
-## 13. Industry Scenario — Delivery Delay Analysis
-
-A logistics company records delivery times (minutes): `[28, 30, 31, 32, 35, 90]`.
-
-- The mean is 41 minutes.
-- The median is 31.5 minutes.
-- The value 90 is unusually high relative to the others and pulls the mean upward.
-
-An analyst should investigate the 90-minute delivery rather than remove it automatically. It may represent a data error, a special route or a genuine operational delay.
-
-If the company predicts late delivery, it should define a late-delivery threshold, create labels consistently and evaluate false alerts versus missed delays.
-
-## 14. Common Mistakes
-
-- Using mean alone for heavily skewed data.
-- Confusing population and sample variance.
-- Saying standard deviation measures accuracy; it measures spread.
-- Treating an observed historical rate as a guaranteed future probability.
-- Assuming all data follows a normal distribution.
-- Treating correlation as proof of cause.
-- Treating a model score as a certainty without calibration and validation.
-
-## 15. Quick Revision
-
-- Mean = arithmetic average; median = middle value.
-- Variance measures average squared spread; standard deviation is its square root.
-- Probability quantifies uncertainty; conditional probability adds a condition.
-- Distributions describe how values or events are spread.
-- Statistical summaries must be interpreted in the context of the data and business question.
-
----
-
-## Beginner-to-Developer Expansion: More Examples and Real-World Reasoning
-
-### A. Start with the simplest meaning
-Before memorizing a function, explain the idea in your own words. Identify the input, output and the reason the operation exists. A correct syntax call on the wrong data is still a wrong solution.
-
-### B. Additional practical scenario
-Monthly salaries may be 25k, 28k, 30k, 32k and 500k. The mean is pulled upward by the extreme salary; the median better represents the middle employee in this skewed example.
-
-### C. Syntax and use: how to choose
-Mean is sum/count; median is the middle after sorting; variance measures squared spread; standard deviation is the square root of variance. Probability describes uncertainty, not certainty.
-
-### D. What happens if this is skipped?
-If a team reports only the mean, it can misrepresent a skewed population. Always inspect distribution and sample size.
-
-### E. Senior developer review checklist
-- Is the business definition clear?
-- Are input types, units, shape and missing values checked?
-- Can the result be verified on a small hand-checkable example?
-- Have normal, boundary and invalid cases been considered?
-- Is the approach simple enough to explain and maintain?
-- Are limitations and possible failure costs documented?
-
-### F. Explain it in an interview
-Use this order: definition → why it is needed → syntax or method → small example → real business scenario → what can go wrong → how you validate the result. Avoid answering with only a library function name.
+## 9. Scenario Questions
+1. A salary dataset has a few very high salaries. Which centre may better represent a typical employee? Median.
+2. Two stores have the same average sales but one has much more variation. Which measure helps compare consistency? Standard deviation.
+3. A fraud model predicts a probability of 0.8. Does it guarantee fraud? No; it is a probability estimate that must be evaluated and interpreted.
