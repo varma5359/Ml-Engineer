@@ -4,116 +4,50 @@
 **Phase:** 2 — Data preparation and EDA  
 **Level:** Beginner to Intermediate
 
-## 1. Learning objectives
-By the end, you can define the concept, explain why it is needed, use its basic syntax, interpret results and discuss its risks in a real ML workflow.
+## Learning Objectives
+- Define Exploratory Data Analysis.
+- Inspect dataset structure and summary statistics.
+- Select charts that answer specific questions.
+- Compare categories and numeric distributions.
+- Avoid confusing association with causation.
 
-## 2. Definition from zero
+## 1. What Is EDA?
+Exploratory Data Analysis (EDA) is the process of inspecting data to understand its structure, quality, distributions, patterns and relationships before modelling.
 
-**EDA, Distributions and Feature Relationships:** Exploratory Data Analysis is the structured inspection of data quality, distributions, segments and relationships before modelling.
-
-In simple terms, this is a step used to make data or a model more reliable. First understand what the input represents, what output is expected and what assumptions are being made.
-
-## 3. Why do we need it?
-
-It helps an ML engineer prepare trustworthy data, choose valid methods and avoid errors that otherwise affect model quality. Skipping it can lead to unreliable metrics or poor production decisions.
-
-## 4. Syntax and key operations
-
-Use describe(), value_counts(), groupby(), histograms, box plots, scatter plots and category counts. Choose each chart to answer a specific question.
-
-### How to read a syntax example
-1. Identify the imported library or class.
-2. Identify the input data and its expected type/shape.
-3. Identify the method and its parameters.
-4. Inspect the output and validate it against the business meaning.
-
-## 5. Small worked example
-
-Use a tiny sample first. Calculate or predict the expected result manually, run the code, and compare. Then change one input and observe what changes. Finally test an empty, missing or unusual input where applicable.
-
-## 6. Real-time industry scenario
-
-**Scenario:** An online store sees returns rise. Compare return rate by category, not just raw return count, because categories have different order volumes. Investigate before claiming a cause.
-
-### Senior developer approach
-- Clarify the business decision and prediction time.
-- Inspect representative records and source-system definitions.
-- Check assumptions, units, missingness and edge cases.
-- Choose the simplest method that solves the requirement.
-- Validate on data that was not used to fit the transformation/model.
-- Explain uncertainty and monitor after deployment.
-
-### What goes wrong if ignored?
-
-EDA reveals patterns and questions; it does not prove causation. Check sample sizes, missingness, units and time periods.
-
-## 7. Common mistakes
-
-| Mistake | Why it is a problem | Better practice |
-|---|---|---|
-| Applying a method without understanding the data | Output may be technically valid but semantically wrong | Check definitions, types, units and examples |
-| Learning preprocessing from all records | Evaluation becomes optimistic | Fit on training folds only |
-| Treating every unusual value as invalid | Valid rare cases may be lost | Investigate against domain rules |
-| Reporting one metric only | Important failure segments remain hidden | Evaluate segments and error costs |
-
-## 8. Interview-ready summary
-
-Explain the definition, why the step is required, its syntax, assumptions, a business example and the failure mode if it is skipped. Avoid claiming a cause before examining evidence.
-
-## 9. Self-check
-1. Define the topic in your own words.
-2. When should you use it and when should you avoid it?
-3. What assumptions must be checked?
-4. What can go wrong if it is skipped?
-5. How would you validate the result?
-
-## 10. Related interview practice
-See `day_14_interview.md` for scenario questions and model answers.
-
-
----
-
-## Detailed Beginner Teaching Expansion
-
-### Beginner explanation
-Exploratory Data Analysis (EDA) is the process of asking questions of a dataset before modelling. It helps you understand what each column means, how values are distributed, where data is missing, how groups differ and which relationships deserve further investigation.
-
-### Start with these inspection commands
+## 2. First Inspection Syntax
 ```python
-df.shape
 df.head()
+df.shape
 df.info()
 df.describe(include="all")
 df.isna().sum()
 df.nunique()
 ```
-- `shape`: number of rows and columns.
-- `head`: preview sample records.
-- `info`: data types and non-null counts.
-- `describe`: summary statistics.
-- `isna().sum()`: missing count per column.
-- `nunique`: number of distinct values.
+These commands show example rows, dimensions, types, summary statistics, missing counts and distinct-value counts.
 
-### Choose a chart based on the question
-| Question | Chart |
-|---|---|
-| How is one numeric field distributed? | Histogram |
-| Are there extreme values? | Box plot |
-| How do two numeric variables move together? | Scatter plot |
-| How many records belong to each category? | Count/bar plot |
-| How does a metric change over time? | Line plot |
-| How do numeric features correlate? | Correlation heatmap |
+## 3. Three Common EDA Examples
+1. Numeric distribution: histogram of order amount.
+2. Category comparison: count of orders by payment method.
+3. Relationship: scatter plot of advertising spend against sales.
 
-### Grouped business analysis
+## 4. Grouped Analysis
 ```python
-summary = df.groupby("region").agg(
-    orders=("order_id", "count"),
-    revenue=("revenue", "sum"),
-    avg_order_value=("revenue", "mean")
-)
+summary = df.groupby("region")["revenue"].agg(["count", "sum", "mean"])
 print(summary)
 ```
-This calculates several measures by region. Verify whether each row represents an order or a line item before interpreting the count.
+This reports count, total and average revenue per region. Confirm the row grain before interpreting count.
 
-### EDA is not proof of cause
-A relationship between discount and sales does not prove discounts caused the increase. Season, marketing, stock availability and customer mix may also explain the pattern.
+## 5. Choosing a Chart
+| Chart | Use |
+|---|---|
+| Histogram | Numeric distribution |
+| Box plot | Spread and potential extreme values |
+| Bar/count plot | Category comparison |
+| Scatter plot | Relationship between two numeric features |
+| Line plot | Change over time |
+| Heatmap | Matrix such as correlations |
+
+## 6. Scenario Questions
+1. Region A has twice the returns of Region B but also twice the orders. Which measure is fairer? Return rate.
+2. A scatter plot shows discount and sales rise together. Does discount cause sales? Not proven; other variables may influence both.
+3. A chart has no units or time period. What is missing? Context needed to interpret the result.
