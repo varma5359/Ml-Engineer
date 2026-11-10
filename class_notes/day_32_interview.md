@@ -1,44 +1,67 @@
-# Day 32: Interview Questions — Supervised Learning Comparison and Model Selection
+# Day 32: Interview Questions — Supervised Model Comparison and Model Selection
 
-## Beginner concepts
+**Pathway:** Machine Learning Engineer
 
-### Q1. Explain supervised learning comparison and model selection.
-**Answer:** Model selection means comparing candidate algorithms using the same problem definition, data split, preprocessing and evaluation criteria, then choosing the model that best meets business and technical requirements.
+## Core concepts
 
-### Q2. Why is this method useful?
-**Answer:** It addresses a practical pattern-discovery or prediction need. Its suitability depends on the dataset, assumptions, target/goal and operational constraints.
+### Q1. What is model selection?
+**Answer:** It is choosing a suitable model by comparing predictive performance, stability, error costs, interpretability and operational constraints.
+**Follow-up:** Is the highest accuracy model always best?  
+**Answer:** No. It may fail on an important class or be too slow or difficult to maintain.
 
-### Q3. Explain the basic implementation.
-**Answer:**
-```python
-Compare LogisticRegression, KNeighborsClassifier, DecisionTreeClassifier, RandomForestClassifier and SVC inside consistent pipelines. Use cross-validation and metrics suited to the business objective.
-```
-I would explain the inputs, parameters, what fit learns, what the output represents and how I validate it.
+### Q2. Why establish a baseline?
+**Answer:** It provides a simple reference so the team can determine whether a complex model adds meaningful value.
+**Follow-up:** What is a classification baseline?  
+**Answer:** A simple strategy such as predicting the most frequent training class.
 
-## Practical and scenario questions
+### Q3. Why use cross-validation?
+**Answer:** It evaluates models across multiple partitions and reduces reliance on one split. It supports more stable comparisons.
+**Follow-up:** Why use the same folds for all candidates?  
+**Answer:** It makes the comparison fair because each model sees the same validation partitions.
 
-### Q4. A churn team compares models. One has higher accuracy but lower recall; another finds more likely churners but creates more retention calls. The business must agree on the error trade-off.
-**Answer:** I would confirm the business objective and data meaning, inspect representative records, prepare features according to the algorithm's requirements, establish a baseline, fit using the appropriate training data and evaluate the output. I would inspect errors or group profiles, document assumptions and verify that the result is actionable.
+### Q4. What is the difference between underfitting and overfitting?
+**Answer:** Underfitting occurs when a model is too simple to capture useful patterns. Overfitting occurs when it fits training details but fails to generalize.
+**Follow-up:** How can you identify overfitting?  
+**Answer:** Compare training and validation performance and inspect the gap.
 
-### Q5. What is the most important limitation to explain to a stakeholder?
-**Answer:** Do not compare scores from different splits or select only by accuracy. Include latency, interpretability, stability, data needs and maintenance.
+## Scenario questions
 
-### Q6. The result changes significantly when you change one parameter. What do you do?
-**Answer:** Run a controlled sensitivity analysis across a reasonable parameter range, keep the data and evaluation method fixed, measure quality and stability, and choose based on validation and business usefulness rather than a single attractive result.
+### Q5. Model A has slightly higher mean F1 but much larger fold variation than Model B. What do you consider?
+**Answer:** Compare stability, sample size, business impact and the practical size of the difference. A more stable model may be preferable.
+**Follow-up:** Is standard deviation the only uncertainty measure?  
+**Answer:** No. Consider confidence intervals, sample size and the evaluation design where appropriate.
 
-### Q7. A colleague says the algorithm's output is automatically the correct business answer. Do you agree?
-**Answer:** No. Algorithms produce outputs under assumptions. A developer must check data quality, interpret the result, compare with domain knowledge and validate against business outcomes.
+### Q6. A complex model improves F1 slightly but doubles inference latency. What do you do?
+**Answer:** Determine whether the performance gain justifies the latency and operational cost under the service requirements.
+**Follow-up:** Who defines acceptable latency?  
+**Answer:** Product, engineering and business stakeholders should agree on service requirements.
 
-### Q8. How would you prepare this method for production?
-**Answer:** Package preprocessing and the estimator consistently, validate input schema and ranges, record model/data versions, test edge cases, monitor input drift and outcomes, and define an owner and rollback procedure.
+### Q7. One model has high accuracy but low fraud recall. Should it be selected?
+**Answer:** Not without reviewing the cost of missed fraud and appropriate class-level metrics such as recall and precision.
+**Follow-up:** Why can accuracy be misleading?  
+**Answer:** The majority class can dominate the score.
 
-## Senior developer questions
+### Q8. The team chooses the best model using test accuracy after trying many candidates. What is wrong?
+**Answer:** The test set has influenced model selection and is no longer an independent final evaluation.
+**Follow-up:** What should they use for selection?  
+**Answer:** Validation data or cross-validation, then reserve test data for final evaluation.
 
-### Q9. How do you compare this method with an alternative?
-**Answer:** Use the same data protocol and compare relevant quality measures, stability, interpretability, latency, memory, operational complexity and business impact. Avoid choosing solely by algorithm popularity.
+### Q9. Two models perform similarly. How do you choose?
+**Answer:** Compare stability, interpretability, latency, memory, reliability, data requirements and maintenance effort.
+**Follow-up:** Is a simpler model often worth considering?  
+**Answer:** Yes, if performance is comparable and it is easier to operate or explain.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, feature distributions, prediction/cluster distribution, runtime failures, latency, delayed labels or business outcomes, and changes across important segments. Define alerts and review ownership.
+## Code interpretation
 
-## Interview answer structure
-Clarify the business question → explain the concept → state assumptions → describe implementation → validate output → explain limitations → recommend monitoring.
+### Q10. What does StratifiedKFold do?
+**Answer:** It creates folds while attempting to preserve class proportions in each fold.
+**Follow-up:** Can it solve an extremely small minority class?  
+**Answer:** No. The data must contain enough examples to support the chosen number of folds.
+
+### Q11. Why use cross_validate with a Pipeline?
+**Answer:** Each fold fits preprocessing on its own training partition, reducing leakage during model comparison.
+
+### Q12. Why should the final test set be evaluated only after model selection?
+**Answer:** To keep it independent from development decisions and provide a more honest final performance estimate.
+
+**Senior developer principle:** Select a model for the real operating environment, not merely the best number in a notebook.
