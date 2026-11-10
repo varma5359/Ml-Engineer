@@ -69,3 +69,48 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_13_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### Beginner explanation
+A model can memorize the examples it sees. We therefore need separate data to check whether it can work on cases it has not trained on.
+
+- Training set: used to fit model parameters and preprocessing.
+- Validation set: used to compare models, tune hyperparameters and choose thresholds.
+- Test set: held back until the end to estimate final performance.
+
+A common starting point is 70/15/15 or 80/20, but the correct split depends on dataset size, time and repeated entities. There is no universal best percentage.
+
+### Syntax: train-test split
+```python
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.20,
+    random_state=42,
+    stratify=y
+)
+```
+- `X`: input features; `y`: target.
+- `test_size=0.20`: reserves 20% for testing.
+- `random_state=42`: makes the random split repeatable.
+- `stratify=y`: keeps class proportions approximately similar in both sets; use for classification when appropriate.
+
+### Three-way split
+First reserve the test set. Then split the remaining training portion into training and validation. Keep the test set untouched until the model and threshold are finalized.
+
+### Choose the split based on data structure
+| Data situation | Recommended approach |
+|---|---|
+| Independent rows | Random split |
+| Imbalanced classification | Stratified split |
+| Repeated customers/patients | Group-based split |
+| Time-dependent forecasting | Chronological split |
+| Data from different sites | Consider site/group holdout |
+
+### Why random_state matters
+It makes the same random split reproducible. It does not make the split automatically correct or guarantee a good model.
