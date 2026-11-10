@@ -1,48 +1,64 @@
 # Day 28: Interview Questions — Naive Bayes and Conditional Probability
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. Define naive bayes and conditional probability.
-**Answer:** Naive Bayes applies Bayes' theorem with a conditional-independence assumption between features given the class.
+## Core concepts
 
-### Q2. Why would you use it?
-**Answer:** It provides a systematic approach to learning patterns from data. Its suitability depends on the target, data quality, scale, assumptions and business cost of errors.
+### Q1. What is conditional probability?
+**Answer:** It describes the probability of an event when some other information is already known.
+**Follow-up:** Give an ML example.  
+**Answer:** The probability that an email is spam given that it contains particular words.
 
-### Q3. Explain the basic syntax.
-**Answer:** P(class|features) proportional to P(features|class) × P(class). Use MultinomialNB for non-negative word counts; GaussianNB for continuous Gaussian-like features. I would explain the input, parameters, fitted state and output, not simply quote the class name.
+### Q2. What is Naive Bayes?
+**Answer:** It is a family of probabilistic classifiers based on Bayes' theorem and a simplifying assumption that features are conditionally independent given the class.
+**Follow-up:** Why is the assumption called naive?  
+**Answer:** Real-world features are often related, so the assumption is a simplification.
 
-## Practical questions
+### Q3. Why can Naive Bayes still work when features are not independent?
+**Answer:** The simplification can still produce useful class rankings or predictions in some tasks, especially text classification. Its suitability must be evaluated empirically.
+**Follow-up:** Does it always outperform other classifiers?  
+**Answer:** No. Performance depends on the dataset and feature representation.
 
-### Q4. How do you know the model is learning useful patterns rather than memorizing?
-**Answer:** Compare training and validation performance, use an appropriate split, inspect error patterns and evaluate once on untouched test data. A large gap between training and validation can indicate overfitting.
-
-### Q5. What would you inspect before tuning the model?
-**Answer:** Target definition, missing values, data leakage, feature types, scaling needs, class balance, baseline performance and the validation strategy.
+### Q4. Compare GaussianNB, MultinomialNB and BernoulliNB.
+**Answer:** GaussianNB is used for continuous numerical features under a Gaussian assumption. MultinomialNB is common for non-negative counts or frequencies. BernoulliNB uses binary feature indicators.
+**Follow-up:** Which is a common starting point for word-count text features?  
+**Answer:** MultinomialNB.
 
 ## Scenario questions
 
-### Q6. An email filter learns word patterns from labelled spam and legitimate messages. It is fast and works well as a text baseline.
-**Answer:** I would clarify the business requirement, inspect examples and data quality, establish a baseline, train with leakage-safe preprocessing and validate on representative unseen data. I would compare relevant metrics, examine errors by segment and explain the cost of false positives and false negatives. I would not deploy based only on one aggregate score.
+### Q5. You are building a spam classifier from word counts. Which variant is a common starting point?
+**Answer:** MultinomialNB.
+**Follow-up:** What if the features only show whether each word appears?  
+**Answer:** BernoulliNB may be suitable.
 
-### Q7. Training performance is excellent but validation performance is poor. What might be happening?
-**Answer:** The model may be overfitting, the split may not represent deployment, the dataset may be small, or there may be leakage or distribution differences. I would check split logic, pipeline boundaries, model complexity and segment coverage before changing hyperparameters.
+### Q6. GaussianNB performs poorly. What do you investigate?
+**Answer:** Feature distributions, data quality, class balance, feature relevance and whether the Gaussian assumption is a reasonable approximation.
+**Follow-up:** Should you immediately discard Naive Bayes?  
+**Answer:** Compare it with a baseline and other suitable models using the same evaluation data.
 
-### Q8. A stakeholder asks you to improve accuracy, but missing a positive case is very expensive. What do you recommend?
-**Answer:** Clarify the cost of false negatives and false positives. Evaluate recall, precision, PR curve and confusion matrices across thresholds. Choose a threshold using validation data and business capacity, and explain the trade-off. Accuracy alone is not enough.
+### Q7. A spam classifier has high accuracy but misses most spam messages. What do you inspect?
+**Answer:** Class distribution, confusion matrix, spam recall, threshold and the cost of missed spam.
+**Follow-up:** Why is accuracy insufficient?  
+**Answer:** It can hide poor performance on the class that matters most.
 
-## Senior developer questions
+### Q8. A word appears frequently in both spam and legitimate messages. What should you expect?
+**Answer:** That word alone may provide limited class-discriminating evidence. The classifier combines evidence from multiple features.
+**Follow-up:** Does Naive Bayes understand word order?  
+**Answer:** A basic bag-of-words MultinomialNB pipeline does not represent word order.
 
-### Q9. How do you decide whether this method is suitable for production?
-**Answer:** Assess validated performance, latency, memory, explainability, stability, monitoring, data availability, retraining needs and operational ownership. A slightly weaker but reliable model may be preferable to a fragile complex one.
+### Q9. Why fit CountVectorizer on training text only?
+**Answer:** To prevent the test vocabulary from influencing preprocessing. Fit the vocabulary on training messages and transform held-out messages using that vocabulary.
+**Follow-up:** What happens to a test-only word?  
+**Answer:** It is not added to the learned vocabulary and does not create a new feature during transform.
 
-### Q10. What would you monitor after release?
-**Answer:** Input schema and data quality, missing/unknown values, prediction distribution, latency, errors, drift and delayed ground-truth metrics. Review performance by relevant segment and define rollback criteria.
+## Code interpretation
 
-## Structured scenario-answer method
-1. Clarify business impact.
-2. Gather evidence and representative examples.
-3. Identify likely causes without guessing.
-4. Test hypotheses one at a time.
-5. Choose a safe correction.
-6. Validate on unseen and edge-case data.
-7. Communicate trade-offs and monitor.
+### Q10. What does predict_proba() return?
+**Answer:** Estimated probabilities for each class, in the order shown by classes_.
+**Follow-up:** Are those probabilities guaranteed to be calibrated?  
+**Answer:** No. Calibration should be assessed if probabilities drive important decisions.
+
+### Q11. Why should MultinomialNB features be non-negative?
+**Answer:** Its feature model is designed for count or frequency-like non-negative inputs. Standard centered/scaled values can contain negatives and may be unsuitable.
+
+**Senior developer principle:** Select the Naive Bayes variant from the feature representation, then validate the simplifying assumptions against real data.
