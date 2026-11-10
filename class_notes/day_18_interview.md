@@ -46,3 +46,19 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: complex model does not beat baseline
+A delivery-delay model achieves 82% accuracy, while a majority-class baseline achieves 84%.
+
+**Senior answer:** Accuracy may be misleading if classes are imbalanced, so inspect confusion matrix, recall, precision and business costs. But if the candidate model truly does not improve relevant outcomes, do not deploy complexity without value.
+
+**Q1. Why create a baseline?** To establish a minimum reference and avoid claiming value from a model that does not outperform a simple strategy.  
+**Q2. Is random_state enough for reproducibility?** No. Data versions, code, package versions and preprocessing must also be recorded.  
+**Q3. Can a baseline be a business rule?** Yes, if it is a relevant existing decision process.  
+**Q4. What is experiment tracking?** Recording configurations, data/model versions and results so experiments can be compared and repeated.  
+**Q5. What if the model beats the baseline offline but fails live?** Compare data distribution, feature availability, preprocessing, timing, infrastructure and business process changes.
