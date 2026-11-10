@@ -69,3 +69,41 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_17_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### From zero
+Matplotlib is a plotting library that gives control over figures and axes. Seaborn builds statistical charts with concise syntax and works on top of Matplotlib.
+
+### Choose the right chart
+| Chart | Question answered |
+|---|---|
+| Histogram | What is the distribution of a numeric feature? |
+| Box plot | How does spread and potential outlier behaviour differ by group? |
+| Scatter plot | How do two numeric features relate? |
+| Count plot | How many observations are in each category? |
+| Line plot | How does a metric change over time? |
+| Heatmap | What is the pattern in a matrix such as correlations? |
+
+### Syntax and explanation
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+sns.histplot(data=df, x="monthly_charge", bins=20, kde=True)
+plt.title("Monthly charge distribution")
+plt.xlabel("Monthly charge (₹)")
+plt.ylabel("Number of customers")
+plt.show()
+```
+- `data`: DataFrame supplying the data.
+- `x`: column mapped to horizontal axis.
+- `bins`: number of intervals.
+- `kde=True`: adds a smoothed density estimate.
+- Labels and units make the chart interpretable.
+
+### Chart quality rules
+Use clear titles, units, readable scales and appropriate denominators. Avoid truncated axes that exaggerate differences. For categories of different sizes, compare rates rather than raw counts.
