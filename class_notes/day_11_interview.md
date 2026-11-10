@@ -46,3 +46,29 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: insurance claim values suddenly increase
+An insurer sees several claims much larger than the usual claim amount. A junior developer removes every value above the IQR fence. This improves the training score, but the model now performs poorly on expensive claims.
+
+**Senior engineer response:** First verify whether the claims are duplicates, currency/unit errors, genuine catastrophic claims or a change in the portfolio. Check source records and related fields, not only the amount column. If they are valid, retain them or use a robust modelling strategy. Evaluate performance separately for ordinary and high-value claims. Record the decision and its business owner.
+
+### Scenario questions
+**Q1. A value is flagged by IQR. Does that prove it is incorrect?**  
+No. IQR is a statistical screening rule, not a business truth. Verify the record against source data, units, domain limits and related features.
+
+**Q2. Should outlier thresholds be calculated before train-test splitting?**  
+No, when the thresholds influence model preprocessing. Split first and estimate thresholds on training data, then apply the learned rule to validation/test data.
+
+**Q3. A fraud model's rare high-value transactions are removed as outliers. What is the risk?**  
+The cleaning step may remove the very events the model is intended to detect. Rare does not mean invalid.
+
+**Q4. When might you prefer a log transformation over deletion?**  
+When values are valid and positive but strongly right-skewed, and reducing scale differences helps the model. Interpret transformed effects carefully.
+
+**Q5. How would you prove an outlier treatment helped?**  
+Compare a baseline and treated approach using the same split, relevant metrics, segment-level errors and business costs. Keep a final test set untouched.
