@@ -1,0 +1,355 @@
+# Day 02: Python Environment, Variables, Data Types and Operators
+
+**Pathway:** Machine Learning Engineer  
+**Phase:** 1 — Python, mathematics and statistics foundations  
+**Level:** Beginner to Intermediate  
+**Learning focus:** Understand the concepts, apply them correctly, and explain decisions in an interview.
+
+---
+
+## 1. Learning Objectives
+
+- Understand how Python code is executed in a development environment.
+- Create and use variables with meaningful names.
+- Identify Python's main built-in data types.
+- Convert between compatible types safely.
+- Use arithmetic, comparison, logical and assignment operators.
+- Understand why correct data types matter in data and ML workflows.
+
+## 2. What Is Python?
+
+Python is a general-purpose programming language used in automation, data analysis, machine learning, web development and scientific computing.
+
+ML engineers commonly use Python because its ecosystem includes NumPy, Pandas, Matplotlib, Seaborn and scikit-learn, along with deep-learning libraries.
+
+## 3. Setting Up a Python Environment
+
+A **Python environment** is the setup in which Python code runs, including the Python interpreter and installed packages.
+
+| Tool | Purpose |
+|---|---|
+| Python interpreter | Executes Python code |
+| VS Code | Code editor with extensions and terminal |
+| Jupyter Notebook | Runs code in separate cells and displays outputs |
+| Google Colab | Hosted notebook environment accessible through a browser |
+| pip | Installs Python packages |
+| Virtual environment | Keeps dependencies isolated for a project |
+
+### Check Python installation
+
+Run in a terminal:
+
+```bash
+python --version
+```
+
+If your system uses the Python launcher on Windows, you can also try:
+
+```bash
+py --version
+```
+
+### Create and activate a virtual environment (Windows PowerShell)
+
+```powershell
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+```
+
+**Explanation:**
+
+- `python -m venv .venv` creates an isolated environment in `.venv`.
+- The activation command makes that environment's Python and pip active in the terminal.
+- Upgrading pip updates the package installer inside the active environment.
+
+If PowerShell blocks activation due to execution policy, follow your organization's approved policy; do not change machine-wide security settings blindly. You can also invoke the environment's interpreter directly.
+
+### Install common data science libraries
+
+```bash
+python -m pip install numpy pandas matplotlib seaborn scikit-learn jupyter
+```
+
+**Important:** A package installed in one Python environment may not be available in another. In a notebook, verify which Python kernel is selected.
+
+## 4. What Is a Variable?
+
+A variable is a name that refers to a value stored by a Python program.
+
+```python
+customer_age = 28
+monthly_bill = 799.50
+customer_name = "Anita"
+is_active = True
+
+print(customer_age)
+print(monthly_bill)
+print(customer_name)
+print(is_active)
+```
+
+**Output:**
+
+```text
+28
+799.5
+Anita
+True
+```
+
+Explanation:
+
+- `customer_age` refers to an integer value.
+- `monthly_bill` refers to a decimal value.
+- `customer_name` refers to text.
+- `is_active` refers to a Boolean value.
+- `print()` displays values so we can inspect them.
+
+### Variable naming rules
+
+- A name can contain letters, digits and underscores.
+- A name cannot begin with a digit.
+- Names are case-sensitive: `age` and `Age` are different.
+- Python keywords such as `if`, `for` and `class` cannot be used as variable names.
+- Use descriptive names such as `monthly_revenue`, not vague names such as `x`, when practical.
+
+## 5. Python Data Types
+
+A data type describes the kind of value a variable refers to.
+
+| Type | Example | Use in ML/data work |
+|---|---|---|
+| `int` | `25` | Number of orders, age in whole years |
+| `float` | `25.75` | Price, probability, measurement |
+| `str` | `"Hyderabad"` | City, product category |
+| `bool` | `True` | Is customer active? |
+| `NoneType` | `None` | Missing/not-yet-assigned value in Python |
+
+### Inspect a value's type
+
+```python
+age = 25
+price = 499.99
+city = "Hyderabad"
+active = True
+result = None
+
+print(type(age))
+print(type(price))
+print(type(city))
+print(type(active))
+print(type(result))
+```
+
+**Output:**
+
+```text
+<class 'int'>
+<class 'float'>
+<class 'str'>
+<class 'bool'>
+<class 'NoneType'>
+```
+
+### Why data types matter
+
+Suppose a CSV file stores a price as text (`"1200"`) rather than a number. A calculation may fail or behave differently from what you expect. Data must be checked and converted appropriately before mathematical operations or model training.
+
+## 6. Type Conversion
+
+Type conversion changes a value from one type to another when the conversion is valid.
+
+```python
+age_text = "25"
+age_number = int(age_text)
+
+price_text = "1499.50"
+price_number = float(price_text)
+
+quantity = 3
+quantity_text = str(quantity)
+
+print(age_number + 5)
+print(price_number * 2)
+print(quantity_text)
+```
+
+**Output:**
+
+```text
+30
+2999.0
+3
+```
+
+### Invalid conversion
+
+```python
+value = "twenty"
+number = int(value)
+```
+
+This raises `ValueError` because the text `"twenty"` is not a valid integer representation.
+
+**Safer input handling:**
+
+```python
+raw_value = "27"
+
+try:
+    age = int(raw_value)
+    print("Age:", age)
+except ValueError:
+    print("Please provide age as a whole number.")
+```
+
+In production, validate input at the boundary and report useful errors rather than silently replacing invalid values.
+
+## 7. Operators in Python
+
+### 7.1 Arithmetic operators
+
+| Operator | Meaning | Example | Result |
+|---|---|---|---:|
+| `+` | Addition | `10 + 3` | 13 |
+| `-` | Subtraction | `10 - 3` | 7 |
+| `*` | Multiplication | `10 * 3` | 30 |
+| `/` | Division | `10 / 3` | 3.333... |
+| `//` | Floor division | `10 // 3` | 3 |
+| `%` | Remainder | `10 % 3` | 1 |
+| `**` | Power | `2 ** 3` | 8 |
+
+**Business example: calculate revenue**
+
+```python
+units_sold = 12
+unit_price = 250
+revenue = units_sold * unit_price
+
+print("Revenue:", revenue)
+```
+
+Output: `Revenue: 3000`
+
+### 7.2 Comparison operators
+
+Comparison operators return `True` or `False`.
+
+| Operator | Meaning | Example |
+|---|---|---|
+| `==` | Equal to | `score == 80` |
+| `!=` | Not equal to | `status != "active"` |
+| `>` | Greater than | `age > 18` |
+| `<` | Less than | `stock < 10` |
+| `>=` | Greater than or equal | `marks >= 40` |
+| `<=` | Less than or equal | `bill <= 1000` |
+
+```python
+model_score = 0.84
+minimum_score = 0.80
+
+print(model_score >= minimum_score)
+```
+
+Output: `True`
+
+The comparison says the score is at least the configured threshold. It does not prove the prediction is correct.
+
+### 7.3 Logical operators
+
+- `and`: both conditions must be true.
+- `or`: at least one condition must be true.
+- `not`: reverses a Boolean condition.
+
+```python
+age = 24
+has_account = True
+
+eligible_for_offer = age >= 18 and has_account
+print(eligible_for_offer)
+```
+
+Output: `True`
+
+### 7.4 Assignment operators
+
+```python
+total = 100
+total += 25   # same as total = total + 25
+total -= 10   # same as total = total - 10
+print(total)
+```
+
+Output: `115`
+
+## 8. Operator Precedence
+
+Python evaluates some operators before others. Parentheses make the intended order explicit.
+
+```python
+result_1 = 10 + 2 * 3
+result_2 = (10 + 2) * 3
+
+print(result_1)
+print(result_2)
+```
+
+Output:
+
+```text
+16
+36
+```
+
+Multiplication happens before addition in the first expression. Parentheses change the order in the second.
+
+## 9. Industry Scenario — Monthly Customer Value
+
+An e-commerce company wants to calculate a simple order value and check whether an order qualifies for free delivery.
+
+```python
+item_price = 850.0
+quantity = 2
+delivery_fee = 60.0
+free_delivery_limit = 1500.0
+
+subtotal = item_price * quantity
+
+if subtotal >= free_delivery_limit:
+    final_amount = subtotal
+else:
+    final_amount = subtotal + delivery_fee
+
+print("Subtotal:", subtotal)
+print("Final amount:", final_amount)
+```
+
+Output:
+
+```text
+Subtotal: 1700.0
+Final amount: 1700.0
+```
+
+The example shows how variables, numeric types, multiplication and comparisons combine in a business rule. This is not itself a trained ML model; it is a deterministic rule.
+
+## 10. Common Errors and Best Practices
+
+| Error / weak practice | Why it is a problem | Better approach |
+|---|---|---|
+| `"10" + 5` | String and integer cannot be added directly | Convert after validating |
+| Naming a variable `list` | Hides Python's built-in `list` name | Use `customer_records` |
+| Using `=` instead of `==` in a comparison | `=` assigns a value | Use `==` for equality checks |
+| Assuming CSV columns have correct types | Files may contain mixed or invalid values | Inspect and validate types |
+| Hard-coding unexplained constants | Business rules become difficult to maintain | Use clearly named variables/configuration |
+| Converting every value without checking | Invalid data may raise errors or be corrupted | Validate input and handle conversion errors |
+
+## 11. Quick Revision
+
+- A Python environment contains an interpreter and installed dependencies.
+- Variables are names referring to values.
+- Common types include integer, float, string, Boolean and None.
+- `type()` inspects a value's type; `int()`, `float()` and `str()` perform conversions.
+- Arithmetic operators calculate; comparison operators return Booleans; logical operators combine conditions.
+- Good data types and input validation are essential before ML computations.
