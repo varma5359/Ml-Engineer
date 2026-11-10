@@ -1,48 +1,71 @@
-# Day 29: Interview Questions — Decision Trees, Splits and Impurity
+# Day 29: Interview Questions — Decision Trees and Splitting Criteria
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. Define decision trees, splits and impurity.
-**Answer:** A decision tree recursively splits data using feature conditions. Classification splits reduce impurity such as Gini or entropy.
+## Core concepts
 
-### Q2. Why would you use it?
-**Answer:** It provides a systematic approach to learning patterns from data. Its suitability depends on the target, data quality, scale, assumptions and business cost of errors.
+### Q1. What is a Decision Tree?
+**Answer:** A supervised algorithm that predicts by following a sequence of feature-based questions from a root node to a leaf.
+**Follow-up:** What does a leaf contain?  
+**Answer:** A final class prediction or numerical prediction, depending on the tree type.
 
-### Q3. Explain the basic syntax.
-**Answer:** DecisionTreeClassifier(max_depth=4,min_samples_leaf=10,random_state=42).fit(X_train,y_train). I would explain the input, parameters, fitted state and output, not simply quote the class name.
+### Q2. What are root, branch and leaf nodes?
+**Answer:** The root is the first decision point, branches represent outcomes of decisions and leaves are terminal prediction nodes.
+**Follow-up:** What is tree depth?  
+**Answer:** The number of decision levels along a path from root to leaf.
 
-## Practical questions
+### Q3. What is Gini impurity?
+**Answer:** A measure of how mixed the class labels are within a node. A node containing only one class is pure.
+**Follow-up:** What does a useful split do?  
+**Answer:** It creates child groups that are more class-pure than the parent node.
 
-### Q4. How do you know the model is learning useful patterns rather than memorizing?
-**Answer:** Compare training and validation performance, use an appropriate split, inspect error patterns and evaluate once on untouched test data. A large gap between training and validation can indicate overfitting.
+### Q4. What is entropy?
+**Answer:** A measure of uncertainty in the class distribution. A split can be selected to reduce uncertainty in child nodes.
+**Follow-up:** Must you memorize formulas to explain it?  
+**Answer:** No. Explain the idea of class mixture and uncertainty.
 
-### Q5. What would you inspect before tuning the model?
-**Answer:** Target definition, missing values, data leakage, feature types, scaling needs, class balance, baseline performance and the validation strategy.
+### Q5. What is pruning?
+**Answer:** Reducing tree complexity by removing or restricting branches that do not provide enough useful predictive value.
+**Follow-up:** Why prune?  
+**Answer:** To reduce overfitting and improve generalization.
 
 ## Scenario questions
 
-### Q6. A loan team wants decision paths based on debt-to-income ratio, repayment history and income. A deep tree can memorize individual cases.
-**Answer:** I would clarify the business requirement, inspect examples and data quality, establish a baseline, train with leakage-safe preprocessing and validate on representative unseen data. I would compare relevant metrics, examine errors by segment and explain the cost of false positives and false negatives. I would not deploy based only on one aggregate score.
+### Q6. Training accuracy is 100%, but test accuracy is much lower. What may be happening?
+**Answer:** The tree may be too deep and overfitting training observations. Check depth, leaf size, leakage and split design.
+**Follow-up:** What settings can control complexity?  
+**Answer:** max_depth, min_samples_split, min_samples_leaf, max_leaf_nodes and pruning strength.
 
-### Q7. Training performance is excellent but validation performance is poor. What might be happening?
-**Answer:** The model may be overfitting, the split may not represent deployment, the dataset may be small, or there may be leakage or distribution differences. I would check split logic, pipeline boundaries, model complexity and segment coverage before changing hyperparameters.
+### Q7. A tree has hundreds of leaves and is difficult to explain. What can you do?
+**Answer:** Limit depth, increase minimum leaf size or prune the tree, then validate the trade-off.
+**Follow-up:** Does a shallow tree always perform better?  
+**Answer:** No. It may underfit. Compare on validation data.
 
-### Q8. A stakeholder asks you to improve accuracy, but missing a positive case is very expensive. What do you recommend?
-**Answer:** Clarify the cost of false negatives and false positives. Evaluate recall, precision, PR curve and confusion matrices across thresholds. Choose a threshold using validation data and business capacity, and explain the trade-off. Accuracy alone is not enough.
+### Q8. A feature has high impurity importance. Does it cause the target?
+**Answer:** No. Importance describes how the fitted tree used the feature for splits, not a causal effect.
+**Follow-up:** What is one limitation of impurity importance?  
+**Answer:** It can favour features with many possible split points and can be affected by correlated features.
 
-## Senior developer questions
+### Q9. A tree performs poorly on a minority class. What do you inspect?
+**Answer:** Class counts, confusion matrix, class weights, split strategy and whether the features contain useful information for that class.
+**Follow-up:** Is accuracy enough?  
+**Answer:** No. Inspect precision, recall and business costs.
 
-### Q9. How do you decide whether this method is suitable for production?
-**Answer:** Assess validated performance, latency, memory, explainability, stability, monitoring, data availability, retraining needs and operational ownership. A slightly weaker but reliable model may be preferable to a fragile complex one.
+### Q10. Does a Decision Tree require feature scaling?
+**Answer:** Ordinary trees are generally not sensitive to monotonic feature scaling because splits depend on feature ordering.
+**Follow-up:** Does that mean data cleaning is unnecessary?  
+**Answer:** No. Invalid values, leakage and inconsistent categories still need attention.
 
-### Q10. What would you monitor after release?
-**Answer:** Input schema and data quality, missing/unknown values, prediction distribution, latency, errors, drift and delayed ground-truth metrics. Review performance by relevant segment and define rollback criteria.
+## Code interpretation
 
-## Structured scenario-answer method
-1. Clarify business impact.
-2. Gather evidence and representative examples.
-3. Identify likely causes without guessing.
-4. Test hypotheses one at a time.
-5. Choose a safe correction.
-6. Validate on unseen and edge-case data.
-7. Communicate trade-offs and monitor.
+### Q11. What does max_depth=3 control?
+**Answer:** It limits the maximum number of decision levels in the tree.
+**Follow-up:** What is a trade-off?  
+**Answer:** A shallow tree is easier to interpret but may underfit.
+
+### Q12. What does min_samples_leaf do?
+**Answer:** It sets the minimum number of training observations allowed in a terminal leaf.
+**Follow-up:** Why can a larger value help?  
+**Answer:** It prevents very small leaves that may represent noise or individual records.
+
+**Senior developer principle:** A tree that explains every training row may simply have memorized the data. Validate complexity on unseen observations.
