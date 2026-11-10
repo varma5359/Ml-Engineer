@@ -46,3 +46,19 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: house price prediction
+A model predicts price from area, bedrooms and age. Errors are consistently positive for premium locations and negative for outer suburbs.
+
+**Senior answer:** Inspect residuals by location and price band. The model may omit location effects or use an inadequate functional form. Add meaningful location features if available at prediction time, validate on a proper split and compare with a baseline.
+
+**Q1. What does a coefficient mean?** Expected target change for a one-unit increase in that feature, holding other included features constant within the model.  
+**Q2. Does a coefficient prove causation?** No. Predictive association is not causal evidence.  
+**Q3. What is the intercept?** Predicted target when included features equal zero; it may not have a useful real-world interpretation if zero is outside the data range.  
+**Q4. Why inspect residuals?** Patterns can reveal nonlinearity, unequal variance, outliers or missing structure.  
+**Q5. Why split data?** To estimate performance on unseen cases rather than memorized training examples.
