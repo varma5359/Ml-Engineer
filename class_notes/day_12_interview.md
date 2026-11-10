@@ -1,74 +1,74 @@
 # Day 12: Interview Questions — Encoding Categorical Variables and Scaling Numerical Data
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. What is encoding categorical variables and scaling numerical data?
-**Answer:** Encoding converts categories into numeric representations. Scaling changes numeric feature magnitudes so that they are comparable.
+## Core concepts
 
-### Q2. Why is it important in an ML workflow?
-**Answer:** It improves the reliability of data preparation, training or evaluation. Arbitrary category numbers invent order, while fitting a scaler on the full dataset leaks test information. Use a ColumnTransformer and Pipeline for consistent training/inference.
+### Q1. Why do we encode categorical variables?
+**Answer:** Many estimators expect numerical inputs. Encoding converts category labels into a numerical representation.
+**Follow-up:** Should every category receive an arbitrary integer?  
+**Answer:** No. That may create an artificial order or distance for nominal categories.
 
-### Q3. What syntax or method would you use?
-**Answer:** One-hot encode unordered categories; use ordinal encoding only when a real order exists. StandardScaler uses (x - mean) / standard deviation; MinMaxScaler maps values to a chosen range. Fit transformations on training data only. I would explain the input, parameters, output and validation rather than reciting a function name.
+### Q2. What is one-hot encoding?
+**Answer:** It creates indicator columns for categories in a nominal feature.
+**Follow-up:** What is one drawback?  
+**Answer:** High-cardinality features can create many columns and increase dimensionality.
 
-## Practical questions
+### Q3. When is ordinal encoding suitable?
+**Answer:** When the categories have a meaningful order, such as Low, Medium and High, and the mapping is defined.
+**Follow-up:** Should cities be ordinal-encoded as 1, 2 and 3?  
+**Answer:** Not without a meaningful order; city names are nominal categories.
 
-### Q4. How do you know the operation worked correctly?
-**Answer:** Test a small known example, compare expected and actual output, inspect boundary cases and verify that the result still makes sense in the business domain.
+### Q4. Why scale numerical features?
+**Answer:** Distance-based and many gradient-based methods can be influenced by feature magnitude. Scaling puts numerical features on a more comparable scale.
+**Follow-up:** Do all algorithms require scaling?  
+**Answer:** No. Tree-based models are generally less sensitive to monotonic scaling.
 
-### Q5. What beginner mistake should you avoid?
-**Answer:** Applying a technique without checking assumptions or the meaning of the data. I would inspect source definitions, data types, units, missingness and output before using it downstream.
+### Q5. Compare StandardScaler and MinMaxScaler.
+**Answer:** StandardScaler centers features and scales their spread using training statistics. MinMaxScaler maps the training minimum and maximum to a chosen range, often zero to one.
+**Follow-up:** Is MinMaxScaler robust to extreme values?  
+**Answer:** No. Extreme minima or maxima can compress the other observations.
 
-## Scenario-based interview questions
+## Scenario questions
 
-### Q6. A loan dataset contains city, education, age and income. City has no natural ranking; education may have a defined order. KNN may be dominated by income unless numeric features are scaled.
-**Answer:** I would first clarify the business goal and gather examples of the issue. Then I would inspect source data, assumptions and the point in time at which each field becomes available. I would reproduce the problem on a small sample, test likely causes one at a time, select a correction based on evidence and validate it on held-out data. I would document limitations and monitor the outcome after release.
+### Q6. A developer maps Hyderabad=1, Chennai=2 and Vizag=3. What is the concern?
+**Answer:** The codes may imply a ranking that does not exist. Use an appropriate nominal encoding.
+**Follow-up:** Does a tree model automatically make arbitrary codes harmless?  
+**Answer:** No. The codes can still impose artificial split structure.
 
-### Q7. The aggregate metric is acceptable, but one important customer segment performs poorly. What do you do?
-**Answer:** I would calculate metrics and inspect data quality by segment, verify sample sizes, investigate whether the segment differs in behaviour or data capture, and discuss the error trade-off with the business owner. I would not hide the issue behind an overall average.
+### Q7. A KNN model is dominated by income rather than age. What do you investigate?
+**Answer:** Inspect units and feature ranges. Consider scaling numerical features using training-only fitted statistics and compare validation performance.
+**Follow-up:** Does scaling fix invalid data?  
+**Answer:** No. It does not fix incorrect units, leakage or poor feature definitions.
 
-### Q8. A teammate suggests an immediate fix without investigating the cause. How do you respond?
-**Answer:** I would ask for evidence and reproduce the failure. A quick change can mask the root cause or create a new defect. I would compare hypotheses, make the smallest safe change and add a regression test.
+### Q8. A new city appears in production. What should happen?
+**Answer:** Use a documented unknown-category policy, such as OneHotEncoder with handle_unknown="ignore", and monitor the new category.
+**Follow-up:** Does ignore mean the model has learned the new city?  
+**Answer:** No. It prevents an encoding error but does not create learned information about that category.
 
-## Senior developer questions
+### Q9. A scaler was fitted before train-test splitting. What is wrong?
+**Answer:** Held-out information influenced the scaling statistics. Split first, fit on training data and transform test data using the fitted scaler.
+**Follow-up:** How do you prevent this?  
+**Answer:** Use a Pipeline or ColumnTransformer inside the model evaluation workflow.
 
-### Q9. How do you choose between a simple and complex solution?
-**Answer:** Compare correctness, maintainability, latency, cost, explainability, data requirements and operational risk. Start with a baseline and add complexity only when repeatable validation and business impact justify it.
+### Q10. A tree-based model performs similarly with and without scaling. Is that surprising?
+**Answer:** No. Tree splits are generally less sensitive to monotonic feature scaling than distance-based methods.
+**Follow-up:** Should scaling be added automatically?  
+**Answer:** No. Match preprocessing to the estimator and validate.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, missing and unknown values, output distributions, latency, errors, delayed ground-truth metrics and segment-level outcomes. Define owners and alert thresholds before release.
+## Code interpretation
 
-## Answer framework
-1. Clarify the decision and constraints.
-2. Inspect the data and assumptions.
-3. Diagnose using evidence.
-4. Choose the smallest safe correction.
-5. Validate normal and edge cases.
-6. Communicate trade-offs and limitations.
-7. Monitor after release.
+### Q11. What does OneHotEncoder(handle_unknown="ignore") do?
+**Answer:** It learns categories during fit and avoids raising an error for unseen categories during transform.
+**Follow-up:** Does transform learn new categories?  
+**Answer:** No. New categories require an updated fit if they should become learned columns.
 
+### Q12. Difference between fit_transform() and transform()?
+**Answer:** fit_transform learns transformation parameters and applies them. transform applies parameters already learned.
+**Follow-up:** Which should be used on test data?  
+**Answer:** transform() using the object fitted on training data.
 
----
+### Q13. Why use ColumnTransformer with Pipeline?
+**Answer:** ColumnTransformer applies different transformations to selected column groups. Pipeline connects those transformations to the estimator and helps keep training and inference consistent.
 
-## Detailed Scenario and Technical Interview Expansion
-
-### Scenario: customer risk model uses city, education and salary
-A developer maps Hyderabad=1, Vizag=2 and Chennai=3. The model may interpret Chennai as “greater” than Hyderabad even though city has no numeric order. Salary is also measured in thousands while age is measured in years, so KNN distances may be dominated by salary.
-
-**Senior engineer response:** One-hot encode city. Use ordinal encoding for education only if the category order is real and documented. Scale continuous numeric fields for distance-based models. Put both operations in a ColumnTransformer/Pipeline so training and inference use identical transformations.
-
-### Scenario questions
-**Q1. Why is label encoding city risky?**  
-It assigns arbitrary numeric order to categories that have no natural ranking. One-hot encoding is often safer for nominal features.
-
-**Q2. Does every model require scaling?**  
-No. KNN, SVM and many gradient-based models are scale-sensitive. Decision trees and random forests generally do not require standard scaling.
-
-**Q3. Why must a scaler be fitted only on training data?**  
-The test set must simulate unseen future data. Learning its mean or range leaks information from the test distribution into training.
-
-**Q4. What if a new city appears at prediction time?**  
-Configure the encoder to handle unknown categories, for example OneHotEncoder(handle_unknown="ignore"), and monitor the new category frequency.
-
-**Q5. Why not scale the entire dataset before splitting?**  
-Because the scaling statistics would include validation/test observations and make the evaluation less independent.
+**Senior developer principle:** Preprocessing is part of the model. Training and production must use the same fitted transformation.
