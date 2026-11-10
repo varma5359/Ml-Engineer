@@ -43,4 +43,19 @@ Each day has a separate class-notes file and interview-question file. Days 1–1
 - Include common mistakes, limitations, validation steps and scenario-based interview answers.
 - Markdown only; no LaTeX. No daily projects or AI mentor prompts.
 
-**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–30 are covered in this folder; continue with Day 31 onward in order.
+**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–40 are covered in this folder; continue with Day 41 onward in order.
+
+## Days 31–40
+
+| Day | Topic | Class notes | Interview questions |
+|---:|---|---|---|
+| 31 | Support vector machines and maximum-margin hyperplanes | [Notes](day_31_notes.md) | [Interview](day_31_interview.md) |
+| 32 | Supervised learning comparison and model selection | [Notes](day_32_notes.md) | [Interview](day_32_interview.md) |
+| 33 | Clustering and unsupervised learning | [Notes](day_33_notes.md) | [Interview](day_33_interview.md) |
+| 34 | K-means and centroid-based clustering | [Notes](day_34_notes.md) | [Interview](day_34_interview.md) |
+| 35 | Elbow method and silhouette score | [Notes](day_35_notes.md) | [Interview](day_35_interview.md) |
+| 36 | Hierarchical clustering and dendrograms | [Notes](day_36_notes.md) | [Interview](day_36_interview.md) |
+| 37 | DBSCAN and density-based clustering | [Notes](day_37_notes.md) | [Interview](day_37_interview.md) |
+| 38 | PCA and dimensionality reduction | [Notes](day_38_notes.md) | [Interview](day_38_interview.md) |
+| 39 | Association rules and market basket analysis | [Notes](day_39_notes.md) | [Interview](day_39_interview.md) |
+| 40 | Anomaly detection concepts | [Notes](day_40_notes.md) | [Interview](day_40_interview.md) |
