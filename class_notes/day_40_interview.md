@@ -1,47 +1,45 @@
 # Day 40: Interview Questions — Anomaly Detection Concepts
 
-## Beginner concepts
+**Pathway:** Machine Learning Engineer
 
-### Q1. Explain anomaly detection concepts.
-**Answer:** Anomaly detection identifies observations that differ substantially from expected patterns. It can be supervised when anomalies are labelled or unsupervised/semi-supervised when labels are scarce.
+## Core concepts
 
-### Q2. Why is this method useful?
-**Answer:** It addresses a practical pattern-discovery or prediction need. Its suitability depends on the dataset, assumptions, target/goal and operational constraints.
+### Q1. What is anomaly detection?
+**Answer:** It identifies observations that differ from expected or common patterns and may require investigation.
+**Follow-up:** Does anomaly mean fraud?  
+**Answer:** No. An anomaly can be valid, erroneous or suspicious.
 
-### Q3. Explain the basic implementation.
-**Answer:**
-```python
-from sklearn.ensemble import IsolationForest
-model = IsolationForest(contamination=0.02, random_state=42)
-model.fit(X_train)
-labels = model.predict(X_new)  # -1 anomaly, 1 inlier
-```
-I would explain the inputs, parameters, what fit learns, what the output represents and how I validate it.
+### Q2. What is the difference between an anomaly and a data error?
+**Answer:** An anomaly is unusual relative to a pattern. A data error is incorrect information caused by collection, entry, parsing or system problems. An anomaly may be valid.
 
-## Practical and scenario questions
+### Q3. What is Isolation Forest?
+**Answer:** It isolates observations through randomized feature splits. Unusual observations are often isolated more easily than common ones.
+**Follow-up:** What does contamination mean?  
+**Answer:** It is an estimate of the expected outlier proportion used to set a threshold, not a guarantee of the true anomaly rate.
 
-### Q4. A payment platform looks for unusual combinations of amount, merchant, time and device. Alerts are reviewed by investigators rather than automatically treated as confirmed fraud.
-**Answer:** I would confirm the business objective and data meaning, inspect representative records, prepare features according to the algorithm's requirements, establish a baseline, fit using the appropriate training data and evaluate the output. I would inspect errors or group profiles, document assumptions and verify that the result is actionable.
+### Q4. What is Local Outlier Factor?
+**Answer:** It compares the local density around an observation with the density around its neighbours to identify unusual local patterns.
+**Follow-up:** What does n_neighbors control?  
+**Answer:** The size of the local neighbourhood used for comparison.
 
-### Q5. What is the most important limitation to explain to a stakeholder?
-**Answer:** Anomaly does not mean fraud. Rare legitimate activity can be flagged and subtle fraud can be missed. Alert capacity, investigation outcomes and changing behaviour must be monitored.
+### Q5. What is the difference between point, contextual and collective anomalies?
+**Answer:** A point anomaly is one unusual observation; a contextual anomaly is unusual in a specific context; a collective anomaly is an unusual group or sequence.
 
-### Q6. The result changes significantly when you change one parameter. What do you do?
-**Answer:** Run a controlled sensitivity analysis across a reasonable parameter range, keep the data and evaluation method fixed, measure quality and stability, and choose based on validation and business usefulness rather than a single attractive result.
+## Scenario questions
 
-### Q7. A colleague says the algorithm's output is automatically the correct business answer. Do you agree?
-**Answer:** No. Algorithms produce outputs under assumptions. A developer must check data quality, interpret the result, compare with domain knowledge and validate against business outcomes.
+### Q6. A detector flags a large transaction from a premium customer. What do you do?
+**Answer:** Review the customer's history, transaction context, source data and business rules before deciding whether it is suspicious.
 
-### Q8. How would you prepare this method for production?
-**Answer:** Package preprocessing and the estimator consistently, validate input schema and ranges, record model/data versions, test edge cases, monitor input drift and outcomes, and define an owner and rollback procedure.
+### Q7. Isolation Forest flags 20% of transactions but the review team can investigate only 2%. What do you consider?
+**Answer:** Revisit feature quality, threshold settings, ranking strategy and review capacity. Prioritize by risk and business impact.
 
-## Senior developer questions
+### Q8. A new fraud pattern is not detected because it looks similar to normal transactions. What is the limitation?
+**Answer:** Unsupervised anomaly detection cannot identify every harmful event. Labels, domain rules and better features may be required.
 
-### Q9. How do you compare this method with an alternative?
-**Answer:** Use the same data protocol and compare relevant quality measures, stability, interpretability, latency, memory, operational complexity and business impact. Avoid choosing solely by algorithm popularity.
+### Q9. The alert count doubles after a system update. What do you investigate?
+**Answer:** Input schema, units, missing values, feature distributions, source-system changes and threshold configuration before assuming customer behaviour changed.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, feature distributions, prediction/cluster distribution, runtime failures, latency, delayed labels or business outcomes, and changes across important segments. Define alerts and review ownership.
+### Q10. Why should flagged records not be deleted automatically?
+**Answer:** They may be valid rare events. Review them and apply a documented treatment policy.
 
-## Interview answer structure
-Clarify the business question → explain the concept → state assumptions → describe implementation → validate output → explain limitations → recommend monitoring.
+**Senior developer principle:** An anomaly detector produces investigation candidates, not final fraud or error decisions.
