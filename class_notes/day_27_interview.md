@@ -1,48 +1,65 @@
 # Day 27: Interview Questions — K-Nearest Neighbors and Distance Metrics
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. Define k-nearest neighbors and distance metrics.
-**Answer:** KNN predicts using labels or values of the nearest training examples according to a distance metric. It is a lazy learner that retains training observations.
+## Core concepts
 
-### Q2. Why would you use it?
-**Answer:** It provides a systematic approach to learning patterns from data. Its suitability depends on the target, data quality, scale, assumptions and business cost of errors.
+### Q1. What is K-Nearest Neighbors?
+**Answer:** KNN predicts a new observation using the labels or target values of nearby training observations. For classification it uses neighbour voting; for regression it combines neighbour target values.
+**Follow-up:** Why is it called a lazy learner?  
+**Answer:** It stores training observations and performs much of its computation when predictions are requested.
 
-### Q3. Explain the basic syntax.
-**Answer:** KNeighborsClassifier(n_neighbors=5, metric='minkowski'). Scale numeric features before distance calculations. I would explain the input, parameters, fitted state and output, not simply quote the class name.
+### Q2. What does K control?
+**Answer:** It controls how many neighbours contribute to a prediction. Small K can be sensitive to noise; large K can smooth over local patterns.
+**Follow-up:** Is there one best K for every dataset?  
+**Answer:** No. Select it using validation or cross-validation.
 
-## Practical questions
+### Q3. Why is feature scaling important for KNN?
+**Answer:** KNN uses distances. Features with larger numerical ranges can dominate distance calculations if they are not scaled appropriately.
+**Follow-up:** Should scaling be fitted on the full dataset?  
+**Answer:** No. Fit on training data only and transform held-out data.
 
-### Q4. How do you know the model is learning useful patterns rather than memorizing?
-**Answer:** Compare training and validation performance, use an appropriate split, inspect error patterns and evaluate once on untouched test data. A large gap between training and validation can indicate overfitting.
+### Q4. Compare Euclidean and Manhattan distance.
+**Answer:** Euclidean distance measures straight-line distance. Manhattan distance sums absolute differences across dimensions.
+**Follow-up:** Which one is always better?  
+**Answer:** Neither. Compare based on data representation and validation.
 
-### Q5. What would you inspect before tuning the model?
-**Answer:** Target definition, missing values, data leakage, feature types, scaling needs, class balance, baseline performance and the validation strategy.
+### Q5. What is distance weighting?
+**Answer:** It gives closer neighbours more influence than farther neighbours. Uniform weighting gives each selected neighbour equal influence.
 
 ## Scenario questions
 
-### Q6. A retailer classifies a new shopper using similar customers' purchase frequency and basket value.
-**Answer:** I would clarify the business requirement, inspect examples and data quality, establish a baseline, train with leakage-safe preprocessing and validate on representative unseen data. I would compare relevant metrics, examine errors by segment and explain the cost of false positives and false negatives. I would not deploy based only on one aggregate score.
+### Q6. KNN performs poorly because income ranges into millions while age ranges below 100. What do you do?
+**Answer:** Inspect feature units and scale numeric features inside a training pipeline.
+**Follow-up:** Does scaling fix irrelevant features?  
+**Answer:** No. Irrelevant or noisy features can still distort distance.
 
-### Q7. Training performance is excellent but validation performance is poor. What might be happening?
-**Answer:** The model may be overfitting, the split may not represent deployment, the dataset may be small, or there may be leakage or distribution differences. I would check split logic, pipeline boundaries, model complexity and segment coverage before changing hyperparameters.
+### Q7. K=1 performs well on training but poorly on validation. What may be happening?
+**Answer:** The model may be sensitive to individual training observations and overfit noise.
+**Follow-up:** What might you try?  
+**Answer:** Compare larger K values and suitable distance/weighting options on validation data.
 
-### Q8. A stakeholder asks you to improve accuracy, but missing a positive case is very expensive. What do you recommend?
-**Answer:** Clarify the cost of false negatives and false positives. Evaluate recall, precision, PR curve and confusion matrices across thresholds. Choose a threshold using validation data and business capacity, and explain the trade-off. Accuracy alone is not enough.
+### Q8. The dataset has hundreds of features. What is the concern?
+**Answer:** In high-dimensional spaces, distances may become less informative. Consider feature selection, dimensionality reduction or another model family.
+**Follow-up:** Would scaling alone solve it?  
+**Answer:** No. Scaling does not remove irrelevant dimensions.
 
-## Senior developer questions
+### Q9. KNN prediction is slow after deployment. What may explain it?
+**Answer:** KNN may need to compare a new observation with many stored training rows. Large datasets increase prediction cost and memory needs.
+**Follow-up:** What alternatives could you investigate?  
+**Answer:** Efficient neighbour-search structures, approximate search or a different estimator with faster inference.
 
-### Q9. How do you decide whether this method is suitable for production?
-**Answer:** Assess validated performance, latency, memory, explainability, stability, monitoring, data availability, retraining needs and operational ownership. A slightly weaker but reliable model may be preferable to a fragile complex one.
+### Q10. A new observation is far outside the training feature range. What is the concern?
+**Answer:** Its nearest training neighbours may still be poor analogues. Validate inputs and recognize that predictions outside the training distribution can be unreliable.
 
-### Q10. What would you monitor after release?
-**Answer:** Input schema and data quality, missing/unknown values, prediction distribution, latency, errors, drift and delayed ground-truth metrics. Review performance by relevant segment and define rollback criteria.
+## Code interpretation
 
-## Structured scenario-answer method
-1. Clarify business impact.
-2. Gather evidence and representative examples.
-3. Identify likely causes without guessing.
-4. Test hypotheses one at a time.
-5. Choose a safe correction.
-6. Validate on unseen and edge-case data.
-7. Communicate trade-offs and monitor.
+### Q11. What does n_neighbors=5 mean?
+**Answer:** Five nearest training observations contribute to the prediction.
+**Follow-up:** Does KNN learn five model coefficients?  
+**Answer:** No. It retains the training observations and uses them during prediction.
+
+### Q12. What is the difference between weights="uniform" and weights="distance"?
+**Answer:** Uniform gives each neighbour equal influence. Distance weighting gives closer neighbours more influence.
+
+**Senior developer principle:** KNN quality depends heavily on feature representation, scaling and the meaning of distance.
