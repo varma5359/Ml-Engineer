@@ -69,3 +69,29 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_18_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### From zero
+An ML workflow is the repeatable path from a business problem to a monitored model. A baseline is a simple reference approach used to judge whether a more complex model adds value. Reproducibility means being able to recreate a result using recorded data, code and settings.
+
+### Typical workflow
+Problem definition → data understanding → split → preprocessing → baseline → candidate models → evaluation → deployment → monitoring.
+
+### Baseline syntax
+```python
+from sklearn.dummy import DummyClassifier
+from sklearn.metrics import accuracy_score
+
+baseline = DummyClassifier(strategy="most_frequent")
+baseline.fit(X_train, y_train)
+pred = baseline.predict(X_test)
+print(accuracy_score(y_test, pred))
+```
+DummyClassifier predicts using a simple strategy, not learned feature relationships. For regression, DummyRegressor provides simple reference predictions.
+
+### What to record
+Dataset snapshot/version, target definition, feature list, split strategy, random seed, library versions, preprocessing, model parameters, metrics and code revision.
