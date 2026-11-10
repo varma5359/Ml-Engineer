@@ -1,4 +1,4 @@
-# Machine Learning Engineer — Day 01–43 Notes
+# Machine Learning Engineer — Day 01–53 Notes
 
 Each day has a separate class-notes file and interview-question file. The class notes reuse relevant Python and statistics teaching material where appropriate, adapt examples to machine learning, and use the Data Analyst Days 25–47 notes as a teaching reference for statistics, EDA and visualization. The ML career_path.md remains the authority for day titles and sequence.
 
@@ -63,5 +63,15 @@ Each day has a separate class-notes file and interview-question file. The class 
 | 41 | Unsupervised model interpretation | [Notes](day_41_notes.md) | [Interview](day_41_interview.md) |
 | 42 | Clustering evaluation and limitations | [Notes](day_42_notes.md) | [Interview](day_42_interview.md) |
 | 43 | Unsupervised learning project integration | [Notes](day_43_notes.md) | [Interview](day_43_interview.md) |
+| 44 | Confusion matrix and classification metrics | [Notes](day_44_notes.md) | [Interview](day_44_interview.md) |
+| 45 | Accuracy, precision, recall and F1-score | [Notes](day_45_notes.md) | [Interview](day_45_interview.md) |
+| 46 | ROC curve, AUC and PR curve | [Notes](day_46_notes.md) | [Interview](day_46_interview.md) |
+| 47 | Regression evaluation: MAE, MSE, RMSE and R² | [Notes](day_47_notes.md) | [Interview](day_47_interview.md) |
+| 48 | Cross-validation and hyperparameter tuning | [Notes](day_48_notes.md) | [Interview](day_48_interview.md) |
+| 49 | Feature selection and feature importance | [Notes](day_49_notes.md) | [Interview](day_49_interview.md) |
+| 50 | Feature engineering and transformation | [Notes](day_50_notes.md) | [Interview](day_50_interview.md) |
+| 51 | Imbalanced datasets and resampling concepts | [Notes](day_51_notes.md) | [Interview](day_51_interview.md) |
+| 52 | Model bias, variance and overfitting | [Notes](day_52_notes.md) | [Interview](day_52_interview.md) |
+| 53 | Model interpretability and responsible ML | [Notes](day_53_notes.md) | [Interview](day_53_interview.md) |
 
-**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–43 are covered in this folder; continue with Day 44 onward in syllabus order.
+**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–53 are covered in this folder; continue with Day 54 onward in syllabus order.
