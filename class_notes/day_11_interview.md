@@ -1,74 +1,85 @@
 # Day 11: Interview Questions — Outlier Detection and Treatment
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. What is outlier detection and treatment?
-**Answer:** An outlier is a value unusually far from the pattern of a dataset. It may be a data-entry error, a rare but valid event, or evidence of a new business condition.
+## Core concepts
 
-### Q2. Why is it important in an ML workflow?
-**Answer:** It improves the reliability of data preparation, training or evaluation. Blind deletion can remove the exact fraud cases or premium customers the model must detect. Compare model performance with and without treatment, using thresholds learned from training data only.
+### Q1. What is an outlier?
+**Answer:** An observation unusually far from the general pattern. It may be a data error, a valid rare event or a different population segment.
+**Follow-up:** Is every outlier an error?  
+**Answer:** No. Statistical rules flag values for investigation; they do not know business validity.
 
-### Q3. What syntax or method would you use?
-**Answer:** Use domain checks, box plots, IQR fences and z-scores as investigation tools. IQR = Q3 - Q1; lower fence = Q1 - 1.5 × IQR; upper fence = Q3 + 1.5 × IQR. I would explain the input, parameters, output and validation rather than reciting a function name.
+### Q2. Explain the IQR method.
+**Answer:** IQR is the spread between the first and third quartiles. A common fence-based rule flags unusually low or high values for review.
+**Follow-up:** Is the IQR fence a business limit?  
+**Answer:** No. It is a statistical screening rule.
 
-## Practical questions
+### Q3. What is a z-score?
+**Answer:** It describes how far a value is from the mean in standard-deviation units. It can be useful when the distribution is reasonably compatible with the method's assumptions.
+**Follow-up:** Why can it be sensitive to outliers?  
+**Answer:** The mean and standard deviation used to calculate it can themselves be affected by extreme observations.
 
-### Q4. How do you know the operation worked correctly?
-**Answer:** Test a small known example, compare expected and actual output, inspect boundary cases and verify that the result still makes sense in the business domain.
+### Q4. What is the difference between retaining, capping and removing an outlier?
+**Answer:** Retaining keeps a value, capping limits its magnitude and removing excludes a record. Each action changes the information available to the model.
+**Follow-up:** What should you preserve before capping?  
+**Answer:** Original values, learned boundaries and an audit of affected records.
 
-### Q5. What beginner mistake should you avoid?
-**Answer:** Applying a technique without checking assumptions or the meaning of the data. I would inspect source definitions, data types, units, missingness and output before using it downstream.
+## Scenario questions
 
-## Scenario-based interview questions
+### Q5. A transaction is 100 times larger than usual. Do you delete it?
+**Answer:** No. Verify whether it is a bulk order, premium transaction, currency issue, aggregation error or data-entry problem. Decide only after checking the source and target population.
+**Follow-up:** What if it is a valid rare event?  
+**Answer:** Retain it if it belongs to the task's population, and evaluate whether a robust method or transformation is suitable.
 
-### Q6. A ₹9 lakh payment among mostly ₹500–₹10,000 transactions might be fraud, a genuine bulk payment or an extra zero. Verify transaction source and customer context before deleting or capping it.
-**Answer:** I would first clarify the business goal and gather examples of the issue. Then I would inspect source data, assumptions and the point in time at which each field becomes available. I would reproduce the problem on a small sample, test likely causes one at a time, select a correction based on evidence and validate it on held-out data. I would document limitations and monitor the outcome after release.
+### Q6. The IQR method flags 8% of transactions. Is that too many?
+**Answer:** Not necessarily. Inspect the flagged records, segments, source validity and business process. Report the count and percentage with the treatment decision.
+**Follow-up:** Why include segment analysis?  
+**Answer:** A group of legitimate high-value customers may be incorrectly treated as anomalous when analysed together with all customers.
 
-### Q7. The aggregate metric is acceptable, but one important customer segment performs poorly. What do you do?
-**Answer:** I would calculate metrics and inspect data quality by segment, verify sample sizes, investigate whether the segment differs in behaviour or data capture, and discuss the error trade-off with the business owner. I would not hide the issue behind an overall average.
+### Q7. A box plot marks several points beyond its whiskers. Should they be removed?
+**Answer:** Not automatically. Whiskers are statistical conventions. Inspect original records and domain rules.
+**Follow-up:** What else can help?  
+**Answer:** Histograms, sorted values and group-level summaries.
 
-### Q8. A teammate suggests an immediate fix without investigating the cause. How do you respond?
-**Answer:** I would ask for evidence and reproduce the failure. A quick change can mask the root cause or create a new defect. I would compare hypotheses, make the smallest safe change and add a regression test.
+### Q8. Why must learned outlier thresholds use training data only?
+**Answer:** If validation or test observations contribute to the threshold, held-out data influences preprocessing. Learn thresholds on training data and apply them unchanged to held-out data.
+**Follow-up:** How can this be implemented consistently?  
+**Answer:** Include the transformation in a fitted preprocessing workflow or pipeline.
 
-## Senior developer questions
+### Q9. Your model performs poorly for high-value customers. What do you investigate?
+**Answer:** Compare sample sizes, feature distributions, data quality and prediction errors for that segment. Check whether the segment is underrepresented or behaves differently.
+**Follow-up:** Why isn't the overall metric enough?  
+**Answer:** Aggregate performance can hide a concentrated failure in an important segment.
 
-### Q9. How do you choose between a simple and complex solution?
-**Answer:** Compare correctness, maintainability, latency, cost, explainability, data requirements and operational risk. Start with a baseline and add complexity only when repeatable validation and business impact justify it.
+## Code interpretation
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, missing and unknown values, output distributions, latency, errors, delayed ground-truth metrics and segment-level outcomes. Define owners and alert thresholds before release.
+### Q10. What does this code calculate?
+```python
+q1 = series.quantile(0.25)
+q3 = series.quantile(0.75)
+iqr = q3 - q1
+```
+**Answer:** The first quartile, third quartile and interquartile range.
+**Follow-up:** Does it explain why a value is unusual?  
+**Answer:** No. The source and business context must be investigated.
 
-## Answer framework
-1. Clarify the decision and constraints.
-2. Inspect the data and assumptions.
-3. Diagnose using evidence.
-4. Choose the smallest safe correction.
-5. Validate normal and edge cases.
-6. Communicate trade-offs and limitations.
-7. Monitor after release.
+### Q11. What does clip(upper=100) do?
+**Answer:** It limits values above 100 to 100 and leaves smaller values unchanged.
+**Follow-up:** Why keep the original value?  
+**Answer:** To audit the transformation and understand how much information was changed.
 
+### Q12. What should you check before applying log()?
+**Answer:** Check for zero and negative values, the feature's meaning and the transformation's suitability.
+**Follow-up:** Why?  
+**Answer:** The ordinary real-valued logarithm is not defined for zero or negative values.
 
----
+## Interview approach
+1. Identify unusual observations.
+2. Check source and business meaning.
+3. Compare affected segments.
+4. Choose a justified treatment.
+5. Fit learned thresholds on training data only.
+6. Preserve originals and record changes.
+7. Evaluate impact on overall and segment-level performance.
 
-## Detailed Scenario and Technical Interview Expansion
-
-### Scenario: insurance claim values suddenly increase
-An insurer sees several claims much larger than the usual claim amount. A junior developer removes every value above the IQR fence. This improves the training score, but the model now performs poorly on expensive claims.
-
-**Senior engineer response:** First verify whether the claims are duplicates, currency/unit errors, genuine catastrophic claims or a change in the portfolio. Check source records and related fields, not only the amount column. If they are valid, retain them or use a robust modelling strategy. Evaluate performance separately for ordinary and high-value claims. Record the decision and its business owner.
-
-### Scenario questions
-**Q1. A value is flagged by IQR. Does that prove it is incorrect?**  
-No. IQR is a statistical screening rule, not a business truth. Verify the record against source data, units, domain limits and related features.
-
-**Q2. Should outlier thresholds be calculated before train-test splitting?**  
-No, when the thresholds influence model preprocessing. Split first and estimate thresholds on training data, then apply the learned rule to validation/test data.
-
-**Q3. A fraud model's rare high-value transactions are removed as outliers. What is the risk?**  
-The cleaning step may remove the very events the model is intended to detect. Rare does not mean invalid.
-
-**Q4. When might you prefer a log transformation over deletion?**  
-When values are valid and positive but strongly right-skewed, and reducing scale differences helps the model. Interpret transformed effects carefully.
-
-**Q5. How would you prove an outlier treatment helped?**  
-Compare a baseline and treated approach using the same split, relevant metrics, segment-level errors and business costs. Keep a final test set untouched.
+**Senior developer principle:** Outlier detection is an investigation step, not a delete command.
