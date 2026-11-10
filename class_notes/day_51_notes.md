@@ -390,6 +390,14 @@ print(
 
 ## 11. Strategy 4 — SMOTE
 
+**Environment note:** SMOTE and the imbalanced-learn Pipeline require the imbalanced-learn package. If it is not installed in your notebook environment, run this setup command in a separate cell:
+
+~~~python
+%pip install imbalanced-learn
+~~~
+
+Restart the notebook kernel if your environment asks you to do so, then continue with the imports below.
+
 **SMOTE** means Synthetic Minority Over-sampling Technique.
 
 Instead of only duplicating minority observations, SMOTE creates synthetic minority samples using neighbouring minority observations.
