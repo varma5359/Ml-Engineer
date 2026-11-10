@@ -1,4 +1,4 @@
-# Machine Learning Engineer — Day 01–40 Notes
+# Machine Learning Engineer — Day 01–43 Notes
 
 Each day has a separate class-notes file and interview-question file. The class notes reuse relevant Python and statistics teaching material where appropriate, adapt examples to machine learning, and use the Data Analyst Days 25–47 notes as a teaching reference for statistics, EDA and visualization. The ML career_path.md remains the authority for day titles and sequence.
 
@@ -60,5 +60,8 @@ Each day has a separate class-notes file and interview-question file. The class 
 | 38 | PCA and dimensionality reduction | [Notes](day_38_notes.md) | [Interview](day_38_interview.md) |
 | 39 | Association rules | [Notes](day_39_notes.md) | [Interview](day_39_interview.md) |
 | 40 | Anomaly detection | [Notes](day_40_notes.md) | [Interview](day_40_interview.md) |
+| 41 | Unsupervised model interpretation | [Notes](day_41_notes.md) | [Interview](day_41_interview.md) |
+| 42 | Clustering evaluation and limitations | [Notes](day_42_notes.md) | [Interview](day_42_interview.md) |
+| 43 | Unsupervised learning project integration | [Notes](day_43_notes.md) | [Interview](day_43_interview.md) |
 
-**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–40 are covered in this folder; continue with Day 41 onward in syllabus order.
+**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–43 are covered in this folder; continue with Day 44 onward in syllabus order.
