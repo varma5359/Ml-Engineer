@@ -1,49 +1,47 @@
 # Day 38: Interview Questions — Principal Component Analysis and Dimensionality Reduction
 
-## Beginner concepts
+**Pathway:** Machine Learning Engineer
 
-### Q1. Explain principal component analysis and dimensionality reduction.
-**Answer:** PCA transforms correlated numeric features into new orthogonal directions called principal components, ordered by the amount of variance they explain.
+### Q1. What is dimensionality reduction?
+**Answer:** It reduces the number of input dimensions while attempting to preserve useful information.
+**Follow-up:** Why might it help?  
+**Answer:** It can reduce redundancy, computation and difficulty visualizing high-dimensional data.
 
-### Q2. Why is this method useful?
-**Answer:** It addresses a practical pattern-discovery or prediction need. Its suitability depends on the dataset, assumptions, target/goal and operational constraints.
+### Q2. What is PCA?
+**Answer:** It is an unsupervised technique that creates new combined features called principal components, ordered by how much variation they represent.
+**Follow-up:** Does PCA select original columns?  
+**Answer:** No. It creates combinations of original features.
 
-### Q3. Explain the basic implementation.
-**Answer:**
-```python
-from sklearn.decomposition import PCA
-from sklearn.preprocessing import StandardScaler
-X_scaled = StandardScaler().fit_transform(X_train)
-pca = PCA(n_components=0.95)
-X_reduced = pca.fit_transform(X_scaled)
-print(pca.n_components_)
-```
-I would explain the inputs, parameters, what fit learns, what the output represents and how I validate it.
+### Q3. What is explained variance ratio?
+**Answer:** It describes the share of original feature variation represented by a principal component.
+**Follow-up:** Does high explained variance guarantee high classification accuracy?  
+**Answer:** No. PCA does not use the target and may preserve variation that is not useful for predicting it.
 
-## Practical and scenario questions
+### Q4. Why scale features before PCA?
+**Answer:** PCA is influenced by feature variance. If units differ greatly, large-scale features can dominate the components.
+**Follow-up:** Is scaling always identical for every dataset?  
+**Answer:** No. Choose preprocessing based on units, distributions and the task.
 
-### Q4. A sensor dataset contains dozens of correlated measurements. PCA can compress much of the variation into fewer components for visualization or modelling.
-**Answer:** I would confirm the business objective and data meaning, inspect representative records, prepare features according to the algorithm's requirements, establish a baseline, fit using the appropriate training data and evaluate the output. I would inspect errors or group profiles, document assumptions and verify that the result is actionable.
+### Q5. What are component loadings?
+**Answer:** They describe how original features contribute to a principal component.
+**Follow-up:** Is PC1 automatically a business concept?  
+**Answer:** No. Interpret it by examining loadings and domain context.
 
-### Q5. What is the most important limitation to explain to a stakeholder?
-**Answer:** PCA components are combinations of original features and may be hard to explain. Scale when units differ, fit PCA only on training data and remember variance retained is not the same as predictive usefulness.
+## Scenario questions
 
-### Q6. The result changes significantly when you change one parameter. What do you do?
-**Answer:** Run a controlled sensitivity analysis across a reasonable parameter range, keep the data and evaluation method fixed, measure quality and stability, and choose based on validation and business usefulness rather than a single attractive result.
+### Q6. A dataset has 500 numerical features. What might PCA help with?
+**Answer:** It can create a smaller representation that retains a chosen share of feature variation, helping exploration or modelling.
 
-### Q7. A colleague says the algorithm's output is automatically the correct business answer. Do you agree?
-**Answer:** No. Algorithms produce outputs under assumptions. A developer must check data quality, interpret the result, compare with domain knowledge and validate against business outcomes.
+### Q7. PCA retains 95% of variation but model accuracy decreases. Is that possible?
+**Answer:** Yes. PCA preserves overall feature variation, not necessarily the information most useful for predicting the target.
 
-### Q8. How would you prepare this method for production?
-**Answer:** Package preprocessing and the estimator consistently, validate input schema and ranges, record model/data versions, test edge cases, monitor input drift and outcomes, and define an owner and rollback procedure.
+### Q8. Should PCA be fitted before train-test split?
+**Answer:** No. Fit PCA on training data only and transform held-out data using the fitted components.
 
-## Senior developer questions
+### Q9. A business team cannot interpret principal components. What can you do?
+**Answer:** Show original-feature loadings, compare with original features and assess whether interpretability requirements justify PCA.
 
-### Q9. How do you compare this method with an alternative?
-**Answer:** Use the same data protocol and compare relevant quality measures, stability, interpretability, latency, memory, operational complexity and business impact. Avoid choosing solely by algorithm popularity.
+### Q10. Does PCA guarantee better model performance?
+**Answer:** No. Compare a model using original features with one using PCA under the same validation strategy.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, feature distributions, prediction/cluster distribution, runtime failures, latency, delayed labels or business outcomes, and changes across important segments. Define alerts and review ownership.
-
-## Interview answer structure
-Clarify the business question → explain the concept → state assumptions → describe implementation → validate output → explain limitations → recommend monitoring.
+**Senior developer principle:** PCA compresses feature variation; it does not guarantee that the compressed representation preserves the target information.
