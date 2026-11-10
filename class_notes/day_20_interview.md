@@ -46,3 +46,19 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: good average error, bad luxury predictions
+A property model has acceptable overall MAE but repeatedly underestimates expensive properties.
+
+**Senior answer:** Segment residuals by price band and location, inspect data coverage and feature representation, and discuss whether large-value errors have greater business cost. Evaluate alternative features/models using validation data.
+
+**Q1. Why is RMSE more sensitive to large errors than MAE?** Squaring gives larger errors disproportionately more weight.  
+**Q2. Can R² be negative?** Yes. On evaluation data the model can perform worse than predicting the mean baseline.  
+**Q3. What does a residual plot with a curve indicate?** The model may be missing a nonlinear relationship.  
+**Q4. Should you optimize the metric with the smallest number?** Not automatically; choose based on target units, business error costs and robustness.  
+**Q5. Why is training error not enough?** It does not estimate performance on unseen observations.
