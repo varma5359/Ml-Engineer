@@ -4,63 +4,37 @@
 **Phase:** 3 — Supervised learning  
 **Level:** Beginner to Intermediate
 
-## 1. Learning objectives
-Define the topic, explain its purpose, write its core syntax, interpret outputs, identify assumptions and discuss its limitations in a business setting.
+## Learning Objectives
+- Define KNN and how it makes predictions.
+- Explain k and distance metrics.
+- Understand why scaling matters.
+- Recognize high-dimensionality and performance limits.
 
-## 2. Definition from zero
+## 1. Definition
+K-Nearest Neighbors (KNN) predicts using the labels or values of the nearest training observations under a chosen distance measure. It is called a lazy learner because it stores examples rather than learning a compact parameterized model during fitting.
 
-**K-Nearest Neighbors and Distance Metrics:** KNN predicts using labels or values of the nearest training examples according to a distance metric. It is a lazy learner that retains training observations.
+## 2. Syntax
+```python
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
 
-In simple language, this method helps a computer learn a relationship from examples. Understand what is supplied, what is learned and what result is expected before opening the library documentation.
+model = make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=5))
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+```
 
-## 3. Why it is needed
+## 3. Three Examples
+1. Classify a new shopper using similar customers' purchase frequency and spend.
+2. Predict whether a flower belongs to a species using similar measurements.
+3. Estimate a numeric property value from nearby examples (KNeighborsRegressor).
 
-It gives an engineer a systematic way to learn from historical examples rather than hard-coding every possible case. It is useful only when the data, target and evaluation setup match the real decision.
+## 4. Important Choices
+- k: number of neighbours.
+- Distance: Euclidean/Manhattan or another supported metric.
+- Scaling: important because features with large units can dominate distances.
 
-**If ignored or misunderstood:** the model may optimize the wrong thing, produce unstable results or fail on new records.
-
-## 4. Syntax and structure
-
-KNeighborsClassifier(n_neighbors=5, metric='minkowski'). Scale numeric features before distance calculations.
-
-Read every call by identifying the input data, model/transformer, important parameters, output and validation step. Check the official library documentation for version-specific options and defaults.
-
-## 5. Small worked example
-
-Start with a tiny dataset where you can calculate or reason about the expected output. Fit or run the operation, inspect the result, then change one input or parameter. Compare the outputs and explain why they changed. Finally test an edge case.
-
-## 6. Real-world scenario
-
-**Scenario:** A retailer classifies a new shopper using similar customers' purchase frequency and basket value.
-
-### Senior engineer's investigation
-1. Confirm the business objective and prediction time.
-2. Check data definitions, missing values, target quality and class balance.
-3. Establish a simple baseline before selecting a complex method.
-4. Split data correctly and fit preprocessing only on training data.
-5. Evaluate with metrics that reflect business error costs.
-6. Review errors by important segment and document limitations.
-7. Monitor live inputs and delayed outcomes after deployment.
-
-### What goes wrong if ignored?
-
-KNN can be slow at inference, sensitive to irrelevant features, scaling and high dimensionality.
-
-## 7. Common beginner mistakes
-
-| Mistake | Consequence | Better approach |
-|---|---|---|
-| Choosing an algorithm because it is popular | It may not suit the target or data | Start from problem type and baseline |
-| Ignoring feature scale or quality | Training/prediction can be misleading | Inspect and preprocess correctly |
-| Evaluating only training data | Overfitting remains hidden | Use validation and final test data |
-| Reporting only accuracy | Error costs and class imbalance are hidden | Select relevant metrics and inspect confusion matrix |
-
-## 8. Interview-ready explanation
-Explain the definition, why the method is useful, its core syntax, a practical business example, assumptions and limitations. Be prepared to explain what evidence would make you change your approach.
-
-## 9. Self-check
-1. What does the method learn or calculate?
-2. What are its inputs and outputs?
-3. Which parameters affect its behaviour?
-4. What are its assumptions and failure modes?
-5. How will you validate it on unseen data?
+## 5. Scenario Questions
+1. Income dominates KNN distance compared with age. What should you do? Scale numeric features.
+2. Why might k=1 overfit? It relies on one nearest observation and is sensitive to noise.
+3. Prediction is slow on a huge dataset. What is the issue? KNN may require expensive neighbour searches at inference.
