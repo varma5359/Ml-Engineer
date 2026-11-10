@@ -1,64 +1,65 @@
 # Day 17: Interview Questions — Matplotlib and Seaborn for ML Visualization
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. What is matplotlib and seaborn for ml visualization?
-**Answer:** Matplotlib is a foundational plotting library; Seaborn provides statistical visualizations built on Matplotlib.
+## Core concepts
 
-### Q2. Why is it important in an ML workflow?
-**Answer:** It improves the reliability of data preparation, training or evaluation. A chart without labels, correct denominators or representative data can mislead. Visualization supports investigation; it does not establish causation.
+### Q1. What is the difference between Matplotlib and Seaborn?
+**Answer:** Matplotlib is a foundational plotting library with detailed figure and axes control. Seaborn provides higher-level statistical plots and convenient integration with Pandas.
+**Follow-up:** Can Seaborn work with Matplotlib?  
+**Answer:** Yes. Seaborn charts are built on Matplotlib and can be customized with Matplotlib functions.
 
-### Q3. What syntax or method would you use?
-**Answer:** Use histograms for distributions, box plots for spread, count plots for category frequency, scatter plots for relationships and heatmaps for correlation matrices. Label axes and units. I would explain the input, parameters, output and validation rather than reciting a function name.
+### Q2. When do you use a histogram?
+**Answer:** To inspect the distribution of a numerical variable, including spread, skewness and possible unusual values.
+**Follow-up:** What does changing bins do?  
+**Answer:** It changes how values are grouped. Too few bins can hide patterns; too many can create noise.
 
-## Practical questions
+### Q3. When do you use a box plot?
+**Answer:** To compare medians, quartiles, spread and potential extreme observations across groups.
+**Follow-up:** Are points outside whiskers always errors?  
+**Answer:** No. They are potential outliers under the box-plot convention and need investigation.
 
-### Q4. How do you know the operation worked correctly?
-**Answer:** Test a small known example, compare expected and actual output, inspect boundary cases and verify that the result still makes sense in the business domain.
+### Q4. When do you use a scatter plot?
+**Answer:** To inspect the relationship between two numerical variables and identify trends, clusters or unusual observations.
+**Follow-up:** Does a trend prove causation?  
+**Answer:** No.
 
-### Q5. What beginner mistake should you avoid?
-**Answer:** Applying a technique without checking assumptions or the meaning of the data. I would inspect source definitions, data types, units, missingness and output before using it downstream.
+### Q5. Why label axes and units?
+**Answer:** Without labels and units, a chart can be misinterpreted. A chart should be understandable without reading the code.
 
-## Scenario-based interview questions
+## Scenario questions
 
-### Q6. A product manager asks why returns increased. Plot return rates by category and month; raw return counts can mislead when sales volumes differ.
-**Answer:** I would first clarify the business goal and gather examples of the issue. Then I would inspect source data, assumptions and the point in time at which each field becomes available. I would reproduce the problem on a small sample, test likely causes one at a time, select a correction based on evidence and validate it on held-out data. I would document limitations and monitor the outcome after release.
+### Q6. You want to compare customer spend distributions. Which charts would you use?
+**Answer:** A histogram to inspect the distribution and a box plot to summarize spread and potential extremes.
+**Follow-up:** What if spend is strongly skewed?  
+**Answer:** Report median and spread, inspect extreme values and consider whether a transformed view is useful.
 
-### Q7. The aggregate metric is acceptable, but one important customer segment performs poorly. What do you do?
-**Answer:** I would calculate metrics and inspect data quality by segment, verify sample sizes, investigate whether the segment differs in behaviour or data capture, and discuss the error trade-off with the business owner. I would not hide the issue behind an overall average.
+### Q7. You want to compare customer counts by contract type. Which chart?
+**Answer:** A count plot or bar chart.
+**Follow-up:** What if the categories have long names?  
+**Answer:** Use a horizontal bar chart or rotate labels for readability.
 
-### Q8. A teammate suggests an immediate fix without investigating the cause. How do you respond?
-**Answer:** I would ask for evidence and reproduce the failure. A quick change can mask the root cause or create a new defect. I would compare hypotheses, make the smallest safe change and add a regression test.
+### Q8. You want to show monthly sales trends. Which chart?
+**Answer:** A line chart with months in chronological order.
+**Follow-up:** Can a line chart prove seasonality from six months?  
+**Answer:** No. More repeated time periods are needed to assess seasonality.
 
-## Senior developer questions
+### Q9. One region has twice as many returns because it has twice as many orders. What should you compare?
+**Answer:** Return rate per order, not raw return count alone.
+**Follow-up:** Why?  
+**Answer:** Rates account for different group sizes.
 
-### Q9. How do you choose between a simple and complex solution?
-**Answer:** Compare correctness, maintainability, latency, cost, explainability, data requirements and operational risk. Start with a baseline and add complexity only when repeatable validation and business impact justify it.
+### Q10. A chart has a truncated axis that exaggerates a small difference. What is the issue?
+**Answer:** The visual scale may mislead the reader. Use an appropriate scale and clearly disclose any non-zero baseline or transformation.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, missing and unknown values, output distributions, latency, errors, delayed ground-truth metrics and segment-level outcomes. Define owners and alert thresholds before release.
+## Code interpretation
 
-## Answer framework
-1. Clarify the decision and constraints.
-2. Inspect the data and assumptions.
-3. Diagnose using evidence.
-4. Choose the smallest safe correction.
-5. Validate normal and edge cases.
-6. Communicate trade-offs and limitations.
-7. Monitor after release.
+### Q11. What does hue do in Seaborn?
+**Answer:** It separates observations by a categorical variable using different visual encodings, commonly colors.
+**Follow-up:** What is a risk of using too many hue categories?  
+**Answer:** The plot becomes crowded and difficult to interpret.
 
+### Q12. Why use plt.show()?
+**Answer:** It displays the current figure in many notebook and script workflows. Exact display behaviour depends on the environment.
 
----
-
-## Detailed Scenario and Technical Interview Expansion
-
-### Scenario: return rate rises
-A retailer sees return counts rise in one product category. The category also had twice as many orders this month.
-
-**Senior answer:** Plot both count and return rate (returns/orders). Compare across time and category, check denominator changes and inspect data completeness. Do not infer a cause from the chart alone.
-
-**Q1. Histogram or bar chart for age?** Histogram for numeric distribution; bar chart for counts of discrete groups/bins.  
-**Q2. Why label units?** ₹ and dollars or days and hours are not interchangeable; labels prevent wrong interpretation.  
-**Q3. Why can raw counts mislead?** Group sizes differ; use rates or normalized proportions.  
-**Q4. Does a correlation heatmap prove causal influence?** No. It shows pairwise association only.  
-**Q5. How would you explain a chart to management?** State the question, metric, sample/time period, key observation, caveat and decision relevance.
+**Senior developer principle:** Choose the chart to answer a question, not to decorate a notebook.
