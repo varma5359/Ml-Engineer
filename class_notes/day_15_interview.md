@@ -46,3 +46,29 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: two versions of the same feature
+A property dataset contains area_sqft and area_sqm. A linear regression assigns large positive and negative coefficients to the two columns, even though they describe the same property size.
+
+**Senior engineer response:** Verify the units and relationship. Keep one representation or transform features according to a documented design. Refit and compare coefficient stability and validation performance. Do not claim that one variable is more important merely because its coefficient is larger.
+
+### Scenario questions
+**Q1. Does correlation prove causation?**  
+No. Confounding variables, reverse direction and coincidence can create association.
+
+**Q2. Can two variables have zero Pearson correlation but still be related?**  
+Yes. A nonlinear relationship such as a symmetric U-shape may have near-zero Pearson correlation.
+
+**Q3. Why is multicollinearity a problem for linear regression?**  
+It can make coefficient estimates unstable and inflate their uncertainty, making individual feature effects hard to interpret.
+
+**Q4. Should highly correlated features always be removed?**  
+No. Decide based on model type, business meaning, validation results and interpretability requirements. Tree models may be less affected for prediction, though interpretation remains complicated.
+
+**Q5. What is VIF?**  
+Variance Inflation Factor estimates how much the variance of a coefficient is inflated because a predictor is linearly explained by other predictors. It is a diagnostic, not a universal automatic deletion rule.
