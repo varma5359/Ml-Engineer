@@ -800,118 +800,147 @@ As alpha increases, Lasso may set more coefficients to zero. The exact pattern d
 
 ## 12. Select alpha using cross-validation
 
-### 12.1 Import RidgeCV
+For a leakage-safe comparison, place scaling and Ridge inside one Pipeline, then use GridSearchCV around that complete pipeline. Each cross-validation fold will fit its own scaler using only that fold's training partition.
 
-### 12.1. Import RidgeCV
+### 12.1 Import GridSearchCV
 
 ```python
-from sklearn.linear_model import RidgeCV
+from sklearn.model_selection import GridSearchCV
 
-print("RidgeCV imported")
+print("GridSearchCV imported")
 ```
 
 **Expected output**
 
 ```text
-RidgeCV imported
+GridSearchCV imported
 ```
 
 **Explanation**
 
-RidgeCV evaluates candidate alpha values using cross-validation on the supplied training data.
+GridSearchCV evaluates parameter combinations using cross-validation. When the estimator is a Pipeline, every fold fits the preprocessing steps within that fold.
 
-
-
-### 12.2 Create a RidgeCV pipeline
-
-### 12.2. Build a cross-validated Ridge pipeline
+### 12.2 Create the base pipeline
 
 ```python
-ridge_cv_pipeline = Pipeline([
+ridge_search_pipeline = Pipeline([
     ("scaler", StandardScaler()),
-    ("model", RidgeCV(alphas=[0.01, 0.1, 1, 10, 100]))
+    ("model", Ridge())
 ])
 
-print(ridge_cv_pipeline)
+print(ridge_search_pipeline)
+```
+
+**Expected output**
+
+A Pipeline containing StandardScaler and Ridge.
+
+**Explanation**
+
+The scaler and model are treated as one estimator. This ensures each cross-validation fold learns scaling parameters from its own training subset.
+
+### 12.3 Define candidate alpha values
+
+```python
+param_grid = {
+    "model__alpha": [0.01, 0.1, 1, 10, 100]
+}
+
+print(param_grid)
+```
+
+**Expected output**
+
+A dictionary containing five candidate alpha values.
+
+**Explanation**
+
+The `model__alpha` name refers to the alpha parameter of the model step inside the pipeline. The double underscore is scikit-learn's parameter naming convention for nested estimators.
+
+### 12.4 Configure the search
+
+```python
+ridge_search = GridSearchCV(
+    estimator=ridge_search_pipeline,
+    param_grid=param_grid,
+    cv=5,
+    scoring="neg_mean_absolute_error"
+)
+
+print(ridge_search)
+```
+
+**Expected output**
+
+A GridSearchCV object.
+
+**Explanation**
+
+The search compares the supplied alpha values using five-fold cross-validation. The negative MAE scoring convention is used because scikit-learn assumes higher scores are better.
+
+### 12.5 Fit the search using training data only
+
+```python
+ridge_search.fit(X_train, y_train)
+
+print("Cross-validation search completed")
 ```
 
 **Expected output**
 
 ```text
-A pipeline containing StandardScaler and RidgeCV
+Cross-validation search completed
 ```
 
 **Explanation**
 
-The pipeline allows the scaler to be fitted within the training workflow. RidgeCV chooses alpha using its internal validation procedure.
+Only training data is supplied to the search. Within each fold, the scaler is fitted on that fold's training subset, then the Ridge model is fitted on the transformed data.
 
-
-
-### 12.3 Fit RidgeCV
-
-### 12.3. Train RidgeCV on training data
+### 12.6 Inspect the selected alpha
 
 ```python
-ridge_cv_pipeline.fit(X_train, y_train)
-
-print("RidgeCV fitted")
+print(ridge_search.best_params_)
 ```
 
 **Expected output**
 
-```text
-RidgeCV fitted
-```
+A dictionary containing the selected `model__alpha` value.
 
 **Explanation**
 
-Only training data is passed to fit. The held-out test set remains separate.
+The selected setting is the one with the best mean cross-validation score under the chosen metric. The best value depends on the data and folds.
 
-
-
-### 12.4 Inspect selected alpha
-
-### 12.4. Read selected regularization strength
+### 12.7 Inspect the best validation score
 
 ```python
-selected_alpha = ridge_cv_pipeline.named_steps["model"].alpha_
-
-print(selected_alpha)
+print(-ridge_search.best_score_)
 ```
 
 **Expected output**
 
-```text
-One of the supplied alpha values
-```
+A positive cross-validation MAE value.
 
 **Explanation**
 
-The selected alpha is the value chosen by the cross-validation procedure on training data.
+The search stores the score as negative MAE. Negating it makes the value easier to interpret as an error.
 
-
-
-### 12.5 Evaluate the selected model once on test data
-
-### 12.5. Generate final test predictions
+### 12.8 Evaluate the selected model once on test data
 
 ```python
-ridge_cv_predictions = ridge_cv_pipeline.predict(X_test)
+best_ridge = ridge_search.best_estimator_
+
+ridge_cv_predictions = best_ridge.predict(X_test)
 
 print(mean_absolute_error(y_test, ridge_cv_predictions))
 ```
 
 **Expected output**
 
-```text
-A held-out MAE value
-```
+A non-negative held-out MAE value.
 
 **Explanation**
 
-Use the test set after model settings have been selected. Do not repeatedly tune based on this final test result.
-
-
+The search has already selected alpha using training-only cross-validation. The test set is used once for final evaluation and should not be used for further tuning.
 
 ## 13. Ridge versus Lasso
 
