@@ -69,3 +69,32 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_20_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### From zero
+A residual is actual value minus predicted value. It tells us the direction and size of the error for one record. A loss function summarizes errors across records so an algorithm can optimize model parameters.
+
+### Important metrics
+- MAE: average absolute error; same unit as target.
+- MSE: average squared error; strongly penalizes large errors.
+- RMSE: square root of MSE; same unit as target, still sensitive to large errors.
+- R²: compares the model with a mean-target baseline; it can be negative on test data.
+
+### Syntax
+```python
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import numpy as np
+
+mae = mean_absolute_error(y_test, predictions)
+mse = mean_squared_error(y_test, predictions)
+rmse = np.sqrt(mse)
+r2 = r2_score(y_test, predictions)
+print(mae, rmse, r2)
+```
+
+### Residual interpretation
+A residual of +₹2 lakh means actual price was ₹2 lakh higher than prediction. A residual of -₹2 lakh means prediction was ₹2 lakh too high. Plot residuals against predictions and inspect errors by meaningful segment.
