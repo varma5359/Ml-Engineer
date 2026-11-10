@@ -305,12 +305,17 @@ RMSE converts the squared-error summary back into the target's unit.
 ### 7.2 Use scikit-learn root mean squared error where available
 
 ~~~python
-from sklearn.metrics import root_mean_squared_error
+try:
+    from sklearn.metrics import root_mean_squared_error
 
-rmse_library = root_mean_squared_error(
-    y_actual,
-    y_predicted
-)
+    rmse_library = root_mean_squared_error(
+        y_actual,
+        y_predicted
+    )
+except ImportError:
+    rmse_library = np.sqrt(
+        mean_squared_error(y_actual, y_predicted)
+    )
 
 print("RMSE:", rmse_library)
 ~~~
