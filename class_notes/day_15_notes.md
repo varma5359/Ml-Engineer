@@ -69,3 +69,35 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_15_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### Beginner explanation
+Correlation describes how two variables move together. A positive correlation means larger values of one tend to accompany larger values of the other; negative means one tends to be smaller when the other is larger. A value near zero means little measured association under that correlation method, not necessarily no relationship.
+
+Multicollinearity is a modelling issue where input features are strongly related to one another. It can make coefficient estimates in linear models unstable and hard to interpret.
+
+### Pearson and Spearman
+- Pearson correlation: measures linear association and is sensitive to outliers.
+- Spearman correlation: measures monotonic association using ranks; useful when relationships are monotonic but not linear or values are ordinal.
+
+### Syntax
+```python
+corr = df[["area_sqft", "bedrooms", "price"]].corr(method="pearson")
+print(corr)
+```
+A correlation matrix contains values from -1 to +1. The diagonal is 1 because each feature is perfectly correlated with itself.
+
+### Example interpretation
+If area and price have correlation +0.82, larger houses tend to have higher prices in this sample. It does not prove increasing area alone causes higher prices; location, condition and market demand may also matter.
+
+### Multicollinearity checks
+- Inspect pairwise correlations among predictors.
+- Use domain knowledge to identify duplicate or derived fields.
+- Variance Inflation Factor (VIF) can help diagnose linear dependence among predictors.
+- Compare coefficient stability across samples or model specifications.
+
+High correlation is not an automatic reason to delete a feature. Prediction performance, interpretability and domain meaning all matter.
