@@ -2,353 +2,123 @@
 
 **Pathway:** Machine Learning Engineer  
 **Phase:** 2 — Data preparation and EDA  
-**Level:** Beginner to Intermediate  
-**Learning focus:** Understand the concepts, apply them correctly, and explain decisions in an interview.
+**Level:** Beginner to Intermediate
 
----
+## Learning Objectives
+- Define missing values and identify why they occur.
+- Distinguish missing, blank, zero and special-code values.
+- Detect exact duplicates and business-key duplicates.
+- Identify inconsistent text, dates, units and categories.
+- Apply basic Pandas cleaning operations.
+- Explain why cleaning decisions must preserve business meaning.
 
-## 1. Learning Objectives
+## 1. What Is Data Cleaning?
+Data cleaning is the process of identifying and handling incorrect, incomplete, duplicated or inconsistent data so that analysis and modelling use trustworthy information.
 
-- Identify missing values and understand why they occur.
-- Distinguish missing values from valid zero, blank text and special codes.
-- Detect exact and business-key duplicates.
-- Identify inconsistent formats, labels, units and invalid values.
-- Apply suitable cleaning options using Pandas.
-- Explain how data-quality problems can distort ML training and evaluation.
-- Document cleaning decisions so the process is reproducible.
+Poor-quality data can create incorrect summaries, misleading model patterns and unreliable business decisions.
 
-## 2. What Is Data Cleaning?
+## 2. Missing Values
+**Definition:** A missing value means the information was not recorded or is unavailable in that field.
 
-Data cleaning is the process of identifying, investigating and appropriately correcting or handling quality problems in a dataset.
+Possible causes:
+- User did not provide the value.
+- Source system failed to capture it.
+- Data integration did not find a matching record.
+- The field was not applicable.
 
-Common problems:
+Missing is not the same as zero. A missing salary does not mean salary is ₹0.
 
-| Problem | Example |
-|---|---|
-| Missing value | Customer age is empty |
-| Duplicate | Same transaction loaded twice |
-| Inconsistent text | `Hyderabad`, `hyderabad`, `HYD` |
-| Invalid value | Age = -5 |
-| Wrong data type | Price stored as `"₹1,200"` text |
-| Inconsistent unit | Weight recorded partly in kg and partly in lb |
-| Invalid date | `31/02/2026` |
-
-Cleaning should preserve valid information. It is not simply deleting unusual or inconvenient rows.
-
-## 3. Missing Values
-
-A missing value means the field has no recorded value. In Pandas, missing data is commonly represented by `NaN`, `None` or `NaT`, depending on the data type.
-
-### 3.1 Why values may be missing
-
-- Customer did not provide the information.
-- Sensor or system failed to record it.
-- Data transfer or extraction failed.
-- Field was not applicable to that record.
-- Data was intentionally withheld.
-
-The reason matters. Missingness can itself contain useful information, but it can also reflect a process problem or introduce bias.
-
-### 3.2 Inspect missing values
-
+### Detect missing values
 ```python
-import pandas as pd
-
-# Example data
-
-df = pd.DataFrame({
-    "customer": ["A", "B", "C", "D"],
-    "age": [25, None, 40, None],
-    "income": [30000, 45000, None, 52000]
-})
-
-print(df.isna())
-print(df.isna().sum())
-print(df.isna().mean() * 100)
+df.isna().sum()
+df.isna().mean() * 100
 ```
 
-Expected counts:
-
-- `age`: 2 missing values (50%).
-- `income`: 1 missing value (25%).
-
-`isna()` creates a Boolean mask, `sum()` counts `True` values by column, and `mean() * 100` calculates the missing percentage.
-
-### 3.3 Missing-value handling options
-
-| Method | When it may be suitable | Risk / caution |
-|---|---|---|
-| Drop rows | Very few rows missing and omission is safe | Can bias data if missingness is systematic |
-| Drop column | Column has little value or excessive missingness | May remove an important predictor |
-| Mean imputation | Numeric data with suitable distribution and limited impact | Sensitive to outliers; reduces variance |
-| Median imputation | Numeric data that is skewed or has outliers | Hides uncertainty and can weaken relationships |
-| Mode imputation | Categorical column with a meaningful common category | Can overrepresent the mode |
-| Constant / explicit category | Missing itself has a meaningful interpretation | Must distinguish unknown from not applicable |
-| Model-based imputation | Complex relationships justify added complexity | More assumptions and operational complexity |
-
-### 3.4 Examples of basic imputation
-
+**Example 1 — Count missing values**
 ```python
-# Fill a numeric column with its median
-median_age = df["age"].median()
-df["age"] = df["age"].fillna(median_age)
-
-# Fill a categorical column with an explicit marker
-# df["city"] = df["city"].fillna("Unknown")
+df = pd.DataFrame({"age": [25, None, 30]})
+print(df["age"].isna().sum())
 ```
+Output: 1.
 
-For ML, calculate imputation values using training data only. Fit the imputer on the training set and apply the learned transformation to validation, test and future data. Fitting an imputer on the full dataset leaks information from held-out data into training.
+**Example 2 — Remove rows missing a required target**
+```python
+df_clean = df.dropna(subset=["target"])
+```
+Use only when rows without the target cannot be used for supervised training and removal is justified.
 
-### 3.5 Do not confuse missing with zero
+**Example 3 — Fill missing numeric values**
+```python
+df["age"] = df["age"].fillna(df["age"].median())
+```
+Median imputation is one option; select a strategy based on the feature distribution and why values are missing.
 
-- `0` may mean a real numeric value.
-- `NaN` means no value is recorded.
-- `-1` may be a special code but must be confirmed in the data dictionary.
-- `"Unknown"` is text and may need standardized treatment.
+## 3. Duplicates
+**Definition:** Duplicate records repeat the same record or business event. Exact duplicate rows and duplicate business keys are not always the same.
 
-Replacing all missing ages with zero would imply customers have age zero, which is not a sensible default for an ordinary adult customer dataset.
-
-## 4. Duplicate Records
-
-A duplicate occurs when a record is repeated according to a chosen definition.
-
-### 4.1 Exact duplicates
-
+**Example 1 — Count exact duplicate rows**
 ```python
 print(df.duplicated().sum())
 ```
 
-`duplicated()` marks repeated rows after the first occurrence by default.
-
-To view them:
-
-```python
-duplicates = df[df.duplicated(keep=False)]
-print(duplicates)
-```
-
-`keep=False` marks every member of a duplicated group.
-
-### 4.2 Remove exact duplicates
-
+**Example 2 — Remove exact duplicates**
 ```python
 df = df.drop_duplicates()
 ```
 
-This removes exact duplicate rows, keeping the first occurrence by default. Before applying it, verify that repeated rows are truly duplicate records rather than repeated legitimate events.
-
-### 4.3 Business-key duplicates
-
-A business key defines which fields should uniquely identify a record.
-
-Example: order lines might be unique by `order_id` and `line_id`, not by customer and amount.
-
+**Example 3 — Check a business key**
 ```python
-print(df.duplicated(subset=["order_id", "line_id"], keep=False))
+print(df["transaction_id"].duplicated().sum())
+df = df.drop_duplicates(subset=["transaction_id"], keep="last")
 ```
+Only use transaction_id as the key if the business confirms that one transaction ID should identify one unique transaction. Do not remove legitimate line items merely because they share an order ID.
 
-Do not delete records based on an arbitrary subset. Two genuine purchases can have the same customer and amount.
-
-## 5. Inconsistent Data
-
-### 5.1 Inconsistent text labels
+## 4. Inconsistent Data
+**Definition:** Inconsistent data represents the same meaning in different formats or contains values that violate agreed business rules.
 
 Examples:
+- "Hyderabad", "hyderabad" and " HYDERABAD " represent the same city.
+- Dates use different formats.
+- A price column mixes rupees and dollars.
+- A quantity contains negative values when negative quantities are not allowed by the business process.
 
-- `Hyderabad`, `hyderabad`, `HYDERABAD`
-- `Premium`, `premium `, `PREMIUM`
-
-Standardize only when they refer to the same category.
-
+**Example 1 — Standardize text**
 ```python
-df["city"] = df["city"].str.strip().str.title()
+df["city"] = df["city"].str.strip().str.lower()
 ```
 
-This removes leading/trailing spaces and standardizes title case. It does not automatically resolve abbreviations or different spellings such as `Hyd` and `Hyderabad`; use a documented mapping after confirming equivalence.
-
-### 5.2 Map known category variants
-
+**Example 2 — Convert dates**
 ```python
-city_mapping = {
-    "Hyd": "Hyderabad",
-    "HYD": "Hyderabad",
-    "Bangalore": "Bengaluru"
-}
-
-df["city"] = df["city"].replace(city_mapping)
+df["order_date"] = pd.to_datetime(df["order_date"], errors="coerce")
 ```
+Invalid date strings become NaT with errors="coerce"; inspect how many were converted.
 
-Use mappings based on a verified business glossary, not guesswork.
-
-### 5.3 Numeric values stored as text
-
+**Example 3 — Validate numeric range**
 ```python
-df["amount"] = (
-    df["amount"].astype("string")
-      .str.replace("₹", "", regex=False)
-      .str.replace(",", "", regex=False)
-      .str.strip()
-)
-
-df["amount"] = pd.to_numeric(df["amount"], errors="coerce")
-```
-
-This example removes a rupee symbol and thousands separators before conversion. Invalid strings become missing values; count them and investigate the raw source.
-
-### 5.4 Validate ranges and categories
-
-```python
-invalid_age = df[(df["age"] < 0) | (df["age"] > 110)]
+invalid_age = df[(df["age"] < 0) | (df["age"] > 120)]
 print(invalid_age)
 ```
+The allowed range must be confirmed for the application; do not treat an arbitrary threshold as universal.
 
-A range check flags suspicious values, but domain rules must determine acceptable ranges. Do not silently clamp or remove values without investigation.
+## 5. A Safe Cleaning Sequence
+1. Keep an untouched copy of the source data.
+2. Inspect row grain, schema and data types.
+3. Count missing values and duplicates.
+4. Check categories, units, dates and domain constraints.
+5. Decide treatment using business meaning.
+6. Apply cleaning consistently.
+7. Compare row counts and summary statistics before and after.
+8. Document each rule and its impact.
 
-## 6. A Practical Data-Quality Inspection Sequence
+## 6. Scenario Questions
+1. An age field is missing. Should you replace it with zero? No; zero has a different meaning. Investigate and choose a suitable treatment.
+2. An order ID appears five times. Does that prove duplicate transactions? No; an order may contain multiple line items. Check the row grain and unique business key.
+3. Revenue suddenly doubles after loading a file. What should you inspect? Duplicate loads, join multiplication, currency units and aggregation logic.
 
-```text
-Load source data
-      |
-      v
-Inspect schema and row counts
-      |
-      v
-Check missing values
-      |
-      v
-Check exact and key-based duplicates
-      |
-      v
-Check types, formats, units and categories
-      |
-      v
-Validate ranges and business rules
-      |
-      v
-Apply documented corrections/handling
-      |
-      v
-Re-check counts and quality rules
-      |
-      v
-Save clean output and cleaning log
-```
-
-## 7. End-to-End Small Cleaning Example
-
-```python
-import pandas as pd
-
-raw = pd.DataFrame({
-    "order_id": ["O1", "O2", "O2", "O3", "O4"],
-    "city": ["hyderabad", "Hyd ", "Hyd ", "CHENNAI", None],
-    "amount": ["₹1,200", "800", "800", "bad-value", "500"],
-    "quantity": [2, 1, 1, 0, 3]
-})
-
-# 1. Remove exact duplicate rows
-clean = raw.drop_duplicates().copy()
-
-# 2. Standardize text formatting
-clean["city"] = clean["city"].str.strip().str.title()
-clean["city"] = clean["city"].replace({"Hyd": "Hyderabad"})
-
-# 3. Convert amount to a numeric column
-clean["amount"] = (
-    clean["amount"].astype("string")
-         .str.replace("₹", "", regex=False)
-         .str.replace(",", "", regex=False)
-)
-clean["amount"] = pd.to_numeric(clean["amount"], errors="coerce")
-
-# 4. Flag invalid quantity (zero is not valid for this example's order line)
-clean["invalid_quantity"] = clean["quantity"] <= 0
-
-print(clean)
-print("Missing by column:")
-print(clean.isna().sum())
-```
-
-Expected observations:
-
-- The repeated O2 row is removed as an exact duplicate.
-- `Hyd` becomes `Hyderabad` using the explicitly supplied mapping.
-- `bad-value` becomes missing after numeric conversion and should be investigated.
-- A missing city remains missing; the code does not invent a city.
-- Quantity 0 is flagged for review rather than automatically deleted.
-
-## 8. Why Data Cleaning Matters for ML
-
-| Quality issue | Possible ML impact |
-|---|---|
-| Missing values | Estimator may fail or learn biased patterns |
-| Duplicate rows | Repeated records can overweight examples and distort evaluation |
-| Inconsistent categories | Same business category may be treated as multiple categories |
-| Wrong units | Feature magnitudes become incorrect |
-| Invalid values | Model learns from impossible or erroneous examples |
-| Future information | Data leakage creates unrealistic evaluation |
-
-Cleaning must be learned from training data where applicable and consistently applied to future records. A reproducible preprocessing pipeline is safer than manually cleaning training and production data in different ways.
-
-## 9. Industry Scenario — Retail Sales Dataset
-
-A retailer imports data from three regional billing systems. The merged dataset contains inconsistent city names, amounts with currency symbols, missing product IDs and repeated order rows.
-
-The ML engineer should:
-
-1. Confirm the row definition (order or order line).
-2. Establish the correct unique key.
-3. Compare source row counts before and after merging.
-4. Standardize region names using a verified mapping.
-5. Parse currency values and record invalid conversions.
-6. Investigate missing product IDs with the source system.
-7. Distinguish duplicated imports from legitimate repeat purchases.
-8. Re-run quality checks and preserve a cleaning log.
-
-**Interview insight:** Do not say "I removed all nulls and duplicates" as a universal solution. Explain how you identified the issue, validated its cause and selected a handling strategy.
-
-## 10. Common Mistakes
-
-- Dropping every row with one missing field without checking impact.
-- Replacing missing values with zero without semantic justification.
-- Removing duplicates based only on customer ID when multiple orders are valid.
-- Standardizing category names using unverified assumptions.
-- Converting invalid numeric strings to missing values without counting them.
-- Fitting imputation statistics on the complete dataset before splitting.
-- Failing to compare row counts and quality metrics after cleaning.
-
-## 11. Quick Revision
-
-- Identify why data is missing before choosing a treatment.
-- Exact duplicate and business-key duplicate are different concepts.
-- Standardize categories only with a verified mapping.
-- Validate data types, units, ranges and business constraints.
-- Fit learned preprocessing steps using training data only.
-- Document every material cleaning decision and verify the output.
-
----
-
-## Beginner-to-Developer Expansion: More Examples and Real-World Reasoning
-
-### A. Start with the simplest meaning
-Before memorizing a function, explain the idea in your own words. Identify the input, output and the reason the operation exists. A correct syntax call on the wrong data is still a wrong solution.
-
-### B. Additional practical scenario
-If customer age is missing, investigate why. A missing age is not automatically age zero. A duplicate transaction ID may be a repeated load, but two legitimate line items may share an order ID; define the correct business key before deleting.
-
-### C. Syntax and use: how to choose
-isna().sum() counts missing values; duplicated() identifies repeated rows; drop_duplicates(subset=...) uses selected key columns; fillna() imputes values. Document every cleaning rule.
-
-### D. What happens if this is skipped?
-If missing values are filled with zero indiscriminately, the model may interpret unknown as a real zero. If duplicates are removed using the wrong key, valid transactions may be lost.
-
-### E. Senior developer review checklist
-- Is the business definition clear?
-- Are input types, units, shape and missing values checked?
-- Can the result be verified on a small hand-checkable example?
-- Have normal, boundary and invalid cases been considered?
-- Is the approach simple enough to explain and maintain?
-- Are limitations and possible failure costs documented?
-
-### F. Explain it in an interview
-Use this order: definition → why it is needed → syntax or method → small example → real business scenario → what can go wrong → how you validate the result. Avoid answering with only a library function name.
+## 7. Common Mistakes
+- Filling every missing value with zero.
+- Removing duplicates without defining the correct key.
+- Standardizing categories without preserving the original source.
+- Converting invalid values without measuring how many were affected.
+- Cleaning before understanding what each row represents.
+- Failing to document changes and their effect on the dataset.
