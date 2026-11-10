@@ -69,3 +69,33 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_16_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### From zero: what is leakage?
+Leakage means the model receives information during training or evaluation that would not legitimately be available when a real prediction is made. It can also happen when statistics from validation/test data influence the training process.
+
+### Two major forms
+- Target leakage: a feature contains the answer or information created after the outcome.
+- Train-test contamination: preprocessing, feature selection or tuning uses held-out data.
+
+### Safe preprocessing pipeline
+```python
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+
+model = Pipeline([
+    ("scale", StandardScaler()),
+    ("classifier", LogisticRegression())
+])
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+```
+The scaler learns training-set statistics inside fit. The pipeline applies those same statistics when predicting.
+
+### Senior checklist
+For every feature ask: when was it created? Would it exist at the exact prediction time? Is it derived from the target? Does it identify the same customer across split sets?
