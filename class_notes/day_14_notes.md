@@ -69,3 +69,51 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_14_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### Beginner explanation
+Exploratory Data Analysis (EDA) is the process of asking questions of a dataset before modelling. It helps you understand what each column means, how values are distributed, where data is missing, how groups differ and which relationships deserve further investigation.
+
+### Start with these inspection commands
+```python
+df.shape
+df.head()
+df.info()
+df.describe(include="all")
+df.isna().sum()
+df.nunique()
+```
+- `shape`: number of rows and columns.
+- `head`: preview sample records.
+- `info`: data types and non-null counts.
+- `describe`: summary statistics.
+- `isna().sum()`: missing count per column.
+- `nunique`: number of distinct values.
+
+### Choose a chart based on the question
+| Question | Chart |
+|---|---|
+| How is one numeric field distributed? | Histogram |
+| Are there extreme values? | Box plot |
+| How do two numeric variables move together? | Scatter plot |
+| How many records belong to each category? | Count/bar plot |
+| How does a metric change over time? | Line plot |
+| How do numeric features correlate? | Correlation heatmap |
+
+### Grouped business analysis
+```python
+summary = df.groupby("region").agg(
+    orders=("order_id", "count"),
+    revenue=("revenue", "sum"),
+    avg_order_value=("revenue", "mean")
+)
+print(summary)
+```
+This calculates several measures by region. Verify whether each row represents an order or a line item before interpreting the count.
+
+### EDA is not proof of cause
+A relationship between discount and sales does not prove discounts caused the increase. Season, marketing, stock availability and customer mix may also explain the pattern.
