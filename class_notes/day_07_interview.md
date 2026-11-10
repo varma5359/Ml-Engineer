@@ -1,71 +1,148 @@
 # Day 07: Interview Questions — Linear Algebra: Scalars, Vectors, Matrices and Operations
 
-**Pathway:** Machine Learning Engineer
+**Pathway:** Machine Learning Engineer  
+**Focus:** Data representation, matrix operations and input-shape reasoning
 
----
+## 1. Core concept questions
 
-## Question 1: What is a scalar, vector and matrix?
+### Q1. What is a scalar, vector and matrix?
 
-**Answer:** A scalar is one number, a vector is an ordered collection of numbers, and a matrix is a rectangular arrangement of numbers in rows and columns.
+**Answer:** A scalar is one numerical value, a vector is an ordered one-dimensional collection of values, and a matrix is a two-dimensional arrangement with rows and columns.
 
-**Example:** One model weight is a scalar; one customer's features form a vector; many customers' features form a matrix.
+**Example:** One model setting can be a scalar, one customer's feature values can be a vector, and a table of many customers can be represented as a matrix.
 
-**Follow-up:** What does a matrix shape of `(1000, 12)` often represent in tabular ML?
+**Follow-up:** What does a matrix shape of `(1000, 12)` commonly represent?
 
-**Answer:** 1,000 observations and 12 feature columns, assuming rows are observations and columns are features.
+**Answer:** 1,000 observations and 12 feature columns, assuming rows represent observations and columns represent features.
 
-## Question 2: What is a dot product and where is it used in ML?
+### Q2. What is a dot product and where is it used in ML?
 
-**Answer:** It multiplies corresponding vector elements and sums the products. It is used to calculate weighted sums, such as a linear model's score.
+**Answer:** A dot product combines corresponding values from two equal-length vectors by multiplying matching positions and adding the results. It is used to calculate weighted scores, including the weighted feature contribution in a linear model.
 
 **Follow-up:** What must be true about the vector lengths?
 
-**Answer:** They must be equal for the standard dot product.
+**Answer:** They must have the same number of elements for a standard vector dot product.
 
-## Question 3: What is the difference between element-wise multiplication and matrix multiplication?
+### Q3. What is the difference between element-wise multiplication and matrix multiplication?
 
-**Answer:** Element-wise multiplication multiplies corresponding entries. Matrix multiplication combines rows and columns and requires the left matrix's column count to match the right matrix's row count.
+**Answer:** Element-wise multiplication combines values at matching positions. Matrix multiplication combines rows and columns and requires the inner dimensions to match.
 
-**Follow-up:** In NumPy, which operator performs matrix multiplication?
+**Follow-up:** Which NumPy operator performs matrix multiplication?
 
-**Answer:** `@` (or `np.matmul`).
+**Answer:** The `@` operator. NumPy also provides functions such as `matmul()`.
 
-## Question 4: If A has shape `(5, 3)` and B has shape `(3, 2)`, what is the shape of `A @ B`?
+### Q4. What does transpose do?
 
-**Answer:** `(5, 2)`. The inner dimensions 3 and 3 match; the output uses outer dimensions 5 and 2.
+**Answer:** Transpose swaps the rows and columns of a matrix. It changes the orientation and shape, but does not change the total number of elements.
 
-**Follow-up:** Can `(5, 3) @ (4, 2)` be performed?
+**Follow-up:** Should you transpose a feature matrix whenever a model raises a shape error?
 
-**Answer:** No, because 3 does not equal 4.
+**Answer:** No. First understand what each axis represents and what shape the model expects. An unnecessary transpose can change the meaning of the input.
 
-## Question 5: What is transpose?
+## 2. Practical ML scenarios
 
-**Answer:** Transpose swaps rows and columns. A matrix with shape `(2, 3)` becomes shape `(3, 2)` after transpose.
+### Q5. Your feature matrix has shape (500, 8). How would you explain it?
 
-**Follow-up:** Why might transpose appear in ML code?
+**Answer:** It commonly represents 500 observations and eight features. I would verify the dataset schema to confirm that each row is one observation and each column is one feature.
 
-**Answer:** It changes data orientation to meet the required mathematical shape for a calculation, but the engineer must understand the meaning of each axis before transposing.
+**Follow-up:** Does this shape identify the target column?
 
-## Question 6: How does linear algebra support linear regression?
+**Answer:** No. The target must be identified from the problem definition and schema.
 
-**Answer:** A linear regression prediction is a weighted sum of input features plus a bias. It can be represented as a dot product between feature values and learned coefficients, plus the intercept.
+### Q6. A model expects four features but an API request supplies three values. What should happen?
 
-**Follow-up:** What does a coefficient mean?
+**Answer:** The request should fail validation with a clear message explaining the expected feature count or names. The application should not silently invent a missing feature.
 
-**Answer:** In a simple model, it represents the predicted change in the output for a one-unit increase in that feature, holding other features fixed. Interpretation depends on scaling, units and model assumptions.
+**Follow-up:** Why is silently filling the missing value dangerous?
 
-## Question 7: Why is feature order important when passing a vector into a trained model?
+**Answer:** It may produce a plausible-looking but invalid prediction. Missing-feature handling must follow the trained preprocessing contract.
 
-**Answer:** The model's learned weights correspond to specific feature positions. If age and income are swapped, the model applies the age weight to income and vice versa, producing invalid predictions.
+### Q7. A matrix multiplication raises a dimension mismatch error. How do you investigate?
 
-**Follow-up:** How can an ML pipeline reduce this risk?
+**Answer:** Print the shapes, identify what each axis represents and confirm that the inner dimensions match for the intended operation. Then correct the orientation or feature selection only when it is mathematically and semantically justified.
 
-**Answer:** Preserve feature names and order in a consistent preprocessing/model pipeline and validate incoming schema.
+**Follow-up:** Is reshaping enough to make the calculation correct?
 
-## Question 8: A matrix operation raises a dimension mismatch error. How do you investigate it?
+**Answer:** No. It may remove the error while changing the meaning of the observations or features.
 
-**Answer:** Inspect both shapes, identify what each axis means, verify the intended operation and confirm the inner dimensions match for matrix multiplication. Then correct the data orientation only when mathematically justified.
+### Q8. A prediction changes after the feature order changes. Why?
 
-**Follow-up:** Is reshaping enough to make an operation conceptually correct?
+**Answer:** The model's learned parameters correspond to particular feature positions. If the application swaps two values, the model may apply each parameter to the wrong feature.
 
-**Answer:** No. It may remove the error while scrambling the meaning of observations and features. Validate the mathematical interpretation as well as the shape.
+**Follow-up:** How can a team reduce this risk?
+
+**Answer:** Preserve feature names and order in a preprocessing pipeline or model input schema, and validate incoming requests against that schema.
+
+### Q9. Your feature matrix has 500 rows but your target contains 498 values. What would you do?
+
+**Answer:** Stop training and trace the preprocessing steps. Check whether rows were removed or reordered in only one object. Restore correct observation alignment using a stable row identifier, then validate both row counts and row correspondence.
+
+**Follow-up:** Is matching row counts sufficient?
+
+**Answer:** No. The feature row and target value must refer to the same observation.
+
+### Q10. Why is linear algebra relevant even when you use scikit-learn rather than writing equations?
+
+**Answer:** Libraries still represent data, model parameters and calculations using numerical arrays and matrices. Understanding shapes, feature order and operations helps diagnose errors and validate model inputs.
+
+**Follow-up:** Does an ML Engineer need to manually implement every matrix operation?
+
+**Answer:** No. Libraries handle many operations. The engineer needs to understand their meaning and validate the inputs and outputs.
+
+## 3. Code interpretation questions
+
+### Q11. What is the output?
+
+```python
+import numpy as np
+x = np.array([2, 3])
+w = np.array([4, 5])
+print(x @ w)
+```
+
+**Answer:** `23`. The dot product combines corresponding values into one result.
+
+**Follow-up:** What happens if the first vector has three elements and the second has two?
+
+**Answer:** The dot product fails because the vector lengths do not match.
+
+### Q12. What does this expression return?
+
+```python
+import numpy as np
+A = np.array([[1, 2, 3], [4, 5, 6]])
+print(A.T.shape)
+```
+
+**Answer:** `(3, 2)`. Transpose changes the original two-row, three-column matrix into a three-row, two-column matrix.
+
+**Follow-up:** Does transpose change the number of values?
+
+**Answer:** No.
+
+### Q13. What is the difference between these expressions?
+
+```python
+A * B
+A @ B
+```
+
+**Answer:** For compatible NumPy arrays, `A * B` performs element-wise multiplication. `A @ B` performs matrix multiplication.
+
+**Follow-up:** Why should a developer not replace one with the other just to make code run?
+
+**Answer:** They represent different calculations and can produce different meanings and shapes.
+
+## 4. Interview answer framework
+
+When discussing a shape or matrix error:
+
+1. State what each row and column represents.
+2. Inspect the input shapes and data types.
+3. Confirm feature names, feature order and target alignment.
+4. Identify the intended operation.
+5. Correct the smallest underlying issue.
+6. Validate using a small known example.
+7. Add input checks so the issue is caught earlier.
+
+**Senior developer principle:** A numerical operation can be technically valid and still be semantically wrong. Always validate what the dimensions represent.
