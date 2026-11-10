@@ -1,4 +1,4 @@
-# Machine Learning Engineer — Day 01–65 Notes
+# Machine Learning Engineer — Day 01–76 Notes
 
 Each day has a separate class-notes file and interview-question file. The class notes reuse relevant Python and statistics teaching material where appropriate, adapt examples to machine learning, and use the Data Analyst Days 25–47 notes as a teaching reference for statistics, EDA and visualization. The ML career_path.md remains the authority for day titles and sequence.
 
@@ -85,5 +85,16 @@ Each day has a separate class-notes file and interview-question file. The class 
 | 63 | Scikit-learn pipelines and serialization | [Notes](day_63_notes.md) | [Interview](day_63_interview.md) |
 | 64 | Model deployment concepts and inference APIs | [Notes](day_64_notes.md) | [Interview](day_64_interview.md) |
 | 65 | FastAPI model serving and input validation | [Notes](day_65_notes.md) | [Interview](day_65_interview.md) |
+| 66 | Streamlit or equivalent UI for model demonstrations | [Notes](day_66_notes.md) | [Interview](day_66_interview.md) |
+| 67 | Docker and containerizing ML applications | [Notes](day_67_notes.md) | [Interview](day_67_interview.md) |
+| 68 | MLflow experiment tracking fundamentals | [Notes](day_68_notes.md) | [Interview](day_68_interview.md) |
+| 69 | Model registry and version management | [Notes](day_69_notes.md) | [Interview](day_69_interview.md) |
+| 70 | DVC and dataset/model versioning | [Notes](day_70_notes.md) | [Interview](day_70_interview.md) |
+| 71 | CI/CD for ML workflows | [Notes](day_71_notes.md) | [Interview](day_71_interview.md) |
+| 72 | Model monitoring and data drift | [Notes](day_72_notes.md) | [Interview](day_72_interview.md) |
+| 73 | Model performance monitoring | [Notes](day_73_notes.md) | [Interview](day_73_interview.md) |
+| 74 | Retraining strategies and feedback loops | [Notes](day_74_notes.md) | [Interview](day_74_interview.md) |
+| 75 | ML security, privacy and governance | [Notes](day_75_notes.md) | [Interview](day_75_interview.md) |
+| 76 | Production ML architecture and reliability | [Notes](day_76_notes.md) | [Interview](day_76_interview.md) |
 
-**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–65 are covered in this folder; continue with Day 66 onward in syllabus order.
+**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–76 are covered in this folder; continue with Day 77 onward in syllabus order.
