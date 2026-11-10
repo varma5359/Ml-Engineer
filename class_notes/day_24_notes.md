@@ -4,63 +4,37 @@
 **Phase:** 3 — Supervised learning  
 **Level:** Beginner to Intermediate
 
-## 1. Learning objectives
-Define the topic, explain its purpose, write its core syntax, interpret outputs, identify assumptions and discuss its limitations in a business setting.
+## Learning Objectives
+- Define regularization and why it is used.
+- Compare Ridge and Lasso.
+- Understand alpha and coefficient shrinkage.
+- Recognize why feature scaling and validation matter.
 
-## 2. Definition from zero
+## 1. Definition
+Regularization adds a penalty to the model objective to discourage excessively large coefficients. It can reduce variance and improve generalization.
 
-**Regularization: Ridge and Lasso:** Regularization penalizes large coefficients to reduce model complexity. Ridge uses an L2 penalty; Lasso uses an L1 penalty and can set coefficients to zero.
+- Ridge: L2 penalty; shrinks coefficients toward zero.
+- Lasso: L1 penalty; can make some coefficients exactly zero.
 
-In simple language, this method helps a computer learn a relationship from examples. Understand what is supplied, what is learned and what result is expected before opening the library documentation.
+## 2. Syntax
+```python
+from sklearn.linear_model import Ridge, Lasso
 
-## 3. Why it is needed
+ridge = Ridge(alpha=1.0)
+lasso = Lasso(alpha=0.1)
+ridge.fit(X_train, y_train)
+lasso.fit(X_train, y_train)
+```
 
-It gives an engineer a systematic way to learn from historical examples rather than hard-coding every possible case. It is useful only when the data, target and evaluation setup match the real decision.
+## 3. Three Examples
+1. Ridge when many correlated predictors should be retained but coefficient sizes need controlling.
+2. Lasso when a sparse coefficient representation is useful.
+3. Regularized regression when many campaign variables predict sales.
 
-**If ignored or misunderstood:** the model may optimize the wrong thing, produce unstable results or fail on new records.
+## 4. Alpha
+Alpha controls penalty strength. Larger alpha generally means stronger regularization. Select it using validation or cross-validation, not the final test set. Scale features before regularized regression when feature units differ.
 
-## 4. Syntax and structure
-
-Ridge(alpha=1.0); Lasso(alpha=0.1). Scale features and tune alpha using cross-validation.
-
-Read every call by identifying the input data, model/transformer, important parameters, output and validation step. Check the official library documentation for version-specific options and defaults.
-
-## 5. Small worked example
-
-Start with a tiny dataset where you can calculate or reason about the expected output. Fit or run the operation, inspect the result, then change one input or parameter. Compare the outputs and explain why they changed. Finally test an edge case.
-
-## 6. Real-world scenario
-
-**Scenario:** A marketing dataset has hundreds of related campaign variables. Ordinary regression coefficients swing widely between samples.
-
-### Senior engineer's investigation
-1. Confirm the business objective and prediction time.
-2. Check data definitions, missing values, target quality and class balance.
-3. Establish a simple baseline before selecting a complex method.
-4. Split data correctly and fit preprocessing only on training data.
-5. Evaluate with metrics that reflect business error costs.
-6. Review errors by important segment and document limitations.
-7. Monitor live inputs and delayed outcomes after deployment.
-
-### What goes wrong if ignored?
-
-Regularization does not automatically solve leakage or bad features. Lasso selection can be unstable with correlated predictors.
-
-## 7. Common beginner mistakes
-
-| Mistake | Consequence | Better approach |
-|---|---|---|
-| Choosing an algorithm because it is popular | It may not suit the target or data | Start from problem type and baseline |
-| Ignoring feature scale or quality | Training/prediction can be misleading | Inspect and preprocess correctly |
-| Evaluating only training data | Overfitting remains hidden | Use validation and final test data |
-| Reporting only accuracy | Error costs and class imbalance are hidden | Select relevant metrics and inspect confusion matrix |
-
-## 8. Interview-ready explanation
-Explain the definition, why the method is useful, its core syntax, a practical business example, assumptions and limitations. Be prepared to explain what evidence would make you change your approach.
-
-## 9. Self-check
-1. What does the method learn or calculate?
-2. What are its inputs and outputs?
-3. Which parameters affect its behaviour?
-4. What are its assumptions and failure modes?
-5. How will you validate it on unseen data?
+## 5. Scenario Questions
+1. Coefficients are extremely large and unstable. What can you try? Scaling and regularization.
+2. Lasso sets a coefficient to zero. What does that mean? That feature's coefficient was removed by the fitted penalized model, not necessarily that the feature is universally useless.
+3. Should alpha be chosen from test performance? No; use validation or cross-validation.
