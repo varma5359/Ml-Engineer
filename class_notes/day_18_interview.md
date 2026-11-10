@@ -1,64 +1,74 @@
 # Day 18: Interview Questions — ML Workflow, Baselines and Reproducibility
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. What is ml workflow, baselines and reproducibility?
-**Answer:** An ML workflow is a repeatable sequence from problem definition through data, training, evaluation and monitoring. A baseline is a simple reference strategy. Reproducibility means being able to recreate results.
+## Core concepts
 
-### Q2. Why is it important in an ML workflow?
-**Answer:** It improves the reliability of data preparation, training or evaluation. Without a baseline, a model can look impressive while adding no value. Without recorded data and settings, results cannot be reliably reproduced.
+### Q1. What is an ML workflow?
+**Answer:** A repeatable sequence from problem definition and data understanding through splitting, preprocessing, baseline training, evaluation, deployment and monitoring.
+**Follow-up:** Why define the problem before selecting an algorithm?  
+**Answer:** The target, prediction time and business cost determine which data, evaluation strategy and model are appropriate.
 
-### Q3. What syntax or method would you use?
-**Answer:** Start with DummyClassifier or DummyRegressor where appropriate. Record dataset version, split strategy, random seed, features, package versions, parameters and metrics. I would explain the input, parameters, output and validation rather than reciting a function name.
+### Q2. What is a baseline model?
+**Answer:** A simple reference prediction or existing business rule used to judge whether a more complex model adds value.
+**Follow-up:** Why is it important?  
+**Answer:** Without a baseline, a complex model may be celebrated even though it performs no better than a simple strategy.
 
-## Practical questions
+### Q3. What does DummyClassifier(strategy="most_frequent") do?
+**Answer:** It predicts the most frequent class learned from training labels, without using feature relationships.
+**Follow-up:** Why can its accuracy be high on imbalanced data?  
+**Answer:** The majority class dominates the dataset, so predicting it can be correct often while missing the minority class.
 
-### Q4. How do you know the operation worked correctly?
-**Answer:** Test a small known example, compare expected and actual output, inspect boundary cases and verify that the result still makes sense in the business domain.
+### Q4. What does DummyRegressor(strategy="mean") do?
+**Answer:** It predicts the mean target value learned from the training data for every input row.
+**Follow-up:** Why compare a regression model with it?  
+**Answer:** To check whether the model improves over a simple constant prediction.
 
-### Q5. What beginner mistake should you avoid?
-**Answer:** Applying a technique without checking assumptions or the meaning of the data. I would inspect source definitions, data types, units, missingness and output before using it downstream.
+### Q5. What is reproducibility?
+**Answer:** Recording enough information about data, code, split strategy, preprocessing, random seeds, parameters, software versions and metrics so the experiment can be understood and repeated.
+**Follow-up:** Does a fixed seed guarantee identical results everywhere?  
+**Answer:** No. Hardware, package versions and nondeterministic operations may affect results.
 
-## Scenario-based interview questions
+## Scenario questions
 
-### Q6. A delivery company predicts late deliveries. Compare a complex model with a simple majority-class or historical-average baseline before claiming the new model adds value.
-**Answer:** I would first clarify the business goal and gather examples of the issue. Then I would inspect source data, assumptions and the point in time at which each field becomes available. I would reproduce the problem on a small sample, test likely causes one at a time, select a correction based on evidence and validate it on held-out data. I would document limitations and monitor the outcome after release.
+### Q6. A complex classifier performs worse than the majority baseline. What do you do?
+**Answer:** Check target definition, data quality, class distribution, split strategy, preprocessing and metrics. Determine whether the complex model adds value before increasing complexity.
+**Follow-up:** Should you report only accuracy?  
+**Answer:** No. Inspect class-level metrics and business costs, especially for minority classes.
 
-### Q7. The aggregate metric is acceptable, but one important customer segment performs poorly. What do you do?
-**Answer:** I would calculate metrics and inspect data quality by segment, verify sample sizes, investigate whether the segment differs in behaviour or data capture, and discuss the error trade-off with the business owner. I would not hide the issue behind an overall average.
+### Q7. A model has 98% accuracy but misses almost every fraud case. Is it successful?
+**Answer:** Not necessarily. Accuracy hides minority-class failures. Evaluate recall, precision, PR curves and business costs.
+**Follow-up:** Why might false negatives be costly?  
+**Answer:** They represent fraud that the system fails to flag, potentially causing financial loss.
 
-### Q8. A teammate suggests an immediate fix without investigating the cause. How do you respond?
-**Answer:** I would ask for evidence and reproduce the failure. A quick change can mask the root cause or create a new defect. I would compare hypotheses, make the smallest safe change and add a regression test.
+### Q8. A colleague cannot reproduce your experiment. What do you provide?
+**Answer:** Dataset version, code revision, split strategy, random seed, preprocessing, model parameters, package versions and evaluation details.
+**Follow-up:** Is random_state enough?  
+**Answer:** No. It is only one part of experiment configuration.
 
-## Senior developer questions
+### Q9. A model artifact loads but production predictions are wrong. What do you investigate?
+**Answer:** Verify artifact version, feature order, preprocessing pipeline, input schema, package versions and whether production data matches training assumptions.
+**Follow-up:** Why save the whole pipeline?  
+**Answer:** The estimator expects the same feature transformations used during training.
 
-### Q9. How do you choose between a simple and complex solution?
-**Answer:** Compare correctness, maintainability, latency, cost, explainability, data requirements and operational risk. Start with a baseline and add complexity only when repeatable validation and business impact justify it.
+### Q10. The team tried 50 models and chose the highest test score. What is the issue?
+**Answer:** The test set influenced model selection and is no longer an independent final evaluation. Use validation or cross-validation for decisions and reserve test data for final assessment.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, missing and unknown values, output distributions, latency, errors, delayed ground-truth metrics and segment-level outcomes. Define owners and alert thresholds before release.
+## Code interpretation
 
-## Answer framework
-1. Clarify the decision and constraints.
-2. Inspect the data and assumptions.
-3. Diagnose using evidence.
-4. Choose the smallest safe correction.
-5. Validate normal and edge cases.
-6. Communicate trade-offs and limitations.
-7. Monitor after release.
+### Q11. What does DummyClassifier most_frequent learn?
+**Answer:** The most frequent class in the training labels.
+**Follow-up:** Does it learn feature importance?  
+**Answer:** No.
 
+### Q12. Why save experiment configuration as JSON?
+**Answer:** It records settings in a structured, human-readable format that can be loaded and reviewed.
+**Follow-up:** What should never be stored in a public config?  
+**Answer:** API keys, passwords, private keys or customer secrets.
 
----
+### Q13. Why should you load only trusted joblib artifacts?
+**Answer:** joblib uses pickle-based serialization mechanisms, and loading an untrusted artifact can execute malicious code.
+**Follow-up:** What should be recorded with a model artifact?  
+**Answer:** Its source, version, dependencies, training data reference and intended input schema.
 
-## Detailed Scenario and Technical Interview Expansion
-
-### Scenario: complex model does not beat baseline
-A delivery-delay model achieves 82% accuracy, while a majority-class baseline achieves 84%.
-
-**Senior answer:** Accuracy may be misleading if classes are imbalanced, so inspect confusion matrix, recall, precision and business costs. But if the candidate model truly does not improve relevant outcomes, do not deploy complexity without value.
-
-**Q1. Why create a baseline?** To establish a minimum reference and avoid claiming value from a model that does not outperform a simple strategy.  
-**Q2. Is random_state enough for reproducibility?** No. Data versions, code, package versions and preprocessing must also be recorded.  
-**Q3. Can a baseline be a business rule?** Yes, if it is a relevant existing decision process.  
-**Q4. What is experiment tracking?** Recording configurations, data/model versions and results so experiments can be compared and repeated.  
-**Q5. What if the model beats the baseline offline but fails live?** Compare data distribution, feature availability, preprocessing, timing, infrastructure and business process changes.
+**Senior developer principle:** A reproducible experiment can still be a poor experiment. Reproducibility records what happened; validation determines whether the result is useful.
