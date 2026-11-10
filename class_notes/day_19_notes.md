@@ -69,3 +69,33 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_19_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### From zero
+Regression predicts a numeric quantity. Linear regression estimates a target as a weighted sum of input features plus an intercept. The word linear refers to linearity in the model coefficients.
+
+### Equation
+`predicted_y = b0 + b1*x1 + b2*x2 + ...`
+- b0: intercept, the model's starting value.
+- b1, b2: learned coefficients/weights.
+- x1, x2: feature values.
+- predicted_y: numeric estimate.
+
+### Syntax
+```python
+from sklearn.linear_model import LinearRegression
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+print(model.coef_)
+print(model.intercept_)
+```
+`fit` learns coefficients from training data; `predict` applies them to new feature rows.
+
+### Assumptions and diagnostics
+Check whether the relationship is reasonably linear in the chosen representation, whether residual patterns are structured, whether errors have changing spread, whether observations are independent for the intended analysis, and whether influential records dominate. Normal residuals are relevant to classical inference, not a universal prerequisite for predictive use.
