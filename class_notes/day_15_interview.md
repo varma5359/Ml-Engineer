@@ -1,74 +1,67 @@
 # Day 15: Interview Questions — Correlation and Multicollinearity
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. What is correlation and multicollinearity?
-**Answer:** Correlation measures association between variables. Multicollinearity occurs when predictors contain strong linear relationships with each other.
+## Core concepts
 
-### Q2. Why is it important in an ML workflow?
-**Answer:** It improves the reliability of data preparation, training or evaluation. Do not treat correlation as causation or drop a useful feature only because its pairwise correlation is low. Inspect non-linear relationships and domain meaning.
+### Q1. What is correlation?
+**Answer:** Correlation describes the direction and strength of association between two variables. It does not prove causation.
+**Follow-up:** What are positive and negative correlation?  
+**Answer:** Positive variables tend to move in the same direction; negative variables tend to move in opposite directions.
 
-### Q3. What syntax or method would you use?
-**Answer:** Pearson measures linear association; Spearman measures rank-based monotonic association. Use DataFrame.corr() and Variance Inflation Factor as diagnostic tools. I would explain the input, parameters, output and validation rather than reciting a function name.
+### Q2. Compare Pearson and Spearman correlation.
+**Answer:** Pearson measures linear association using original values. Spearman measures rank-based monotonic association.
+**Follow-up:** Which may reveal a monotonic but non-linear pattern?  
+**Answer:** Spearman.
 
-## Practical questions
+### Q3. What is multicollinearity?
+**Answer:** It occurs when two or more predictor features are strongly linearly related. It can make coefficients in linear models unstable and difficult to interpret.
+**Follow-up:** Does it always make prediction impossible?  
+**Answer:** No. Its effect depends on the model and objective.
 
-### Q4. How do you know the operation worked correctly?
-**Answer:** Test a small known example, compare expected and actual output, inspect boundary cases and verify that the result still makes sense in the business domain.
+### Q4. What is VIF?
+**Answer:** Variance Inflation Factor is a diagnostic that assesses how strongly a predictor can be explained by other predictors in a linear relationship.
+**Follow-up:** Is VIF an automatic feature-removal rule?  
+**Answer:** No. It is a diagnostic to support investigation.
 
-### Q5. What beginner mistake should you avoid?
-**Answer:** Applying a technique without checking assumptions or the meaning of the data. I would inspect source definitions, data types, units, missingness and output before using it downstream.
+## Scenario questions
 
-## Scenario-based interview questions
+### Q5. Advertising spend and sales have high positive correlation. Can you say advertising caused sales to increase?
+**Answer:** No. Seasonality, product availability, promotions or market demand may affect both.
+**Follow-up:** Can the feature still be useful for prediction?  
+**Answer:** Yes, if available at prediction time and validated on new data. Predictive association is not causation.
 
-### Q6. A property dataset includes area in square feet and area in square metres. Both encode nearly the same information, making linear-model coefficients unstable.
-**Answer:** I would first clarify the business goal and gather examples of the issue. Then I would inspect source data, assumptions and the point in time at which each field becomes available. I would reproduce the problem on a small sample, test likely causes one at a time, select a correction based on evidence and validate it on held-out data. I would document limitations and monitor the outcome after release.
+### Q6. Two house-area columns use square feet and square metres. What is the concern?
+**Answer:** They contain nearly duplicate information and may cause multicollinearity in linear models. Consider keeping the clearer unit.
+**Follow-up:** Should you remove one without checking?  
+**Answer:** No. Confirm units, business needs and model behaviour.
 
-### Q7. The aggregate metric is acceptable, but one important customer segment performs poorly. What do you do?
-**Answer:** I would calculate metrics and inspect data quality by segment, verify sample sizes, investigate whether the segment differs in behaviour or data capture, and discuss the error trade-off with the business owner. I would not hide the issue behind an overall average.
+### Q7. Pearson correlation is near zero but a scatter plot is U-shaped. Explain.
+**Answer:** Pearson summarizes linear association. A U-shaped non-linear relationship may still exist.
+**Follow-up:** What should you do?  
+**Answer:** Inspect non-linear patterns and use modelling or analysis suited to the relationship.
 
-### Q8. A teammate suggests an immediate fix without investigating the cause. How do you respond?
-**Answer:** I would ask for evidence and reproduce the failure. A quick change can mask the root cause or create a new defect. I would compare hypotheses, make the smallest safe change and add a regression test.
+### Q8. A feature has very high correlation with churn. What do you check?
+**Answer:** Check its meaning and timestamp. It may be a post-outcome field or direct target proxy.
+**Follow-up:** Why can target correlation be misleading?  
+**Answer:** Strong association may come from leakage or an invalid feature.
 
-## Senior developer questions
+### Q9. VIF is high for two predictors. Should you remove one immediately?
+**Answer:** No. Inspect definitions, sample size, model type and coefficient stability, then compare justified alternatives.
+**Follow-up:** What if the goal is prediction rather than coefficient interpretation?  
+**Answer:** Evaluate predictive performance and stability; high correlation alone does not settle the decision.
 
-### Q9. How do you choose between a simple and complex solution?
-**Answer:** Compare correctness, maintainability, latency, cost, explainability, data requirements and operational risk. Start with a baseline and add complexity only when repeatable validation and business impact justify it.
+## Code interpretation
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, missing and unknown values, output distributions, latency, errors, delayed ground-truth metrics and segment-level outcomes. Define owners and alert thresholds before release.
+### Q10. What does df.corr(method="spearman") calculate?
+**Answer:** A pairwise Spearman rank-correlation matrix for eligible numeric columns.
+**Follow-up:** Does it include categorical text automatically?  
+**Answer:** Not as ordinary numeric correlation; categories need appropriate handling.
 
-## Answer framework
-1. Clarify the decision and constraints.
-2. Inspect the data and assumptions.
-3. Diagnose using evidence.
-4. Choose the smallest safe correction.
-5. Validate normal and edge cases.
-6. Communicate trade-offs and limitations.
-7. Monitor after release.
+### Q11. Why visualize before interpreting correlation?
+**Answer:** A scatter plot can reveal outliers, clusters and non-linear relationships that a single coefficient hides.
 
+### Q12. What is a correlation heatmap useful for?
+**Answer:** It gives a compact view of pairwise correlations among selected features. It should support, not replace, detailed inspection.
 
----
-
-## Detailed Scenario and Technical Interview Expansion
-
-### Scenario: two versions of the same feature
-A property dataset contains area_sqft and area_sqm. A linear regression assigns large positive and negative coefficients to the two columns, even though they describe the same property size.
-
-**Senior engineer response:** Verify the units and relationship. Keep one representation or transform features according to a documented design. Refit and compare coefficient stability and validation performance. Do not claim that one variable is more important merely because its coefficient is larger.
-
-### Scenario questions
-**Q1. Does correlation prove causation?**  
-No. Confounding variables, reverse direction and coincidence can create association.
-
-**Q2. Can two variables have zero Pearson correlation but still be related?**  
-Yes. A nonlinear relationship such as a symmetric U-shape may have near-zero Pearson correlation.
-
-**Q3. Why is multicollinearity a problem for linear regression?**  
-It can make coefficient estimates unstable and inflate their uncertainty, making individual feature effects hard to interpret.
-
-**Q4. Should highly correlated features always be removed?**  
-No. Decide based on model type, business meaning, validation results and interpretability requirements. Tree models may be less affected for prediction, though interpretation remains complicated.
-
-**Q5. What is VIF?**  
-Variance Inflation Factor estimates how much the variance of a coefficient is inflated because a predictor is linearly explained by other predictors. It is a diagnostic, not a universal automatic deletion rule.
+**Senior developer principle:** A correlation coefficient is a clue about association, not an explanation of why a pattern exists.
