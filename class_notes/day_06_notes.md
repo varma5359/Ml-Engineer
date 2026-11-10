@@ -85,7 +85,7 @@ Useful parameters:
 | `filepath_or_buffer` | File path or readable source |
 | `sep` | Delimiter, such as `,` or `;` |
 | `encoding` | Text encoding, such as `utf-8` |
-| ` na_values` / `na_values` | Extra strings to interpret as missing |
+| `na_values` | Extra strings to interpret as missing |
 | `usecols` | Read only selected columns |
 | `parse_dates` | Parse selected date columns |
 | `dtype` | Specify selected column types when appropriate |
