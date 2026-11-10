@@ -1,47 +1,51 @@
-# Day 34: Interview Questions — K-Means and Centroid-Based Clustering
+# Day 34: Interview Questions — K-Means Clustering and Centroid-Based Grouping
 
-## Beginner concepts
+**Pathway:** Machine Learning Engineer
 
-### Q1. Explain k-means and centroid-based clustering.
-**Answer:** K-Means partitions observations into K clusters by assigning each point to the nearest centroid and repeatedly updating centroids to reduce within-cluster squared distances.
+## Core concepts
 
-### Q2. Why is this method useful?
-**Answer:** It addresses a practical pattern-discovery or prediction need. Its suitability depends on the dataset, assumptions, target/goal and operational constraints.
+### Q1. What is K-Means?
+**Answer:** It is a centroid-based clustering algorithm that assigns observations to the nearest centre and repeatedly updates the cluster centres.
+**Follow-up:** Is K-Means supervised?  
+**Answer:** No. It is an unsupervised learning method.
 
-### Q3. Explain the basic implementation.
-**Answer:**
-```python
-from sklearn.cluster import KMeans
-model = KMeans(n_clusters=3, random_state=42, n_init='auto')
-labels = model.fit_predict(X_scaled)
-centres = model.cluster_centers_
-```
-I would explain the inputs, parameters, what fit learns, what the output represents and how I validate it.
+### Q2. What is a centroid?
+**Answer:** It is the centre of a cluster, calculated from the observations assigned to that cluster.
+**Follow-up:** Is a centroid necessarily a real customer?  
+**Answer:** No. It is a representative feature location.
 
-## Practical and scenario questions
+### Q3. What does n_clusters control?
+**Answer:** It specifies how many clusters K-Means should create.
+**Follow-up:** How do you select it?  
+**Answer:** Use methods such as elbow and silhouette analysis, cluster profiles, stability and business usefulness.
 
-### Q4. A subscription business groups customers using monthly usage and support contacts. Centroids describe the typical profile of each group in scaled feature space.
-**Answer:** I would confirm the business objective and data meaning, inspect representative records, prepare features according to the algorithm's requirements, establish a baseline, fit using the appropriate training data and evaluate the output. I would inspect errors or group profiles, document assumptions and verify that the result is actionable.
+### Q4. What is inertia?
+**Answer:** It summarizes within-cluster distances to centroids. Lower inertia means observations are closer to their assigned centres.
+**Follow-up:** Why not choose the largest K because it lowers inertia?  
+**Answer:** Inertia generally decreases as K increases. More clusters can create unnecessary complexity.
 
-### Q5. What is the most important limitation to explain to a stakeholder?
-**Answer:** K must be selected, numeric features need meaningful scaling, and K-Means is sensitive to outliers and non-spherical cluster shapes. Different initializations can produce different results.
+### Q5. Why use k-means++ initialization?
+**Answer:** It selects initial centres in a way that tends to spread them out, often providing better starting points than arbitrary initialization.
 
-### Q6. The result changes significantly when you change one parameter. What do you do?
-**Answer:** Run a controlled sensitivity analysis across a reasonable parameter range, keep the data and evaluation method fixed, measure quality and stability, and choose based on validation and business usefulness rather than a single attractive result.
+## Scenario questions
 
-### Q7. A colleague says the algorithm's output is automatically the correct business answer. Do you agree?
-**Answer:** No. Algorithms produce outputs under assumptions. A developer must check data quality, interpret the result, compare with domain knowledge and validate against business outcomes.
+### Q6. K-Means groups customers mainly by annual spending. What do you inspect?
+**Answer:** Feature ranges, scaling, units and whether the selected features reflect the intended customer behaviour.
+**Follow-up:** What if spending should genuinely dominate?  
+**Answer:** Keep the feature influence if it matches the business objective, but document and validate the choice.
 
-### Q8. How would you prepare this method for production?
-**Answer:** Package preprocessing and the estimator consistently, validate input schema and ranges, record model/data versions, test edge cases, monitor input drift and outcomes, and define an owner and rollback procedure.
+### Q7. Cluster IDs change between runs. Is that necessarily a problem?
+**Answer:** No. IDs are arbitrary and initialization can change the order or assignment. Compare cluster profiles and stability.
+**Follow-up:** How can you improve repeatability?  
+**Answer:** Set random_state and use suitable n_init settings.
 
-## Senior developer questions
+### Q8. One cluster contains almost all customers. What do you investigate?
+**Answer:** Selected K, feature scaling, outliers, feature relevance and whether the data naturally supports distinct groups.
 
-### Q9. How do you compare this method with an alternative?
-**Answer:** Use the same data protocol and compare relevant quality measures, stability, interpretability, latency, memory, operational complexity and business impact. Avoid choosing solely by algorithm popularity.
+### Q9. A centroid represents a spend score and purchase frequency that no actual customer has. Is that valid?
+**Answer:** Yes. A centroid is an average feature location and does not need to correspond to an actual observation.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, feature distributions, prediction/cluster distribution, runtime failures, latency, delayed labels or business outcomes, and changes across important segments. Define alerts and review ownership.
+### Q10. Why should customer IDs be excluded from K-Means features?
+**Answer:** IDs are labels, not behavioural measurements. Their numeric or string representation does not indicate customer similarity.
 
-## Interview answer structure
-Clarify the business question → explain the concept → state assumptions → describe implementation → validate output → explain limitations → recommend monitoring.
+**Senior developer principle:** Interpret K-Means clusters using original business features, not the cluster number alone.
