@@ -7,7 +7,9 @@ Each day has a separate class-notes file and interview-question file. The class 
 - Explain why the concept is needed and what problem it solves.
 - Show the correct syntax and explain the keywords, parameters and important parts.
 - Give at least three clear examples for major programming constructs and methods where appropriate.
-- Show expected output and explain what Python or the ML library does.
+- Use one code cell per teaching step; show the expected output and explanation immediately below that cell before moving to the next step.
+- For coding-heavy lessons, expand the worked workflow substantially; keep concept-only lessons appropriately concise.
+- Keep class notes and scenario-based interview questions in separate files.
 - Use short, relatable business and ML scenarios.
 - Include simple scenario questions without turning every lesson into a long theoretical section.
 - Explain common beginner mistakes and practical limitations.
