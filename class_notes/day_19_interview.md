@@ -1,64 +1,71 @@
 # Day 19: Interview Questions — Linear Regression, Assumptions and Equation
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. What is linear regression, assumptions and equation?
-**Answer:** Linear regression estimates a continuous target as a weighted sum of input features plus an intercept.
+## Core concepts
 
-### Q2. Why is it important in an ML workflow?
-**Answer:** It improves the reliability of data preparation, training or evaluation. Check residual patterns, non-linearity, influential points and data quality. Normal residuals are relevant to some statistical inference, not a universal requirement for prediction.
+### Q1. What is regression?
+**Answer:** Regression is a supervised-learning task that predicts a numerical target, such as house price, delivery duration or monthly demand.
+**Follow-up:** What is the difference between regression and classification?  
+**Answer:** Regression predicts a numerical quantity; classification predicts a category or class.
 
-### Q3. What syntax or method would you use?
-**Answer:** y_hat = b0 + b1*x1 + ... + bp*xp. In scikit-learn use LinearRegression().fit(X_train, y_train), then predict(X_test). Inspect coefficients and residuals. I would explain the input, parameters, output and validation rather than reciting a function name.
+### Q2. What is linear regression?
+**Answer:** It predicts a numerical target by combining input features with learned weights and an intercept. In a simple one-feature case, it fits a straight-line relationship.
+**Follow-up:** Does the line need to pass through every training observation?  
+**Answer:** No. It represents the fitted relationship and generally minimizes a selected training objective.
 
-## Practical questions
+### Q3. What is a coefficient?
+**Answer:** A learned weight describing how the model's prediction changes with a feature while other included features are held constant.
+**Follow-up:** Does a positive coefficient prove causation?  
+**Answer:** No. It describes an association within the fitted model.
 
-### Q4. How do you know the operation worked correctly?
-**Answer:** Test a small known example, compare expected and actual output, inspect boundary cases and verify that the result still makes sense in the business domain.
+### Q4. What is an intercept?
+**Answer:** It is the model's predicted starting value when input features are zero. It may not have practical meaning if zero is outside the observed data range.
+**Follow-up:** Can the intercept be negative?  
+**Answer:** Yes. Its value depends on the data and fitted relationship; judge whether it is meaningful in context.
 
-### Q5. What beginner mistake should you avoid?
-**Answer:** Applying a technique without checking assumptions or the meaning of the data. I would inspect source definitions, data types, units, missingness and output before using it downstream.
+## Practical and scenario questions
 
-## Scenario-based interview questions
+### Q5. How do you train a LinearRegression model in scikit-learn?
+**Answer:** Create X as a two-dimensional feature table and y as the numerical target, split them appropriately, initialize LinearRegression, call fit on training data and predict on held-out or new data.
+**Follow-up:** What does fit() do?  
+**Answer:** It learns the model parameters from the training features and target.
 
-### Q6. A property company estimates sale price using area, bedrooms and age. The model is an estimate, not a guaranteed market valuation; location and market changes can matter.
-**Answer:** I would first clarify the business goal and gather examples of the issue. Then I would inspect source data, assumptions and the point in time at which each field becomes available. I would reproduce the problem on a small sample, test likely causes one at a time, select a correction based on evidence and validate it on held-out data. I would document limitations and monitor the outcome after release.
+### Q6. A house-price model predicts premium properties too low. What do you inspect?
+**Answer:** Inspect residuals by price band, check whether premium properties are represented in training data, identify missing features and assess whether a straight-line model is adequate.
+**Follow-up:** Should you immediately use a more complex algorithm?  
+**Answer:** Not before understanding the error pattern and validating that added complexity improves performance.
 
-### Q7. The aggregate metric is acceptable, but one important customer segment performs poorly. What do you do?
-**Answer:** I would calculate metrics and inspect data quality by segment, verify sample sizes, investigate whether the segment differs in behaviour or data capture, and discuss the error trade-off with the business owner. I would not hide the issue behind an overall average.
+### Q7. A coefficient is positive. Can the business claim that increasing the feature will cause the target to increase?
+**Answer:** No. A coefficient describes a fitted association. Causal claims require appropriate evidence and study design.
+**Follow-up:** What if the model predicts accurately?  
+**Answer:** Predictive accuracy still does not establish causality.
 
-### Q8. A teammate suggests an immediate fix without investigating the cause. How do you respond?
-**Answer:** I would ask for evidence and reproduce the failure. A quick change can mask the root cause or create a new defect. I would compare hypotheses, make the smallest safe change and add a regression test.
+### Q8. Training predictions are accurate but test predictions are poor. What could be happening?
+**Answer:** Overfitting, data distribution mismatch, leakage, an unsuitable split or a model that does not generalize.
+**Follow-up:** What should you inspect first?  
+**Answer:** Confirm the split and leakage controls, then compare training and test errors and data distributions.
 
-## Senior developer questions
+### Q9. A coefficient changes significantly when a correlated feature is added. What may explain it?
+**Answer:** Multicollinearity or overlapping information among predictors can make individual coefficients unstable.
+**Follow-up:** Does that automatically mean the model cannot predict?  
+**Answer:** No. It may mainly affect coefficient interpretation and stability.
 
-### Q9. How do you choose between a simple and complex solution?
-**Answer:** Compare correctness, maintainability, latency, cost, explainability, data requirements and operational risk. Start with a baseline and add complexity only when repeatable validation and business impact justify it.
+### Q10. The model predicts for an area far beyond every training example. What is the concern?
+**Answer:** Extrapolation. The learned relationship may not continue outside the range represented in training data.
+**Follow-up:** What should an API do?  
+**Answer:** Validate or flag inputs outside the supported range according to the application's policy.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, missing and unknown values, output distributions, latency, errors, delayed ground-truth metrics and segment-level outcomes. Define owners and alert thresholds before release.
+## Residual and diagnostics questions
 
-## Answer framework
-1. Clarify the decision and constraints.
-2. Inspect the data and assumptions.
-3. Diagnose using evidence.
-4. Choose the smallest safe correction.
-5. Validate normal and edge cases.
-6. Communicate trade-offs and limitations.
-7. Monitor after release.
+### Q11. What is a residual?
+**Answer:** Actual target minus predicted target for one observation. Positive residuals indicate underprediction; negative residuals indicate overprediction.
+**Follow-up:** Why plot residuals against predictions?  
+**Answer:** To find patterns such as curvature, changing spread or systematic bias.
 
+### Q12. What assumptions or diagnostics do you consider?
+**Answer:** Check whether the relationship is reasonably represented by the model, whether observations are independent for the task, whether residual spread changes, and whether influential observations or multicollinearity affect interpretation. Assumptions for classical statistical inference are not all universal requirements for prediction.
+**Follow-up:** Is normal residual distribution always required for useful predictions?  
+**Answer:** No. It matters for some classical inference procedures, not as a universal requirement for predictive use.
 
----
-
-## Detailed Scenario and Technical Interview Expansion
-
-### Scenario: house price prediction
-A model predicts price from area, bedrooms and age. Errors are consistently positive for premium locations and negative for outer suburbs.
-
-**Senior answer:** Inspect residuals by location and price band. The model may omit location effects or use an inadequate functional form. Add meaningful location features if available at prediction time, validate on a proper split and compare with a baseline.
-
-**Q1. What does a coefficient mean?** Expected target change for a one-unit increase in that feature, holding other included features constant within the model.  
-**Q2. Does a coefficient prove causation?** No. Predictive association is not causal evidence.  
-**Q3. What is the intercept?** Predicted target when included features equal zero; it may not have a useful real-world interpretation if zero is outside the data range.  
-**Q4. Why inspect residuals?** Patterns can reveal nonlinearity, unequal variance, outliers or missing structure.  
-**Q5. Why split data?** To estimate performance on unseen cases rather than memorized training examples.
+**Senior developer principle:** A fitted coefficient is not a causal explanation. Validate the model's errors and the meaning of its features.
