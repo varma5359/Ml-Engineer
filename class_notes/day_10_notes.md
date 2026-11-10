@@ -325,3 +325,30 @@ The ML engineer should:
 - Validate data types, units, ranges and business constraints.
 - Fit learned preprocessing steps using training data only.
 - Document every material cleaning decision and verify the output.
+
+---
+
+## Beginner-to-Developer Expansion: More Examples and Real-World Reasoning
+
+### A. Start with the simplest meaning
+Before memorizing a function, explain the idea in your own words. Identify the input, output and the reason the operation exists. A correct syntax call on the wrong data is still a wrong solution.
+
+### B. Additional practical scenario
+If customer age is missing, investigate why. A missing age is not automatically age zero. A duplicate transaction ID may be a repeated load, but two legitimate line items may share an order ID; define the correct business key before deleting.
+
+### C. Syntax and use: how to choose
+isna().sum() counts missing values; duplicated() identifies repeated rows; drop_duplicates(subset=...) uses selected key columns; fillna() imputes values. Document every cleaning rule.
+
+### D. What happens if this is skipped?
+If missing values are filled with zero indiscriminately, the model may interpret unknown as a real zero. If duplicates are removed using the wrong key, valid transactions may be lost.
+
+### E. Senior developer review checklist
+- Is the business definition clear?
+- Are input types, units, shape and missing values checked?
+- Can the result be verified on a small hand-checkable example?
+- Have normal, boundary and invalid cases been considered?
+- Is the approach simple enough to explain and maintain?
+- Are limitations and possible failure costs documented?
+
+### F. Explain it in an interview
+Use this order: definition → why it is needed → syntax or method → small example → real business scenario → what can go wrong → how you validate the result. Avoid answering with only a library function name.
