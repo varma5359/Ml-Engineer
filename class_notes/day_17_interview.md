@@ -46,3 +46,19 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: return rate rises
+A retailer sees return counts rise in one product category. The category also had twice as many orders this month.
+
+**Senior answer:** Plot both count and return rate (returns/orders). Compare across time and category, check denominator changes and inspect data completeness. Do not infer a cause from the chart alone.
+
+**Q1. Histogram or bar chart for age?** Histogram for numeric distribution; bar chart for counts of discrete groups/bins.  
+**Q2. Why label units?** ₹ and dollars or days and hours are not interchangeable; labels prevent wrong interpretation.  
+**Q3. Why can raw counts mislead?** Group sizes differ; use rates or normalized proportions.  
+**Q4. Does a correlation heatmap prove causal influence?** No. It shows pairwise association only.  
+**Q5. How would you explain a chart to management?** State the question, metric, sample/time period, key observation, caveat and decision relevance.
