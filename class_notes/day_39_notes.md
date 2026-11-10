@@ -425,10 +425,18 @@ The function converts frequent itemsets into directional association rules.
 ### 9.2. Create association rules
 
 ```python
-rules = association_rules(
-    frequent_itemsets,
-    metric="confidence",
-    min_threshold=0.5
+try:
+    rules = association_rules(
+        frequent_itemsets,
+        num_itemsets=len(basket_df),
+        metric="confidence",
+        min_threshold=0.5
+    )
+except TypeError:
+    rules = association_rules(
+        frequent_itemsets,
+        metric="confidence",
+        min_threshold=0.5
 )
 
 print(rules.head())
