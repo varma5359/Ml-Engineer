@@ -1,4 +1,4 @@
-# Machine Learning Engineer — Day 01–76 Notes
+# Machine Learning Engineer — Day 01–90 Notes
 
 Each day has a separate class-notes file and interview-question file. The class notes reuse relevant Python and statistics teaching material where appropriate, adapt examples to machine learning, and use the Data Analyst Days 25–47 notes as a teaching reference for statistics, EDA and visualization. The ML career_path.md remains the authority for day titles and sequence.
 
@@ -96,5 +96,19 @@ Each day has a separate class-notes file and interview-question file. The class 
 | 74 | Retraining strategies and feedback loops | [Notes](day_74_notes.md) | [Interview](day_74_interview.md) |
 | 75 | ML security, privacy and governance | [Notes](day_75_notes.md) | [Interview](day_75_interview.md) |
 | 76 | Production ML architecture and reliability | [Notes](day_76_notes.md) | [Interview](day_76_interview.md) |
+| 77 | Capstone: problem definition and business metrics | [Notes](day_77_notes.md) | [Interview](day_77_interview.md) |
+| 78 | Capstone: data understanding and quality | [Notes](day_78_notes.md) | [Interview](day_78_interview.md) |
+| 79 | Capstone: preprocessing and feature engineering | [Notes](day_79_notes.md) | [Interview](day_79_interview.md) |
+| 80 | Capstone: baseline model and initial experiments | [Notes](day_80_notes.md) | [Interview](day_80_interview.md) |
+| 81 | Capstone: candidate model training | [Notes](day_81_notes.md) | [Interview](day_81_interview.md) |
+| 82 | Capstone: evaluation and model selection | [Notes](day_82_notes.md) | [Interview](day_82_interview.md) |
+| 83 | Capstone: tuning and validation | [Notes](day_83_notes.md) | [Interview](day_83_interview.md) |
+| 84 | Capstone: explainability and business interpretation | [Notes](day_84_notes.md) | [Interview](day_84_interview.md) |
+| 85 | Capstone: prediction API | [Notes](day_85_notes.md) | [Interview](day_85_interview.md) |
+| 86 | Capstone: interactive application | [Notes](day_86_notes.md) | [Interview](day_86_interview.md) |
+| 87 | Capstone: Docker and deployment preparation | [Notes](day_87_notes.md) | [Interview](day_87_interview.md) |
+| 88 | Capstone: experiment tracking and versioning | [Notes](day_88_notes.md) | [Interview](day_88_interview.md) |
+| 89 | Capstone: monitoring and documentation | [Notes](day_89_notes.md) | [Interview](day_89_interview.md) |
+| 90 | Capstone: final presentation and portfolio | [Notes](day_90_notes.md) | [Interview](day_90_interview.md) |
 
-**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–76 are covered in this folder; continue with Day 77 onward in syllabus order.
+**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–90 are covered in this folder. The 90-day Machine Learning Engineer pathway is complete.
