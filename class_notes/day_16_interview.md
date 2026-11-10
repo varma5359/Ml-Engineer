@@ -46,3 +46,19 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: hospital readmission
+A model predicts readmission at discharge but includes a field updated only after readmission. The offline score is excellent but the field is unavailable at prediction time.
+
+**Senior answer:** Remove or redefine the feature, confirm timestamps with the data owner, rebuild the pipeline and evaluate using a split that reflects deployment. Investigate suspiciously high metrics before celebrating.
+
+**Q1. Why is scaling before train-test split leakage?** It learns test-set distribution statistics.  
+**Q2. Is customer ID always leakage?** Not automatically, but it can cause memorization and poor generalization; evaluate based on the intended unseen-entity scenario.  
+**Q3. How does Pipeline help?** It keeps learned transformations inside each training fold during cross-validation and applies them consistently at inference.  
+**Q4. A feature has a strong correlation with the target. Is it safe?** Check when and how it is created; strong correlation may indicate leakage.  
+**Q5. What if the test score is 99.9% for a difficult task?** Audit labels, split logic, duplicates, timestamps and feature availability before assuming exceptional performance.
