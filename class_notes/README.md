@@ -1,6 +1,20 @@
-# Machine Learning Engineer — Day 01–30 Notes
+# Machine Learning Engineer — Day 01–40 Notes
 
-Each day has a separate class-notes file and interview-question file. Days 1–10 have been expanded with additional beginner-first explanations and industry scenarios. Days 11–30 have been added following the approved syllabus sequence.
+Each day has a separate class-notes file and interview-question file. The class notes follow the beginner-first teaching style demonstrated in the supplied Python Conditional Statements reference.
+
+## Teaching format
+- Start each topic with a clear definition in simple language.
+- Explain why the concept is needed and what problem it solves.
+- Show the correct syntax and explain the keywords, parameters and important parts.
+- Give at least three clear examples for major programming constructs and methods where appropriate.
+- Show expected output and explain what Python or the ML library does.
+- Use short, relatable business and ML scenarios.
+- Include simple scenario questions without turning every lesson into a long theoretical section.
+- Explain common beginner mistakes and practical limitations.
+- Keep the notes in Markdown and follow the approved syllabus order.
+- Do not add the separate "Expanded Beginner-to-Developer Teaching Layer" section.
+
+## Day-wise files
 
 | Day | Topic | Class notes | Interview questions |
 |---:|---|---|---|
@@ -33,29 +47,16 @@ Each day has a separate class-notes file and interview-question file. Days 1–1
 | 27 | K-nearest neighbors | [Notes](day_27_notes.md) | [Interview](day_27_interview.md) |
 | 28 | Naive Bayes | [Notes](day_28_notes.md) | [Interview](day_28_interview.md) |
 | 29 | Decision trees | [Notes](day_29_notes.md) | [Interview](day_29_interview.md) |
-| 30 | Random forests and ensemble learning | [Notes](day_30_notes.md) | [Interview](day_30_interview.md) |
-
-## Teaching approach
-- Begin with definitions and prerequisites; assume no prior knowledge of the day's concept.
-- Explain why the concept is needed and what can go wrong if it is skipped.
-- Include syntax, parameter meaning, practical examples and expected behaviour.
-- Use business scenarios to explain engineering decisions, not unnecessary code dumps.
-- Include common mistakes, limitations, validation steps and scenario-based interview answers.
-- Markdown only; no LaTeX. No daily projects or AI mentor prompts.
-
-**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–40 are covered in this folder; continue with Day 41 onward in order.
-
-## Days 31–40
-
-| Day | Topic | Class notes | Interview questions |
-|---:|---|---|---|
-| 31 | Support vector machines and maximum-margin hyperplanes | [Notes](day_31_notes.md) | [Interview](day_31_interview.md) |
-| 32 | Supervised learning comparison and model selection | [Notes](day_32_notes.md) | [Interview](day_32_interview.md) |
-| 33 | Clustering and unsupervised learning | [Notes](day_33_notes.md) | [Interview](day_33_interview.md) |
-| 34 | K-means and centroid-based clustering | [Notes](day_34_notes.md) | [Interview](day_34_interview.md) |
-| 35 | Elbow method and silhouette score | [Notes](day_35_notes.md) | [Interview](day_35_interview.md) |
-| 36 | Hierarchical clustering and dendrograms | [Notes](day_36_notes.md) | [Interview](day_36_interview.md) |
-| 37 | DBSCAN and density-based clustering | [Notes](day_37_notes.md) | [Interview](day_37_interview.md) |
+| 30 | Random forests | [Notes](day_30_notes.md) | [Interview](day_30_interview.md) |
+| 31 | Support vector machines | [Notes](day_31_notes.md) | [Interview](day_31_interview.md) |
+| 32 | Supervised model comparison | [Notes](day_32_notes.md) | [Interview](day_32_interview.md) |
+| 33 | Clustering | [Notes](day_33_notes.md) | [Interview](day_33_interview.md) |
+| 34 | K-Means | [Notes](day_34_notes.md) | [Interview](day_34_interview.md) |
+| 35 | Elbow and silhouette | [Notes](day_35_notes.md) | [Interview](day_35_interview.md) |
+| 36 | Hierarchical clustering | [Notes](day_36_notes.md) | [Interview](day_36_interview.md) |
+| 37 | DBSCAN | [Notes](day_37_notes.md) | [Interview](day_37_interview.md) |
 | 38 | PCA and dimensionality reduction | [Notes](day_38_notes.md) | [Interview](day_38_interview.md) |
-| 39 | Association rules and market basket analysis | [Notes](day_39_notes.md) | [Interview](day_39_interview.md) |
-| 40 | Anomaly detection concepts | [Notes](day_40_notes.md) | [Interview](day_40_interview.md) |
+| 39 | Association rules | [Notes](day_39_notes.md) | [Interview](day_39_interview.md) |
+| 40 | Anomaly detection | [Notes](day_40_notes.md) | [Interview](day_40_interview.md) |
+
+**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–40 are covered in this folder; continue with Day 41 onward in syllabus order.
