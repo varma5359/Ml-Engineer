@@ -1,4 +1,4 @@
-# Machine Learning Engineer — Day 01–53 Notes
+# Machine Learning Engineer — Day 01–65 Notes
 
 Each day has a separate class-notes file and interview-question file. The class notes reuse relevant Python and statistics teaching material where appropriate, adapt examples to machine learning, and use the Data Analyst Days 25–47 notes as a teaching reference for statistics, EDA and visualization. The ML career_path.md remains the authority for day titles and sequence.
 
@@ -73,5 +73,17 @@ Each day has a separate class-notes file and interview-question file. The class 
 | 51 | Imbalanced datasets and resampling concepts | [Notes](day_51_notes.md) | [Interview](day_51_interview.md) |
 | 52 | Model bias, variance and overfitting | [Notes](day_52_notes.md) | [Interview](day_52_interview.md) |
 | 53 | Model interpretability and responsible ML | [Notes](day_53_notes.md) | [Interview](day_53_interview.md) |
+| 54 | Gradient boosting fundamentals | [Notes](day_54_notes.md) | [Interview](day_54_interview.md) |
+| 55 | XGBoost and practical boosting workflows | [Notes](day_55_notes.md) | [Interview](day_55_interview.md) |
+| 56 | LightGBM and CatBoost concepts and use cases | [Notes](day_56_notes.md) | [Interview](day_56_interview.md) |
+| 57 | Time-series forecasting fundamentals | [Notes](day_57_notes.md) | [Interview](day_57_interview.md) |
+| 58 | Time-series decomposition and feature creation | [Notes](day_58_notes.md) | [Interview](day_58_interview.md) |
+| 59 | Recommendation system fundamentals | [Notes](day_59_notes.md) | [Interview](day_59_interview.md) |
+| 60 | Model pipelines and preprocessing integration | [Notes](day_60_notes.md) | [Interview](day_60_interview.md) |
+| 61 | Model selection and experiment tracking | [Notes](day_61_notes.md) | [Interview](day_61_interview.md) |
+| 62 | ML project reproducibility and artifact management | [Notes](day_62_notes.md) | [Interview](day_62_interview.md) |
+| 63 | Scikit-learn pipelines and serialization | [Notes](day_63_notes.md) | [Interview](day_63_interview.md) |
+| 64 | Model deployment concepts and inference APIs | [Notes](day_64_notes.md) | [Interview](day_64_interview.md) |
+| 65 | FastAPI model serving and input validation | [Notes](day_65_notes.md) | [Interview](day_65_interview.md) |
 
-**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–53 are covered in this folder; continue with Day 54 onward in syllabus order.
+**Syllabus:** approved 90-day Machine Learning Engineer pathway. Days 1–65 are covered in this folder; continue with Day 66 onward in syllabus order.
