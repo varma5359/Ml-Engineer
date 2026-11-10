@@ -46,3 +46,29 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: sales fell in one region
+A sales dashboard shows Region B has lower revenue. A junior analyst concludes the regional team is underperforming.
+
+**Senior engineer response:** Check the number of active stores, number of orders, average order value, product availability, reporting completeness and time period. Compare rates and per-store metrics, not just totals. Look for missing transactions and seasonality. Present evidence and alternative explanations before recommending action.
+
+### Scenario questions
+**Q1. What is the first thing you do when receiving an unfamiliar dataset?**  
+Confirm row grain, business meaning, shape, columns, types, missingness, duplicates and target definition.
+
+**Q2. Why use a histogram instead of a bar chart for a continuous numeric variable?**  
+A histogram groups numeric values into intervals and shows a distribution. A bar chart usually compares discrete categories.
+
+**Q3. A region has the highest number of returns. Does that mean it has the worst return rate?**  
+Not necessarily. Divide returns by orders or units sold and compare denominators.
+
+**Q4. Can EDA cause data leakage?**  
+Yes, if test outcomes guide feature selection or preprocessing decisions. Exploratory analysis should respect the evaluation protocol, especially when choices are tuned based on labels.
+
+**Q5. How do you communicate EDA to a business stakeholder?**  
+State the question, show a correctly labelled chart, quantify the pattern, explain uncertainty and distinguish observed association from proven cause.
