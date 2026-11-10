@@ -46,3 +46,29 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: customer risk model uses city, education and salary
+A developer maps Hyderabad=1, Vizag=2 and Chennai=3. The model may interpret Chennai as “greater” than Hyderabad even though city has no numeric order. Salary is also measured in thousands while age is measured in years, so KNN distances may be dominated by salary.
+
+**Senior engineer response:** One-hot encode city. Use ordinal encoding for education only if the category order is real and documented. Scale continuous numeric fields for distance-based models. Put both operations in a ColumnTransformer/Pipeline so training and inference use identical transformations.
+
+### Scenario questions
+**Q1. Why is label encoding city risky?**  
+It assigns arbitrary numeric order to categories that have no natural ranking. One-hot encoding is often safer for nominal features.
+
+**Q2. Does every model require scaling?**  
+No. KNN, SVM and many gradient-based models are scale-sensitive. Decision trees and random forests generally do not require standard scaling.
+
+**Q3. Why must a scaler be fitted only on training data?**  
+The test set must simulate unseen future data. Learning its mean or range leaks information from the test distribution into training.
+
+**Q4. What if a new city appears at prediction time?**  
+Configure the encoder to handle unknown categories, for example OneHotEncoder(handle_unknown="ignore"), and monitor the new category frequency.
+
+**Q5. Why not scale the entire dataset before splitting?**  
+Because the scaling statistics would include validation/test observations and make the evaluation less independent.
