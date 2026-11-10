@@ -1,48 +1,67 @@
 # Day 24: Interview Questions — Regularization: Ridge and Lasso
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. Define regularization: ridge and lasso.
-**Answer:** Regularization penalizes large coefficients to reduce model complexity. Ridge uses an L2 penalty; Lasso uses an L1 penalty and can set coefficients to zero.
+## Core concepts
 
-### Q2. Why would you use it?
-**Answer:** It provides a systematic approach to learning patterns from data. Its suitability depends on the target, data quality, scale, assumptions and business cost of errors.
+### Q1. What is regularization?
+**Answer:** It adds a penalty to discourage excessively large model coefficients. It can reduce complexity and improve generalization when selected appropriately.
+**Follow-up:** Does regularization always improve performance?  
+**Answer:** No. Too much penalty can cause underfitting.
 
-### Q3. Explain the basic syntax.
-**Answer:** Ridge(alpha=1.0); Lasso(alpha=0.1). Scale features and tune alpha using cross-validation. I would explain the input, parameters, fitted state and output, not simply quote the class name.
+### Q2. What is Ridge regression?
+**Answer:** Ridge uses an L2 penalty and generally shrinks coefficients towards zero without usually setting them exactly to zero.
+**Follow-up:** When might Ridge be useful?  
+**Answer:** When many predictors contain useful information or are correlated and coefficient magnitude needs controlling.
 
-## Practical questions
+### Q3. What is Lasso regression?
+**Answer:** Lasso uses an L1 penalty and can set some coefficients exactly to zero, creating a sparse coefficient representation.
+**Follow-up:** Does a zero coefficient prove the feature is universally useless?  
+**Answer:** No. It depends on the dataset, alpha and other predictors.
 
-### Q4. How do you know the model is learning useful patterns rather than memorizing?
-**Answer:** Compare training and validation performance, use an appropriate split, inspect error patterns and evaluate once on untouched test data. A large gap between training and validation can indicate overfitting.
+### Q4. What does alpha control?
+**Answer:** Alpha controls regularization strength. Larger alpha generally means a stronger penalty.
+**Follow-up:** What can happen if alpha is too large?  
+**Answer:** The model may become too simple and underfit.
 
-### Q5. What would you inspect before tuning the model?
-**Answer:** Target definition, missing values, data leakage, feature types, scaling needs, class balance, baseline performance and the validation strategy.
+### Q5. Why scale features before Ridge or Lasso?
+**Answer:** The penalty acts on coefficient sizes, and feature units affect those sizes. Scaling makes the penalty more comparable across numerical inputs.
+**Follow-up:** How do you prevent scaling leakage?  
+**Answer:** Fit the scaler inside a pipeline using training data only.
 
 ## Scenario questions
 
-### Q6. A marketing dataset has hundreds of related campaign variables. Ordinary regression coefficients swing widely between samples.
-**Answer:** I would clarify the business requirement, inspect examples and data quality, establish a baseline, train with leakage-safe preprocessing and validate on representative unseen data. I would compare relevant metrics, examine errors by segment and explain the cost of false positives and false negatives. I would not deploy based only on one aggregate score.
+### Q6. Coefficients are very large and unstable. What can you try?
+**Answer:** Check feature scaling and multicollinearity, then compare regularized models such as Ridge or Lasso using validation.
+**Follow-up:** Should you automatically choose Lasso?  
+**Answer:** No. Compare alternatives and the modelling objective.
 
-### Q7. Training performance is excellent but validation performance is poor. What might be happening?
-**Answer:** The model may be overfitting, the split may not represent deployment, the dataset may be small, or there may be leakage or distribution differences. I would check split logic, pipeline boundaries, model complexity and segment coverage before changing hyperparameters.
+### Q7. Lasso sets a feature coefficient to zero. What does it mean?
+**Answer:** That fitted Lasso model does not use the feature under the selected data and alpha. It does not prove the feature has no value in every population or model.
+**Follow-up:** Could the selected feature set change with another sample?  
+**Answer:** Yes, especially when predictors are correlated or data is limited.
 
-### Q8. A stakeholder asks you to improve accuracy, but missing a positive case is very expensive. What do you recommend?
-**Answer:** Clarify the cost of false negatives and false positives. Evaluate recall, precision, PR curve and confusion matrices across thresholds. Choose a threshold using validation data and business capacity, and explain the trade-off. Accuracy alone is not enough.
+### Q8. Should alpha be chosen using final test performance?
+**Answer:** No. Use validation or cross-validation to choose alpha and reserve the test set for final evaluation.
+**Follow-up:** Why use GridSearchCV around a pipeline?  
+**Answer:** It lets each fold fit its own scaler and model, reducing preprocessing leakage during parameter selection.
 
-## Senior developer questions
+### Q9. Ridge performs better than Lasso on validation data. What might that suggest?
+**Answer:** Retaining many predictors with smaller coefficients may suit the problem better than a sparse representation.
+**Follow-up:** Is this guaranteed to remain true in production?  
+**Answer:** No. Validate on representative data and monitor performance.
 
-### Q9. How do you decide whether this method is suitable for production?
-**Answer:** Assess validated performance, latency, memory, explainability, stability, monitoring, data availability, retraining needs and operational ownership. A slightly weaker but reliable model may be preferable to a fragile complex one.
+### Q10. A regularized model performs worse than ordinary regression. What do you investigate?
+**Answer:** Alpha strength, scaling, feature quality, sample size and validation stability. The penalty may be too strong or unnecessary for the task.
 
-### Q10. What would you monitor after release?
-**Answer:** Input schema and data quality, missing/unknown values, prediction distribution, latency, errors, drift and delayed ground-truth metrics. Review performance by relevant segment and define rollback criteria.
+## Practical questions
 
-## Structured scenario-answer method
-1. Clarify business impact.
-2. Gather evidence and representative examples.
-3. Identify likely causes without guessing.
-4. Test hypotheses one at a time.
-5. Choose a safe correction.
-6. Validate on unseen and edge-case data.
-7. Communicate trade-offs and monitor.
+### Q11. What is the difference between Ridge and Lasso penalties?
+**Answer:** Ridge uses L2 regularization and generally shrinks coefficients. Lasso uses L1 regularization and can set coefficients exactly to zero.
+
+### Q12. Why use cross-validation for alpha selection?
+**Answer:** It compares candidate penalty strengths across multiple training/validation folds and reduces reliance on one split.
+**Follow-up:** Should test data be included in alpha selection?  
+**Answer:** No.
+
+**Senior developer principle:** Regularization is a controlled trade-off between model flexibility and stability, not a switch that automatically improves every model.
