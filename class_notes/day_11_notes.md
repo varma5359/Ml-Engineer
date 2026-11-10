@@ -69,3 +69,57 @@ Explain the definition, why the step is required, its syntax, assumptions, a bus
 
 ## 10. Related interview practice
 See `day_11_interview.md` for scenario questions and model answers.
+
+
+---
+
+## Detailed Beginner Teaching Expansion
+
+### Beginner explanation: what makes a value an outlier?
+An outlier is a value that is unusually far from the pattern of the other observations. “Unusual” depends on the feature, population and business context. A ₹5 lakh transaction may be unusual for a small grocery purchase but normal for a wholesale supplier.
+
+**Three important possibilities**
+- Data error: an extra zero was typed, a unit was converted incorrectly, or a sensor malfunctioned.
+- Rare but valid event: a premium purchase, a major claim or a genuine fraud attempt.
+- Process change: a new business channel or pricing policy changed the normal range.
+
+### Detection methods and when to use them
+| Method | Meaning | Useful when | Limitation |
+|---|---|---|---|
+| Domain rule | Check a value against business constraints | Age cannot be negative; quantity must be positive | Rules must be verified with domain owners |
+| IQR | Uses the middle 50% of values | Skewed data; quick univariate screening | Can flag valid tail observations |
+| Z-score | Measures distance from mean in standard deviations | Roughly bell-shaped numeric data | Sensitive to outliers; distribution assumption matters |
+| Visual inspection | Box plot, histogram, scatter plot | Understanding context and multivariate patterns | Requires careful interpretation |
+
+### Syntax with a complete worked example
+```python
+import pandas as pd
+
+amount = pd.Series([100, 120, 130, 125, 140, 150, 900])
+
+q1 = amount.quantile(0.25)
+q3 = amount.quantile(0.75)
+iqr = q3 - q1
+
+lower = q1 - 1.5 * iqr
+upper = q3 + 1.5 * iqr
+
+outlier_mask = (amount < lower) | (amount > upper)
+print(amount[outlier_mask])
+```
+- `quantile(0.25)` calculates the first quartile.
+- `quantile(0.75)` calculates the third quartile.
+- IQR is the distance between these quartiles.
+- The mask returns True for values outside the fences.
+
+**Expected output:** the output identifies the unusually high value (900) for this sample. Exact quartile calculation can vary with interpolation settings.
+
+### Treatment choices
+1. Correct the value if the source system confirms a recording error.
+2. Retain it if it is a valid business event.
+3. Cap/winsorize only when the business meaning supports limiting extreme influence.
+4. Apply a transformation such as log to a positive, heavily skewed feature when appropriate.
+5. Use robust methods that are less sensitive to extremes.
+6. Keep an indicator flag when the fact that a value was extreme may itself be informative.
+
+**Do not automatically delete outliers.** Compare row counts, distributions and model performance before and after treatment. If a threshold is part of a model pipeline, learn it from training data only.
