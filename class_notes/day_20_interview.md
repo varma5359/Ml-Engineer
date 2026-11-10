@@ -1,64 +1,79 @@
 # Day 20: Interview Questions — Cost Functions and Residual Analysis
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. What is cost functions and residual analysis?
-**Answer:** A residual is actual value minus predicted value. A loss or cost function quantifies model error.
+## Core concepts
 
-### Q2. Why is it important in an ML workflow?
-**Answer:** It improves the reliability of data preparation, training or evaluation. Lower training loss does not guarantee better unseen predictions. MSE heavily penalizes large errors; choose metrics according to business costs.
+### Q1. What is a residual?
+**Answer:** A residual is the actual target minus the model prediction for one observation. Positive means underprediction; negative means overprediction.
+**Follow-up:** Why is the sign useful?  
+**Answer:** It reveals the direction of prediction error, not just its magnitude.
 
-### Q3. What syntax or method would you use?
-**Answer:** MAE is average absolute error; MSE is average squared error; RMSE is the square root of MSE. Use mean_absolute_error and mean_squared_error from sklearn.metrics. I would explain the input, parameters, output and validation rather than reciting a function name.
+### Q2. What is a loss function?
+**Answer:** A loss function measures how wrong a prediction or set of predictions is. Training algorithms use an objective to adjust model parameters and reduce loss.
+**Follow-up:** Do all loss functions penalize errors in the same way?  
+**Answer:** No. Some give larger errors more influence than others.
 
-## Practical questions
+### Q3. What is MAE?
+**Answer:** Mean Absolute Error is the average absolute prediction error. It is expressed in the same unit as the target.
+**Follow-up:** Why is it easy to communicate?  
+**Answer:** A stakeholder can interpret it as a typical absolute error in minutes, price units or another target unit.
 
-### Q4. How do you know the operation worked correctly?
-**Answer:** Test a small known example, compare expected and actual output, inspect boundary cases and verify that the result still makes sense in the business domain.
+### Q4. What is MSE?
+**Answer:** Mean Squared Error averages squared prediction errors. It is in squared target units and gives large errors more influence.
+**Follow-up:** Why might MSE be sensitive to one large error?  
+**Answer:** Squaring increases the contribution of larger residuals.
 
-### Q5. What beginner mistake should you avoid?
-**Answer:** Applying a technique without checking assumptions or the meaning of the data. I would inspect source definitions, data types, units, missingness and output before using it downstream.
+### Q5. What is RMSE?
+**Answer:** Root Mean Squared Error is the square root of MSE. It returns the result to the same unit as the target while still emphasizing large errors.
+**Follow-up:** Why can RMSE exceed MAE?  
+**Answer:** Large errors have extra influence in the squared-error calculation.
 
-## Scenario-based interview questions
+### Q6. What does R-squared describe?
+**Answer:** It compares model performance with a mean-target reference. A negative value on evaluation data means the model is worse than that reference.
+**Follow-up:** Does high R-squared guarantee acceptable business errors?  
+**Answer:** No. Inspect error magnitude, segments and residual patterns.
 
-### Q6. A house-price model performs well for mid-range homes but underpredicts luxury homes. Segment residual analysis exposes a failure hidden by the overall average.
-**Answer:** I would first clarify the business goal and gather examples of the issue. Then I would inspect source data, assumptions and the point in time at which each field becomes available. I would reproduce the problem on a small sample, test likely causes one at a time, select a correction based on evidence and validate it on held-out data. I would document limitations and monitor the outcome after release.
+## Scenario questions
 
-### Q7. The aggregate metric is acceptable, but one important customer segment performs poorly. What do you do?
-**Answer:** I would calculate metrics and inspect data quality by segment, verify sample sizes, investigate whether the segment differs in behaviour or data capture, and discuss the error trade-off with the business owner. I would not hide the issue behind an overall average.
+### Q7. A delivery model has MAE of five minutes. How do you explain it?
+**Answer:** On the evaluated observations, the average absolute difference between predicted and actual delivery time is five minutes.
+**Follow-up:** Does every prediction have a five-minute error?  
+**Answer:** No. Some errors may be smaller and others larger.
 
-### Q8. A teammate suggests an immediate fix without investigating the cause. How do you respond?
-**Answer:** I would ask for evidence and reproduce the failure. A quick change can mask the root cause or create a new defect. I would compare hypotheses, make the smallest safe change and add a regression test.
+### Q8. RMSE is much larger than MAE. What might this indicate?
+**Answer:** A few large prediction errors may be contributing strongly to RMSE.
+**Follow-up:** What would you inspect?  
+**Answer:** Sort observations by absolute residual and investigate the largest errors.
 
-## Senior developer questions
+### Q9. A model has good overall MAE but consistently underpredicts luxury houses. What do you do?
+**Answer:** Inspect residuals by price segment, sample representation, feature coverage and source quality. Validate any change on appropriate held-out data.
+**Follow-up:** Why report segment counts?  
+**Answer:** A metric based on very few examples can be unstable.
 
-### Q9. How do you choose between a simple and complex solution?
-**Answer:** Compare correctness, maintainability, latency, cost, explainability, data requirements and operational risk. Start with a baseline and add complexity only when repeatable validation and business impact justify it.
+### Q10. Can R-squared be negative on test data?
+**Answer:** Yes. It means the model performs worse than the mean-target reference under the R-squared comparison.
+**Follow-up:** Should you hide the negative result?  
+**Answer:** No. Investigate the model and report it transparently.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, missing and unknown values, output distributions, latency, errors, delayed ground-truth metrics and segment-level outcomes. Define owners and alert thresholds before release.
+### Q11. Which metric should be used if very large errors are especially costly?
+**Answer:** Consider RMSE or another loss that penalizes large errors, but select the metric based on the actual business costs and inspect the full error distribution.
+**Follow-up:** Is RMSE always the best choice?  
+**Answer:** No. It depends on the problem and cost structure.
 
-## Answer framework
-1. Clarify the decision and constraints.
-2. Inspect the data and assumptions.
-3. Diagnose using evidence.
-4. Choose the smallest safe correction.
-5. Validate normal and edge cases.
-6. Communicate trade-offs and limitations.
-7. Monitor after release.
+### Q12. Why inspect residuals by region or product category?
+**Answer:** An overall metric can hide a weak segment or systematic underprediction/overprediction. Segment-level analysis shows where the model is unreliable.
 
+## Code interpretation
 
----
+### Q13. What does mean_absolute_error(y_true, y_pred) return?
+**Answer:** The average absolute difference between the aligned actual and predicted values.
+**Follow-up:** What must be true about the arrays?  
+**Answer:** They must refer to the same observations in the same order.
 
-## Detailed Scenario and Technical Interview Expansion
+### Q14. Why does MSE use squared errors?
+**Answer:** It makes errors non-negative and gives larger errors more influence.
+**Follow-up:** What is one drawback?  
+**Answer:** It is sensitive to large errors and is measured in squared target units.
 
-### Scenario: good average error, bad luxury predictions
-A property model has acceptable overall MAE but repeatedly underestimates expensive properties.
-
-**Senior answer:** Segment residuals by price band and location, inspect data coverage and feature representation, and discuss whether large-value errors have greater business cost. Evaluate alternative features/models using validation data.
-
-**Q1. Why is RMSE more sensitive to large errors than MAE?** Squaring gives larger errors disproportionately more weight.  
-**Q2. Can R² be negative?** Yes. On evaluation data the model can perform worse than predicting the mean baseline.  
-**Q3. What does a residual plot with a curve indicate?** The model may be missing a nonlinear relationship.  
-**Q4. Should you optimize the metric with the smallest number?** Not automatically; choose based on target units, business error costs and robustness.  
-**Q5. Why is training error not enough?** It does not estimate performance on unseen observations.
+**Senior developer principle:** One metric cannot explain every model failure. Combine error summaries, residual plots and business-segment analysis.
