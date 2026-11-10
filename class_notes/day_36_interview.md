@@ -1,47 +1,45 @@
 # Day 36: Interview Questions — Hierarchical Clustering and Dendrograms
 
-## Beginner concepts
+**Pathway:** Machine Learning Engineer
 
-### Q1. Explain hierarchical clustering and dendrograms.
-**Answer:** Hierarchical clustering builds nested groups by repeatedly merging (agglomerative) or splitting (divisive) clusters. A dendrogram visualizes the order and distance at which groups are merged.
+### Q1. What is hierarchical clustering?
+**Answer:** It builds a hierarchy of groups by repeatedly merging or splitting clusters. Agglomerative clustering starts with individual observations and merges them.
+**Follow-up:** What is the opposite direction?  
+**Answer:** Divisive clustering starts with one group and repeatedly splits it.
 
-### Q2. Why is this method useful?
-**Answer:** It addresses a practical pattern-discovery or prediction need. Its suitability depends on the dataset, assumptions, target/goal and operational constraints.
+### Q2. What is a dendrogram?
+**Answer:** A tree diagram showing the order and distance at which observations or groups are merged.
+**Follow-up:** What does merge height represent?  
+**Answer:** The distance or dissimilarity at which the merge occurs.
 
-### Q3. Explain the basic implementation.
-**Answer:**
-```python
-from scipy.cluster.hierarchy import linkage, dendrogram
-Z = linkage(X_scaled, method='ward')
-dendrogram(Z)
-plt.show()
-```
-I would explain the inputs, parameters, what fit learns, what the output represents and how I validate it.
+### Q3. What is linkage?
+**Answer:** It defines how the distance between clusters is calculated.
+**Follow-up:** Name common linkage methods.  
+**Answer:** Single, complete, average and Ward.
 
-## Practical and scenario questions
+### Q4. Compare single and complete linkage.
+**Answer:** Single uses the closest pair between clusters and can create chain-like groups. Complete uses the farthest pair and often favours compact groups.
 
-### Q4. A product team wants to understand similarities among products before choosing a number of categories. A dendrogram lets analysts inspect group structure at several cut levels.
-**Answer:** I would confirm the business objective and data meaning, inspect representative records, prepare features according to the algorithm's requirements, establish a baseline, fit using the appropriate training data and evaluate the output. I would inspect errors or group profiles, document assumptions and verify that the result is actionable.
+### Q5. What is Ward linkage?
+**Answer:** It merges clusters in a way that limits the increase in within-cluster variation. It uses Euclidean distance.
+**Follow-up:** Can it be paired with any arbitrary distance?  
+**Answer:** No. Ward's criterion is based on Euclidean geometry.
 
-### Q5. What is the most important limitation to explain to a stakeholder?
-**Answer:** Hierarchical clustering can be computationally expensive for large datasets and is sensitive to distance and linkage choices. Ward linkage has specific Euclidean assumptions.
+## Scenario questions
 
-### Q6. The result changes significantly when you change one parameter. What do you do?
-**Answer:** Run a controlled sensitivity analysis across a reasonable parameter range, keep the data and evaluation method fixed, measure quality and stability, and choose based on validation and business usefulness rather than a single attractive result.
+### Q6. The dendrogram has a large vertical gap before a final merge. What might you investigate?
+**Answer:** A cut below that merge may create separated groups, but confirm using cluster metrics and domain interpretation.
 
-### Q7. A colleague says the algorithm's output is automatically the correct business answer. Do you agree?
-**Answer:** No. Algorithms produce outputs under assumptions. A developer must check data quality, interpret the result, compare with domain knowledge and validate against business outcomes.
+### Q7. Single linkage creates one long chain-like cluster. Why?
+**Answer:** It merges based on the closest pair of observations, so nearby points can connect otherwise distinct groups.
 
-### Q8. How would you prepare this method for production?
-**Answer:** Package preprocessing and the estimator consistently, validate input schema and ranges, record model/data versions, test edge cases, monitor input drift and outcomes, and define an owner and rollback procedure.
+### Q8. Hierarchical clustering is too slow on millions of records. What do you consider?
+**Answer:** Use a representative sample for exploration, a more scalable clustering method or an algorithm better suited to the data size.
 
-## Senior developer questions
+### Q9. Two cluster counts have similar silhouette scores. How do you choose?
+**Answer:** Compare profile clarity, stability, cluster size and business actionability.
 
-### Q9. How do you compare this method with an alternative?
-**Answer:** Use the same data protocol and compare relevant quality measures, stability, interpretability, latency, memory, operational complexity and business impact. Avoid choosing solely by algorithm popularity.
+### Q10. Does AgglomerativeClustering provide the same simple prediction workflow as KMeans for new records?
+**Answer:** Standard scikit-learn agglomerative clustering does not provide the same simple predict method. A new-observation assignment strategy must be designed if required.
 
-### Q10. What would you monitor after deployment?
-**Answer:** Input quality, feature distributions, prediction/cluster distribution, runtime failures, latency, delayed labels or business outcomes, and changes across important segments. Define alerts and review ownership.
-
-## Interview answer structure
-Clarify the business question → explain the concept → state assumptions → describe implementation → validate output → explain limitations → recommend monitoring.
+**Senior developer principle:** A dendrogram helps explore grouping structure, but the selected clusters still need validation and interpretation.
