@@ -46,3 +46,29 @@
 5. Validate normal and edge cases.
 6. Communicate trade-offs and limitations.
 7. Monitor after release.
+
+
+---
+
+## Detailed Scenario and Technical Interview Expansion
+
+### Scenario: churn prediction from monthly customer snapshots
+The same customer appears in January, February and March. A random row split places January and February in training and March in test. The model may recognize customer-specific patterns, so test performance looks better than it will for entirely new customers.
+
+**Senior engineer response:** Define the deployment question first. If predicting future months for known customers, use a time-based design. If predicting for unseen customers, use a group split by customer ID. Make sure the test data reflects the actual future use case.
+
+### Scenario questions
+**Q1. Why do we need a validation set if we already have a test set?**  
+The validation set supports choices such as algorithm, hyperparameters and threshold. Repeatedly using the test set for these choices turns it into another validation set.
+
+**Q2. When should you use stratify=y?**  
+For classification where preserving approximate class proportions is important and each class has enough examples.
+
+**Q3. Why is random splitting dangerous for time series?**  
+It can train on future observations and test on past observations, which is not how forecasting works in production.
+
+**Q4. What is group leakage?**  
+Related records from the same entity appear in both training and test sets, allowing the model to benefit from entity-specific information.
+
+**Q5. If test performance is poor, can you tune the model against the test set?**  
+No. Diagnose using training/validation data. If the test set has been repeatedly consulted, create a new independent evaluation set if possible.
