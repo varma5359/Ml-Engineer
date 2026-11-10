@@ -373,9 +373,11 @@ The result is expressed in minutes, making it easier to compare with the target'
 ### 8.2. Use the direct RMSE metric when supported
 
 ```python
-from sklearn.metrics import root_mean_squared_error
-
-rmse_direct = root_mean_squared_error(actual, predicted)
+try:
+    from sklearn.metrics import root_mean_squared_error
+    rmse_direct = root_mean_squared_error(actual, predicted)
+except ImportError:
+    rmse_direct = np.sqrt(mean_squared_error(actual, predicted))
 
 print(rmse_direct)
 ```
@@ -764,13 +766,13 @@ The residual column lets us compare prediction direction by region.
 ### 13.2. Summarize segment errors
 
 ```python
-segment_mae = segment_df.groupby("region").apply(
-    lambda group: mean_absolute_error(
+segment_mae = {}
+
+for region, group in segment_df.groupby("region"):
+    segment_mae[region] = mean_absolute_error(
         group["actual"],
         group["predicted"]
-    ),
-    include_groups=False
-)
+    )
 
 print(segment_mae)
 ```
