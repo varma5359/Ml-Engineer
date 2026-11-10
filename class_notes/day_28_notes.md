@@ -4,63 +4,36 @@
 **Phase:** 3 — Supervised learning  
 **Level:** Beginner to Intermediate
 
-## 1. Learning objectives
-Define the topic, explain its purpose, write its core syntax, interpret outputs, identify assumptions and discuss its limitations in a business setting.
+## Learning Objectives
+- Explain Bayes' theorem at a high level.
+- Define the Naive Bayes independence assumption.
+- Compare common Naive Bayes variants.
+- Apply Naive Bayes to simple text classification.
 
-## 2. Definition from zero
+## 1. Definition
+Naive Bayes is a family of probabilistic classifiers based on Bayes' theorem. It uses a simplifying assumption that features are conditionally independent given the class.
 
-**Naive Bayes and Conditional Probability:** Naive Bayes applies Bayes' theorem with a conditional-independence assumption between features given the class.
+Bayes' theorem in words: posterior probability is proportional to likelihood multiplied by prior probability.
 
-In simple language, this method helps a computer learn a relationship from examples. Understand what is supplied, what is learned and what result is expected before opening the library documentation.
+## 2. Common Variants
+- MultinomialNB: commonly used with non-negative word counts or frequencies.
+- BernoulliNB: commonly used with binary feature indicators.
+- GaussianNB: models continuous features using class-conditional Gaussian distributions.
 
-## 3. Why it is needed
+## 3. Syntax
+```python
+from sklearn.naive_bayes import MultinomialNB
+model = MultinomialNB()
+model.fit(X_train_counts, y_train)
+predictions = model.predict(X_test_counts)
+```
 
-It gives an engineer a systematic way to learn from historical examples rather than hard-coding every possible case. It is useful only when the data, target and evaluation setup match the real decision.
+## 4. Three Examples
+1. Spam email classification using word counts.
+2. News topic classification using term frequencies.
+3. Sentiment classification using word-presence features.
 
-**If ignored or misunderstood:** the model may optimize the wrong thing, produce unstable results or fail on new records.
-
-## 4. Syntax and structure
-
-P(class|features) proportional to P(features|class) × P(class). Use MultinomialNB for non-negative word counts; GaussianNB for continuous Gaussian-like features.
-
-Read every call by identifying the input data, model/transformer, important parameters, output and validation step. Check the official library documentation for version-specific options and defaults.
-
-## 5. Small worked example
-
-Start with a tiny dataset where you can calculate or reason about the expected output. Fit or run the operation, inspect the result, then change one input or parameter. Compare the outputs and explain why they changed. Finally test an edge case.
-
-## 6. Real-world scenario
-
-**Scenario:** An email filter learns word patterns from labelled spam and legitimate messages. It is fast and works well as a text baseline.
-
-### Senior engineer's investigation
-1. Confirm the business objective and prediction time.
-2. Check data definitions, missing values, target quality and class balance.
-3. Establish a simple baseline before selecting a complex method.
-4. Split data correctly and fit preprocessing only on training data.
-5. Evaluate with metrics that reflect business error costs.
-6. Review errors by important segment and document limitations.
-7. Monitor live inputs and delayed outcomes after deployment.
-
-### What goes wrong if ignored?
-
-The independence assumption is simplified, probabilities may need calibration, and MultinomialNB does not accept negative inputs.
-
-## 7. Common beginner mistakes
-
-| Mistake | Consequence | Better approach |
-|---|---|---|
-| Choosing an algorithm because it is popular | It may not suit the target or data | Start from problem type and baseline |
-| Ignoring feature scale or quality | Training/prediction can be misleading | Inspect and preprocess correctly |
-| Evaluating only training data | Overfitting remains hidden | Use validation and final test data |
-| Reporting only accuracy | Error costs and class imbalance are hidden | Select relevant metrics and inspect confusion matrix |
-
-## 8. Interview-ready explanation
-Explain the definition, why the method is useful, its core syntax, a practical business example, assumptions and limitations. Be prepared to explain what evidence would make you change your approach.
-
-## 9. Self-check
-1. What does the method learn or calculate?
-2. What are its inputs and outputs?
-3. Which parameters affect its behaviour?
-4. What are its assumptions and failure modes?
-5. How will you validate it on unseen data?
+## 5. Scenario Questions
+1. MultinomialNB receives negative feature values. What is wrong? MultinomialNB expects non-negative count/frequency-like inputs.
+2. Words in a sentence are related. Does the independence assumption hold perfectly? Usually not; it is a simplifying assumption.
+3. Naive Bayes is a strong baseline but not the best model. Is it still useful? Yes, speed and simplicity can make it a valuable benchmark.
