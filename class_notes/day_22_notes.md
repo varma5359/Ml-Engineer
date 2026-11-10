@@ -4,63 +4,35 @@
 **Phase:** 3 — Supervised learning  
 **Level:** Beginner to Intermediate
 
-## 1. Learning objectives
-Define the topic, explain its purpose, write its core syntax, interpret outputs, identify assumptions and discuss its limitations in a business setting.
+## Learning Objectives
+- Define multiple linear regression.
+- Understand features, coefficients and intercept.
+- Train a model with several input columns.
+- Interpret coefficients carefully.
+- Recognize multicollinearity and categorical encoding needs.
 
-## 2. Definition from zero
+## 1. Definition
+Multiple linear regression predicts one numeric target using two or more input features. It estimates a weighted sum of those features plus an intercept.
 
-**Multiple Linear Regression:** Multiple linear regression predicts a numeric target using two or more input features. Each coefficient describes a conditional relationship while other included features are held constant.
+## 2. Syntax
+```python
+from sklearn.linear_model import LinearRegression
+model = LinearRegression()
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+print(model.coef_)
+print(model.intercept_)
+```
 
-In simple language, this method helps a computer learn a relationship from examples. Understand what is supplied, what is learned and what result is expected before opening the library documentation.
+## 3. Three Business Examples
+1. Predict house price from area, bedrooms and age.
+2. Predict salary from experience, role level and education.
+3. Predict monthly electricity usage from temperature, building size and previous usage.
 
-## 3. Why it is needed
+## 4. Coefficient Interpretation
+A coefficient represents the expected change in predicted target for a one-unit increase in that feature, holding the other included features constant. This is a model interpretation, not automatically a causal effect.
 
-It gives an engineer a systematic way to learn from historical examples rather than hard-coding every possible case. It is useful only when the data, target and evaluation setup match the real decision.
-
-**If ignored or misunderstood:** the model may optimize the wrong thing, produce unstable results or fail on new records.
-
-## 4. Syntax and structure
-
-y_hat = b0 + b1*x1 + b2*x2 + ... . Use LinearRegression().fit(X_train,y_train); inspect coef_ and intercept_.
-
-Read every call by identifying the input data, model/transformer, important parameters, output and validation step. Check the official library documentation for version-specific options and defaults.
-
-## 5. Small worked example
-
-Start with a tiny dataset where you can calculate or reason about the expected output. Fit or run the operation, inspect the result, then change one input or parameter. Compare the outputs and explain why they changed. Finally test an edge case.
-
-## 6. Real-world scenario
-
-**Scenario:** Salary depends on experience, role, location and education. Experience alone may confound seniority with job type.
-
-### Senior engineer's investigation
-1. Confirm the business objective and prediction time.
-2. Check data definitions, missing values, target quality and class balance.
-3. Establish a simple baseline before selecting a complex method.
-4. Split data correctly and fit preprocessing only on training data.
-5. Evaluate with metrics that reflect business error costs.
-6. Review errors by important segment and document limitations.
-7. Monitor live inputs and delayed outcomes after deployment.
-
-### What goes wrong if ignored?
-
-Coefficients are not automatically causal. Correlated features can make coefficient estimates unstable.
-
-## 7. Common beginner mistakes
-
-| Mistake | Consequence | Better approach |
-|---|---|---|
-| Choosing an algorithm because it is popular | It may not suit the target or data | Start from problem type and baseline |
-| Ignoring feature scale or quality | Training/prediction can be misleading | Inspect and preprocess correctly |
-| Evaluating only training data | Overfitting remains hidden | Use validation and final test data |
-| Reporting only accuracy | Error costs and class imbalance are hidden | Select relevant metrics and inspect confusion matrix |
-
-## 8. Interview-ready explanation
-Explain the definition, why the method is useful, its core syntax, a practical business example, assumptions and limitations. Be prepared to explain what evidence would make you change your approach.
-
-## 9. Self-check
-1. What does the method learn or calculate?
-2. What are its inputs and outputs?
-3. Which parameters affect its behaviour?
-4. What are its assumptions and failure modes?
-5. How will you validate it on unseen data?
+## 5. Scenario Questions
+1. Area coefficient is positive. Does adding area always cause price to rise? Not necessarily; it is a conditional model association.
+2. Coefficients change greatly after adding a related feature. What might be present? Multicollinearity.
+3. Dataset includes city names. Can raw text be passed to LinearRegression? No; encode categorical features appropriately.
