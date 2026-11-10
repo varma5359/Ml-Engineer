@@ -1,48 +1,67 @@
 # Day 21: Interview Questions — Gradient Descent and Learning Rate
 
-## Beginner questions
+**Pathway:** Machine Learning Engineer
 
-### Q1. Define gradient descent and learning rate.
-**Answer:** Gradient descent updates parameters in the direction that reduces a differentiable loss. The learning rate controls the update size.
+## Core concepts
 
-### Q2. Why would you use it?
-**Answer:** It provides a systematic approach to learning patterns from data. Its suitability depends on the target, data quality, scale, assumptions and business cost of errors.
+### Q1. What is gradient descent?
+**Answer:** It is an iterative optimization method that adjusts model parameters to reduce a selected training objective. The model makes predictions, measures error and updates its parameters repeatedly.
+**Follow-up:** Is gradient descent itself a machine-learning model?  
+**Answer:** No. It is an optimization method used to train or optimize some models.
 
-### Q3. Explain the basic syntax.
-**Answer:** parameter_new = parameter_old - learning_rate × gradient. Too small: slow learning. Too large: unstable jumps or divergence. I would explain the input, parameters, fitted state and output, not simply quote the class name.
+### Q2. What is learning rate?
+**Answer:** It controls the size of parameter updates during optimization.
+**Follow-up:** What happens if it is too small?  
+**Answer:** Training may make progress very slowly.
 
-## Practical questions
+### Q3. What happens if learning rate is too large?
+**Answer:** Updates may overshoot a useful solution, cause oscillation or prevent convergence.
+**Follow-up:** Is the largest learning rate always fastest?  
+**Answer:** No. An unstable learning rate may fail to settle.
 
-### Q4. How do you know the model is learning useful patterns rather than memorizing?
-**Answer:** Compare training and validation performance, use an appropriate split, inspect error patterns and evaluate once on untouched test data. A large gap between training and validation can indicate overfitting.
+### Q4. What is stochastic gradient descent?
+**Answer:** It updates model parameters using one training observation at a time.
+**Follow-up:** What is mini-batch gradient descent?  
+**Answer:** It uses a small group of observations for each update.
 
-### Q5. What would you inspect before tuning the model?
-**Answer:** Target definition, missing values, data leakage, feature types, scaling needs, class balance, baseline performance and the validation strategy.
+### Q5. Why scale features for gradient-based optimization?
+**Answer:** Features with very different numerical ranges can make optimization inefficient or unstable. Scaling can make feature magnitudes more comparable.
+**Follow-up:** Does every model require scaling?  
+**Answer:** No. The need depends on the estimator.
 
-## Scenario questions
+## Practical scenarios
 
-### Q6. A training loss barely changes. An engineer checks feature scale, learning rate and gradients before assuming the algorithm is broken.
-**Answer:** I would clarify the business requirement, inspect examples and data quality, establish a baseline, train with leakage-safe preprocessing and validate on representative unseen data. I would compare relevant metrics, examine errors by segment and explain the cost of false positives and false negatives. I would not deploy based only on one aggregate score.
+### Q6. Training is very slow with a tiny learning rate. What do you inspect?
+**Answer:** Feature scaling, learning-rate schedule, iteration count, stopping tolerance and data quality.
+**Follow-up:** Should you immediately increase the rate by a large amount?  
+**Answer:** No. Change it carefully and compare convergence and validation results.
 
-### Q7. Training performance is excellent but validation performance is poor. What might be happening?
-**Answer:** The model may be overfitting, the split may not represent deployment, the dataset may be small, or there may be leakage or distribution differences. I would check split logic, pipeline boundaries, model complexity and segment coverage before changing hyperparameters.
+### Q7. Training loss oscillates with a high learning rate. What might help?
+**Answer:** Try a smaller learning rate or a suitable adaptive schedule, then inspect convergence.
+**Follow-up:** How do you know the change helped?  
+**Answer:** Compare training behaviour and held-out performance using the same evaluation setup.
 
-### Q8. A stakeholder asks you to improve accuracy, but missing a positive case is very expensive. What do you recommend?
-**Answer:** Clarify the cost of false negatives and false positives. Evaluate recall, precision, PR curve and confusion matrices across thresholds. Choose a threshold using validation data and business capacity, and explain the trade-off. Accuracy alone is not enough.
+### Q8. A model converges on training data but performs poorly on test data. Is this only an optimizer problem?
+**Answer:** No. It may be overfitting, distribution mismatch, leakage or an unsuitable split.
+**Follow-up:** What should you verify first?  
+**Answer:** Data splitting and leakage controls, then training/test error patterns.
 
-## Senior developer questions
+### Q9. A convergence warning appears. What do you do?
+**Answer:** Inspect feature scales, learning rate, maximum iterations, tolerance, input quality and estimator configuration.
+**Follow-up:** Is increasing max_iter always enough?  
+**Answer:** No. The underlying cause may be scaling or optimization settings.
 
-### Q9. How do you decide whether this method is suitable for production?
-**Answer:** Assess validated performance, latency, memory, explainability, stability, monitoring, data availability, retraining needs and operational ownership. A slightly weaker but reliable model may be preferable to a fragile complex one.
+### Q10. Does a fixed random seed guarantee identical results on every machine?
+**Answer:** No. It improves repeatability but hardware, software versions and nondeterministic operations may still affect results.
 
-### Q10. What would you monitor after release?
-**Answer:** Input schema and data quality, missing/unknown values, prediction distribution, latency, errors, drift and delayed ground-truth metrics. Review performance by relevant segment and define rollback criteria.
+## Code interpretation
 
-## Structured scenario-answer method
-1. Clarify business impact.
-2. Gather evidence and representative examples.
-3. Identify likely causes without guessing.
-4. Test hypotheses one at a time.
-5. Choose a safe correction.
-6. Validate on unseen and edge-case data.
-7. Communicate trade-offs and monitor.
+### Q11. What does eta0 represent in SGDRegressor?
+**Answer:** The initial learning-rate value for supported learning-rate schedules.
+**Follow-up:** Does eta0 alone define the whole learning-rate behaviour?  
+**Answer:** No. The learning_rate setting controls how the rate is used or changed.
+
+### Q12. Why use a Pipeline with StandardScaler and SGDRegressor?
+**Answer:** It ensures scaling is fitted on training data and applied consistently before the estimator receives inputs.
+
+**Senior developer principle:** A model that finishes training is not necessarily converged or useful. Inspect optimization behaviour and validation performance.
