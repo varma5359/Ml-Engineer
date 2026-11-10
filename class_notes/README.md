@@ -1,6 +1,6 @@
 # Machine Learning Engineer — Day 01–40 Notes
 
-Each day has a separate class-notes file and interview-question file. The class notes follow the beginner-first teaching style demonstrated in the supplied Python Conditional Statements reference.
+Each day has a separate class-notes file and interview-question file. The class notes reuse relevant Python and statistics teaching material where appropriate, adapt examples to machine learning, and use the Data Analyst Days 25–47 notes as a teaching reference for statistics, EDA and visualization. The ML career_path.md remains the authority for day titles and sequence.
 
 ## Teaching format
 - Start each topic with a clear definition in simple language.
